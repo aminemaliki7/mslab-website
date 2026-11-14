@@ -10,7 +10,7 @@ _Status: Milestone 1. The palette is **provisional** (ADR-018) until MSLAB suppl
 |---|---|---|
 | `fg` (`text-fg`) | ink-900 `#0E1A2B` | Body text, headings |
 | `fg-muted` | slate-500 `#5B6779` | Secondary text (≥ 5:1 on white & paper) |
-| `fg-subtle` | slate-400 `#8A93A1` | Meta, numbering (non-essential text only) |
+| `fg-subtle` | slate-400 `#67717F` | Meta, numbering, SKUs (AA: 4.95:1 on white, 4.57:1 on paper) |
 | `bg` | `#FFFFFF` | Page background |
 | `surface` | paper-50 `#F7F6F2` | Section bands, page headers |
 | `surface-strong` | paper-100 `#EFEDE6` | Skeletons, neutral badges |
@@ -71,7 +71,7 @@ Heading sizes (`<Heading size>`): `display` 36→60px, `xl` 30→36px, `lg` 24�
 Button variants also include `inverse` and `inverseGhost` for dark backgrounds.
 
 ## 8. Accessibility baseline
-Skip link → `#main`; landmarks (`header`, `nav` with labels, `main`, `footer`); `aria-current` on active nav and language; visible focus everywhere; touch targets ≥ 40px in navigation; color contrast AA for all text tokens except `fg-subtle` (non-essential only).
+Skip link → `#main`; landmarks (`header`, `nav` with labels, `main`, `footer`); `aria-current` on active nav and language; visible focus everywhere; touch targets ≥ 40px in navigation; color contrast AA for all text tokens (fg-subtle darkened in M8 after axe flagged it).
 
 ## 9. Logo (ADR-019)
 Original SVG created for the project (no prior MSLAB logo existed):
@@ -85,3 +85,28 @@ The palette (§2) is built from the same ink/cyan pair, so no color change was n
 
 ## 10. Open brand items
 Trademark check of the logo before print/signage use (logo approved 2026-11-14), whether to keep Geist, photography direction, OG share image (M8).
+
+## 11. Illustrations and motion
+**Illustrations** (`src/components/illustrations/index.tsx`): original inline-SVG line drawings in the brand palette, decorative only (`aria-hidden`), ≈1–2 KB each — chosen over GIFs/photos for weight, sharpness and honesty (they never depict real premises, staff, clients or products).
+
+**Goal:** a visitor understands MSLAB's activities from the pictures alone, in any language. Scenes use recognizable everyday objects (printer, flyers, business cards, books, pencil cup, sticky notes, supply carton) and contain no text. They never claim unconfirmed services (no delivery trucks, no people, no premises).
+
+| Illustration | File | Used on |
+|---|---|---|
+| `HeroScene`: printer printing a flyer + business cards, books, pencil cup/ruler/sticky note, supply carton with paper reams | `scenes.tsx` | Homepage hero: first element on phones (compact), beside the text on desktop |
+| `PrintShopIllustration`: printer, flyers, business cards | `scenes.tsx` | "Printing" picture card, Services header |
+| `StationeryIllustration`: notebook, pencil cup, ruler, sticky note, stapler | `scenes.tsx` | "Office supplies" picture card, Catalog header |
+| `LibraryIllustration`: book row, stack, open book | `scenes.tsx` | "Books" picture card, About header |
+| `BusinessSupplyIllustration`: supply carton (reams, folders) + purchase order | `scenes.tsx` | "Business services" picture card |
+| `ChecklistIllustration` (clipboard ticking itself) | `index.tsx` | Quote header |
+| `EnvelopeIllustration` (letter rising) | `index.tsx` | Contact header |
+| `LostSheetIllustration` | `index.tsx` | 404 page |
+| `ProductArt` (notebook, pen, book, binder, stapler, paper, print, generic supplies) | `product-art.tsx` | Products without photos (cards, gallery). Drawing chosen from keywords in the French slug (`productArtKind`); an uploaded photo always wins |
+| `ProductPlaceholderIllustration` | `index.tsx` | Neutral fallback icon (no longer used on public pages) |
+
+The four homepage activities are **picture cards**: illustration first, then number, label and link.
+
+Page headers accept an `illustration` prop (shown from `md` up). Pass a width class when giving an illustration a `className`; without one it fills its container.
+
+**Motion** (`src/app/globals.css`): slow and subtle — `anim-float` (6–8 s), `anim-print` (7 s sheet output loop, fully visible ~85% of the time), `anim-draw` / `anim-draw-loop` (strokes), `anim-grow-x` (text lines composing, mirrored in RTL), `.reveal` (slide-up on scroll via CSS scroll-driven animations — transform only, never opacity, so text keeps full contrast; no JavaScript; content is simply in place where unsupported). Cards lift 2 px on hover.
+Accessibility: everything is disabled for `prefers-reduced-motion: reduce` (durations and delays zeroed; reveals not applied). Never animate text content or anything essential to understanding a page.

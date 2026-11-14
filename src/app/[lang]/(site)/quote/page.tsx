@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { ChecklistIllustration } from "@/components/illustrations";
 import { PageHeader } from "@/components/layout/page-header";
 import { QuoteForm } from "@/components/quote/quote-form";
 import { Container, Section, Skeleton } from "@/components/ui/layout";
@@ -27,7 +28,7 @@ export default async function QuotePage({ searchParams }: PageProps<"/[lang]/quo
   const dict = await getDictionary(locale);
   return (
     <>
-      <PageHeader title={dict.pages.quote.title} lead={dict.pages.quote.description} />
+      <PageHeader title={dict.pages.quote.title} lead={dict.pages.quote.description} illustration={<ChecklistIllustration />} />
       <Section>
         <Container className="max-w-3xl">
           <Suspense fallback={<QuoteFormSkeleton />}>

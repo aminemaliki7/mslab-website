@@ -4,6 +4,9 @@ import { getSiteSettings } from "@/features/settings/queries";
 import { localeMeta, type Locale } from "@/i18n/config";
 import { alternatePaths, localizedPath, type RouteKey } from "@/i18n/routes";
 
+/** Brand share image (public/brand/og-default.png); product pages override it with a photo. */
+export const DEFAULT_OG_IMAGE = { url: "/brand/og-default.png", width: 1200, height: 630, alt: "MSLAB" };
+
 type PageMetadataInput = {
   locale: Locale;
   route: RouteKey | Partial<Record<Locale, RouteKey>>;
@@ -38,8 +41,9 @@ export async function buildPageMetadata({ locale, route, title, description, ind
       url: canonical,
       locale: localeMeta[locale].ogLocale,
       alternateLocale: enabledLocales.filter((l) => l !== locale).map((l) => localeMeta[l].ogLocale),
+      images: [DEFAULT_OG_IMAGE],
     },
-    twitter: { card: "summary", title, description },
+    twitter: { card: "summary_large_image", title, description, images: [DEFAULT_OG_IMAGE.url] },
     robots: index ? undefined : { index: false, follow: true },
   };
 }

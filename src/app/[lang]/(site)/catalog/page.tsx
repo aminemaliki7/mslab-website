@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { StationeryIllustration } from "@/components/illustrations/scenes";
 import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductListing, ProductListingSkeleton } from "@/components/catalog/product-listing";
 import { CtaBand } from "@/components/layout/cta-band";
@@ -28,7 +29,7 @@ export default async function CatalogPage({ searchParams }: PageProps<"/[lang]/c
 
   return (
     <>
-      <PageHeader title={dict.pages.catalog.title} lead={dict.pages.catalog.description} />
+      <PageHeader title={dict.pages.catalog.title} lead={dict.pages.catalog.description} illustration={<StationeryIllustration />} />
       <Section className="py-10 lg:py-14">
         <Container className="grid gap-10 lg:grid-cols-12">
           <aside className="lg:col-span-3">

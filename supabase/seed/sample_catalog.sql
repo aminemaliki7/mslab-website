@@ -60,14 +60,4 @@ values
    'EX-0006', '[]', 'draft', false, 20)
 on conflict (id) do nothing;
 
-insert into public.services (id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en, summary_fr, summary_ar, summary_en, status, is_featured, sort_order)
-values
-  ('c0000000-0000-4000-8000-000000000001', 'Service d''impression (exemple)', 'خدمة طباعة (مثال)', 'Printing service (sample)',
-   'exemple-impression', 'exemple-impression', 'exemple-printing',
-   'Service d''exemple — le contenu réel sera fourni par MSLAB.', 'خدمة تجريبية — سيوفر MSLAB المحتوى الفعلي.', 'Sample service — real content will be provided by MSLAB.',
-   'published', true, 10),
-  ('c0000000-0000-4000-8000-000000000002', 'Service aux entreprises (exemple)', 'خدمة للشركات (مثال)', 'Business service (sample)',
-   'exemple-entreprises', 'exemple-entreprises', 'exemple-business',
-   'Service d''exemple — le contenu réel sera fourni par MSLAB.', 'خدمة تجريبية — سيوفر MSLAB المحتوى الفعلي.', 'Sample service — real content will be provided by MSLAB.',
-   'published', false, 20)
-on conflict (id) do nothing;
+-- Services are real content: see supabase/seed/services_content.sql

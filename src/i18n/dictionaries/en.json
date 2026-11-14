@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "MSLAB",
-    "defaultDescription": "MSLAB, a Moroccan company: printing and printing services, office supplies and stationery, books and business services."
+    "defaultDescription": "MSLAB, a Moroccan company: printing and reprographics, office supplies, stationery and school supplies, books and publications. Request a quote online."
   },
   "common": {
     "skipToContent": "Skip to content",
@@ -20,13 +20,13 @@
     "contact": "Contact"
   },
   "businessAreas": {
-    "printing": "Printing and printing services",
-    "office": "Office supplies and stationery",
-    "books": "Books and related products",
-    "b2b": "Business services"
+    "printing": "Printing & reprographics",
+    "office": "Office supplies",
+    "school": "Stationery & school supplies",
+    "books": "Books & publications"
   },
   "footer": {
-    "about": "MSLAB is a Moroccan company specializing in printing, office supplies, stationery and books.",
+    "about": "MSLAB supports professionals, institutions and individuals with printing, office supplies, stationery and books.",
     "activities": "Activities",
     "navigation": "Navigation",
     "contact": "Contact",
@@ -48,17 +48,16 @@
     "breadcrumb": "Breadcrumb",
     "learnMore": "Learn more",
     "introTitle": "Who we are",
-    "areasTitle": "Our activities",
-    "areasServicesLink": "View services",
-    "areasCatalogLink": "View catalog",
-    "featuredServicesTitle": "Our services",
+    "areasTitle": "Our services",
+    "featuredServicesTitle": "Other services",
     "allServices": "All services",
     "featuredProductsTitle": "Featured products",
     "allProducts": "Browse the full catalog",
     "whyTitle": "Why choose MSLAB",
-    "ctaTitle": "A printing project, or a need for office supplies or books?",
-    "ctaBody": "Send us a quotation request or contact us directly.",
-    "ctaWhatsApp": "Message us on WhatsApp"
+    "ctaTitle": "A printing project, or a need for supplies or books?",
+    "ctaBody": "Describe your needs in a quotation request or contact us: our team will get back to you.",
+    "ctaWhatsApp": "Message us on WhatsApp",
+    "heroLead": "MSLAB supports professionals, institutions and individuals with an offering dedicated to printing, supplies and stationery products."
   },
   "about": {
     "presentationTitle": "Overview",
@@ -77,7 +76,7 @@
   },
   "servicesPage": {
     "listTitle": "Our services",
-    "empty": "MSLAB's services will be presented here soon. For any request, contact us.",
+    "empty": "Our services are being published. In the meantime, tell us what you need and we will reply.",
     "otherServices": "Other services",
     "askQuote": "Request a quote for this service"
   },
@@ -105,7 +104,7 @@
     "resultsFor": "Results for “{q}”",
     "noResults": "No product matches your search.",
     "noResultsHint": "Try another term, or describe your need in a quotation request.",
-    "emptyCatalog": "The catalog will be available soon. For any request, contact us or request a quote.",
+    "emptyCatalog": "Our online catalog is growing. Describe your needs in a quotation request and we will reply with the available products.",
     "pagination": "Pagination",
     "previous": "Previous",
     "next": "Next",
@@ -192,34 +191,34 @@
     "viewQuote": "View my request ({count})"
   },
   "legalPages": {
-    "pending": "This content is being prepared by MSLAB.",
+    "pending": "This content will be published soon.",
     "contact": "For any question about the company or your personal data, contact us.",
     "publisherTitle": "Website publisher"
   },
   "pages": {
     "home": {
       "title": "Printing, office supplies, stationery and books",
-      "description": "MSLAB, a Moroccan company: printing and printing services, office supplies and stationery, books and business services."
+      "description": "MSLAB, a Moroccan company: printing and reprographics, office supplies, stationery and school supplies, books and publications. Request a quote online."
     },
     "about": {
       "title": "About MSLAB",
-      "description": "Discover MSLAB, a Moroccan company specializing in printing, office supplies and books."
+      "description": "MSLAB, a Moroccan company serving professionals, institutions and individuals: printing, office supplies, stationery and books."
     },
     "services": {
       "title": "Services",
-      "description": "Printing and business services offered by MSLAB."
+      "description": "MSLAB supports professionals, institutions and individuals with an offering dedicated to printing, supplies and stationery products."
     },
     "catalog": {
       "title": "Catalog",
-      "description": "The MSLAB catalog: office supplies, stationery, books and printing products."
+      "description": "Office supplies, stationery and school supplies, books and publications: browse the MSLAB catalog and request a quote."
     },
     "contact": {
       "title": "Contact",
-      "description": "Contact MSLAB for any information request."
+      "description": "A question, a printing project or a need for supplies? Write to MSLAB and our team will reply."
     },
     "quote": {
       "title": "Quotation request",
-      "description": "Request a quote from MSLAB for one or more products or a custom printing need."
+      "description": "Select products from the catalog or describe your printing needs: MSLAB reviews your request and gets back to you."
     },
     "legal": {
       "title": "Legal notice",

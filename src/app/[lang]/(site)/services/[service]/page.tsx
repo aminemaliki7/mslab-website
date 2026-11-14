@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
 import { ServiceCard } from "@/components/catalog/service-card";
+import { SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
 import { RichText } from "@/components/content/rich-text";
 import { CtaBand } from "@/components/layout/cta-band";
 import { ButtonLink } from "@/components/ui/button";
@@ -62,8 +63,9 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
   return (
     <>
 
-      <div className="bg-surface border-line border-b">
-        <Container className="py-10 lg:py-14">
+      <div className="bg-surface border-line overflow-hidden border-b">
+        <Container className="grid items-center gap-8 py-10 md:grid-cols-12 lg:py-14">
+          <div className="md:col-span-7">
           <Breadcrumbs
             label={dict.sections.breadcrumb}
             items={[
@@ -82,9 +84,17 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
               {dict.common.contactUs}
             </ButtonLink>
           </div>
+          </div>
+          {/* Core services: the picture explains the service at a glance (also on phones). */}
+          {!service.imageUrl && SERVICE_ART[service.slugs.fr] ? (
+            <div className="order-first md:order-none md:col-span-5">
+              <ServiceArt slugFr={service.slugs.fr} className="mx-auto w-full max-w-[16rem] md:max-w-sm" />
+            </div>
+          ) : null}
         </Container>
       </div>
 
+      {service.description || service.imageUrl ? (
       <Section>
         <Container className="grid gap-10 lg:grid-cols-12">
           <div className={service.imageUrl ? "lg:col-span-7" : "lg:col-span-8"}>
@@ -99,6 +109,7 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
           ) : null}
         </Container>
       </Section>
+      ) : null}
 
       {others.length > 0 ? (
         <Section tone="surface" aria-labelledby="other-services-heading">

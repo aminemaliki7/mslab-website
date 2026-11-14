@@ -167,6 +167,7 @@ Clean module boundaries; reusable primitives; strict TS; Server Components by de
 | ADR-016 | 2026-11-14 | i18n routing built in Milestone 1 (not M7); database (M2) precedes catalog (M3) | Accepted |
 | ADR-017 | 2026-11-14 | Multi-product quotes use a client-side "quote list" (localStorage) feeding the quotation form — not a cart, no checkout | Accepted |
 | ADR-018 | 2026-11-14 | "Ink & paper" palette as semantic tokens; Geist (Latin) + IBM Plex Sans Arabic | Accepted |
+| ADR-020 | 2026-11-14 | Production database on the Supabase **Free** plan (owner decision); mitigations: daily keep-alive workflow, manual backup routine, usage monitoring | Accepted |
 | ADR-019 | 2026-11-14 | Original SVG logo (folded sheet + "M" monogram, ink/cyan) created at the owner's request; used in header, footer, admin and favicon | Accepted (approved by the owner 2026-11-14; trademark check recommended before print use) |
 
 > **Phase 2 note:** ADR-009 to ADR-014 change the data model described in `DATABASE_SCHEMA.md`. That document is rewritten together with the migrations in Milestone 2; where it conflicts with these ADRs, the ADRs win.

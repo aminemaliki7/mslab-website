@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LibraryIllustration } from "@/components/illustrations/scenes";
 import { RichText } from "@/components/content/rich-text";
 import { CtaBand } from "@/components/layout/cta-band";
 import { PageHeader } from "@/components/layout/page-header";
@@ -61,7 +62,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PageHeader title={dict.pages.about.title} lead={dict.pages.about.description} />
+      <PageHeader title={dict.pages.about.title} lead={dict.pages.about.description} illustration={<LibraryIllustration />} />
 
       <Section aria-labelledby="presentation-heading">
         <Container className="grid gap-8 lg:grid-cols-12">

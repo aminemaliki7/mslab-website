@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { ProductImage } from "@/features/catalog/queries";
 import { format } from "@/i18n/format";
 import { cn } from "@/lib/utils";
@@ -11,18 +11,21 @@ type Props = {
   /** Localized template, e.g. "Image {n} of {total}" (functions can't be passed from the server). */
   thumbLabelTemplate: string;
   noImageLabel: string;
+  /** Drawing shown while the product has no photo (rendered on the server). */
+  placeholder: ReactNode;
 };
 
 /** Main image + thumbnail buttons. Without JS the first image still renders (SSR). */
-export function ProductGallery({ images, thumbLabelTemplate, noImageLabel }: Props) {
+export function ProductGallery({ images, thumbLabelTemplate, noImageLabel, placeholder }: Props) {
   const thumbLabel = (n: number, total: number) => format(thumbLabelTemplate, { n, total });
   const [index, setIndex] = useState(0);
   const current = images[index];
 
   if (!current) {
     return (
-      <div className="bg-surface border-line text-fg-subtle grid aspect-square place-items-center rounded-[var(--radius-card)] border text-sm">
-        {noImageLabel}
+      <div className="bg-surface border-line flex aspect-square items-center justify-center rounded-[var(--radius-card)] border p-10">
+        {placeholder}
+        <span className="sr-only">{noImageLabel}</span>
       </div>
     );
   }

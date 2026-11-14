@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
+import { EnvelopeIllustration } from "@/components/illustrations";
 import { ContactForm } from "@/components/forms/contact-form";
 import { PageHeader } from "@/components/layout/page-header";
 import { whatsappHref } from "@/components/layout/whatsapp-button";
@@ -32,7 +34,8 @@ export default async function ContactPage() {
 
   return (
     <>
-      <PageHeader title={dict.pages.contact.title} lead={dict.pages.contact.description} />
+      <OrganizationJsonLd locale={locale} />
+      <PageHeader title={dict.pages.contact.title} lead={dict.pages.contact.description} illustration={<EnvelopeIllustration />} />
       <Section>
         <Container className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">

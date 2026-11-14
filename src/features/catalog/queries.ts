@@ -35,6 +35,8 @@ export type ProductSummary = {
   id: string;
   name: string;
   slug: string;
+  /** Stable identifier (picks the drawing shown when there is no photo). */
+  slugFr: string;
   sku: string | null;
   shortDescription: string | null;
   categoryId: string | null;
@@ -95,6 +97,7 @@ function toProductSummary(row: ProductSummaryRow, locale: Locale): ProductSummar
     id: row.id,
     name,
     slug: slugFor(row, locale),
+    slugFr: row.slug_fr,
     sku: row.sku,
     shortDescription: pick(row, "short_description", locale),
     categoryId: row.category_id,
@@ -283,4 +286,37 @@ export async function getProductsByIds(locale: Locale, ids: string[]): Promise<P
     .in("id", unique);
   if (error) throw new Error(`[catalog] getProductsByIds: ${error.code}`);
   return (data as unknown as ProductSummaryRow[]).map((row) => toProductSummary(row, locale));
+}
+
+export type SitemapEntity = {
+  kind: "category" | "product" | "service";
+  slugs: { fr: string; ar: string | null; en: string | null };
+  updatedAt: string;
+};
+
+/** Every published category/product/service with its per-locale slugs (sitemap.xml). */
+export async function listSitemapEntities(): Promise<SitemapEntity[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CATALOG_TAG, "services");
+
+  const db = createPublicClient();
+  const [categories, products, services] = await Promise.all([
+    db.from("categories").select("slug_fr, slug_ar, slug_en, updated_at"),
+    db.from("products").select("slug_fr, slug_ar, slug_en, updated_at").eq("status", "published").limit(10000),
+    db.from("services").select("slug_fr, slug_ar, slug_en, updated_at").eq("status", "published"),
+  ]);
+  const error = categories.error ?? products.error ?? services.error;
+  if (error) throw new Error(`[sitemap] ${error.code}`);
+
+  const map = (kind: SitemapEntity["kind"]) => (row: { slug_fr: string; slug_ar: string | null; slug_en: string | null; updated_at: string }) => ({
+    kind,
+    slugs: { fr: row.slug_fr, ar: row.slug_ar, en: row.slug_en },
+    updatedAt: row.updated_at,
+  });
+  return [
+    ...(categories.data ?? []).map(map("category")),
+    ...(products.data ?? []).map(map("product")),
+    ...(services.data ?? []).map(map("service")),
+  ];
 }

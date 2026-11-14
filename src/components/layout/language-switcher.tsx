@@ -36,7 +36,6 @@ export function LanguageLinks({
                 href={alternates?.[locale] ?? (pathname ? switchLocalePath(pathname, locale) : `/${locale}`)}
                 hrefLang={localeMeta[locale].htmlLang}
                 lang={localeMeta[locale].htmlLang}
-                aria-label={localeMeta[locale].nativeName}
                 aria-current={isCurrent ? "true" : undefined}
                 prefetch={false}
                 className={cn(
@@ -45,7 +44,10 @@ export function LanguageLinks({
                   locale === "ar" && "font-[family-name:var(--font-arabic)] text-sm",
                 )}
               >
+                {/* Accessible name = visible label + full language name ("FR Français"):
+                    it contains the visible text (WCAG 2.5.3 Label in Name). */}
                 {shortLabels[locale]}
+                <span className="sr-only"> {localeMeta[locale].nativeName}</span>
               </Link>
             </li>
           );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { HeroScene } from "@/components/illustrations/scenes";
 import { ServiceCard } from "@/components/catalog/service-card";
 import { CtaBand } from "@/components/layout/cta-band";
 import { PageHeader } from "@/components/layout/page-header";
@@ -26,7 +27,7 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <PageHeader title={dict.pages.services.title} lead={dict.pages.services.description} />
+      <PageHeader title={dict.pages.services.title} lead={dict.pages.services.description} illustration={<HeroScene />} />
 
       <Section aria-labelledby="services-list-heading">
         <Container>
@@ -34,9 +35,9 @@ export default async function ServicesPage() {
             {dict.servicesPage.listTitle}
           </Heading>
           {services.length > 0 ? (
-            <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {services.map((service) => (
-                <li key={service.id}>
+                <li key={service.id} className="reveal">
                   <ServiceCard
                     service={service}
                     href={localizedPath(locale, { route: "service", slug: service.slug })}
@@ -53,21 +54,6 @@ export default async function ServicesPage() {
               </ArrowLink>
             </div>
           )}
-        </Container>
-      </Section>
-
-      <Section tone="surface" aria-labelledby="areas-heading">
-        <Container className="grid gap-8 lg:grid-cols-12">
-          <Heading as="h2" size="md" id="areas-heading" className="lg:col-span-4">
-            {dict.sections.areasTitle}
-          </Heading>
-          <ul className="border-line grid border-t sm:grid-cols-2 lg:col-span-8">
-            {Object.values(dict.businessAreas).map((area) => (
-              <li key={area} className="border-line text-fg border-b py-4 font-medium sm:pe-6">
-                {area}
-              </li>
-            ))}
-          </ul>
         </Container>
       </Section>
 

@@ -12,7 +12,7 @@
   --color-ink-800: #1b2a40;
   --color-ink-700: #2a3a52;
   --color-slate-500: #5b6779;
-  --color-slate-400: #8a93a1;
+  --color-slate-400: #67717f; /* ≥ 4.5:1 on white (4.95) and paper (4.57) — WCAG AA */
   --color-line-300: #c9c6bc;
   --color-line-200: #e3e1da;
   --color-paper-100: #efede6;
@@ -91,9 +91,76 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * Motion (docs/DESIGN_SYSTEM.md §11): light, slow, decorative only. Every animation is
+ * neutralized by the prefers-reduced-motion rule above; scroll reveals only exist when the
+ * browser supports scroll-driven animations AND the visitor accepts motion — otherwise
+ * content is simply visible (no JavaScript involved).
+ */
+@keyframes mslab-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+/* Printed sheet slides out, then stays fully visible for most of the cycle (it is the key
+   "we print" signal); only a brief fade before the next sheet. */
+@keyframes mslab-print {
+  0% { transform: translateY(-34px); opacity: 0; }
+  6% { opacity: 1; }
+  30%, 92% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+@keyframes mslab-draw {
+  from { stroke-dashoffset: var(--dash, 120); }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mslab-grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+/* Slide-up only — no opacity change: a card resting at the edge of the screen mid-animation
+   must keep full text contrast (WCAG 1.4.3; axe flagged a partial fade on tablet). */
+@keyframes mslab-fade-up {
+  from { transform: translateY(24px); }
+  to { transform: none; }
+}
+
+@layer components {
+  /* SVG parts animate around their own box. */
+  .anim-float,
+  .anim-print,
+  .anim-grow-x {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .anim-float { animation: mslab-float 6s ease-in-out infinite; }
+  .anim-float-slow { animation-duration: 8s; }
+  .anim-print { animation: mslab-print 7s var(--ease-out-soft) infinite; }
+  .anim-draw {
+    stroke-dasharray: var(--dash, 120);
+    animation: mslab-draw 1.6s var(--ease-out-soft) both;
+  }
+  .anim-draw-loop { animation: mslab-draw 2.4s ease-in-out infinite alternate; }
+  .anim-grow-x {
+    transform-origin: left center;
+    animation: mslab-grow-x 0.9s var(--ease-out-soft) both;
+  }
+  [dir="rtl"] .anim-grow-x { transform-origin: right center; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal {
+        animation: mslab-fade-up linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 35%;
+      }
     }
   }
 }

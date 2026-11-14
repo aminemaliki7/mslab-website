@@ -93,6 +93,13 @@ _Implemented in M5_ (`features/inquiries/actions.ts`): honeypot field `website` 
 - QA check: search `.next/static` for secret variable names/values before release.
 - Any secret exposed in chat, logs or commits → rotate immediately.
 
+## 7a. Implemented in M8
+- Headers set in `next.config.ts` on every route: CSP (without nonces — see below), `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`; HSTS on Vercel production only; `X-Powered-By` removed; `X-Robots-Tag: noindex` on every non-production deployment.
+- **CSP trade-off:** nonce-based CSP forces dynamic rendering of every page (bundled Next docs), which would discard the Cache Components static shells. We use the documented "without nonces" policy: `script-src 'self' 'unsafe-inline'`, everything else locked to `'self'` (+ the Supabase Storage origin for images), `frame-ancestors 'none'`, `form-action 'self'`, `object-src 'none'`. Revisit with SRI/nonces if a stricter policy becomes a requirement.
+- Secret scan of `.next/static` (browser bundles): no secret values or names (`FORM_SUBMISSION_KEY`, `IP_HASH_SALT`, secret-key names).
+- `npm audit --omit=dev`: 0 vulnerabilities. Dev-only: 7 moderate in ESLint tooling (`minimatch`), not shipped.
+- Playwright verifies headers and the absence of CSP violations on 30 pages × 3 viewports.
+
 ## 7. HTTP security headers (next.config.ts `headers()`)
 | Header | Value (initial) |
 |---|---|

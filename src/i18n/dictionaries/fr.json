@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "MSLAB",
-    "defaultDescription": "MSLAB, entreprise marocaine : impression et services d'impression, fournitures de bureau et papeterie, livres et services aux entreprises."
+    "defaultDescription": "MSLAB, entreprise marocaine : impression et reprographie, fournitures de bureau, papeterie et fournitures scolaires, livres et ouvrages. Demandez votre devis en ligne."
   },
   "common": {
     "skipToContent": "Aller au contenu",
@@ -20,13 +20,13 @@
     "contact": "Contact"
   },
   "businessAreas": {
-    "printing": "Impression et services d'impression",
-    "office": "Fournitures de bureau et papeterie",
-    "books": "Livres et produits associés",
-    "b2b": "Services aux entreprises"
+    "printing": "Impression & reprographie",
+    "office": "Fournitures de bureau",
+    "school": "Papeterie & fournitures scolaires",
+    "books": "Livres & ouvrages"
   },
   "footer": {
-    "about": "MSLAB est une entreprise marocaine spécialisée dans l'impression, les fournitures de bureau, la papeterie et les livres.",
+    "about": "MSLAB accompagne les professionnels, les établissements et les particuliers pour l'impression, les fournitures de bureau, la papeterie et les livres.",
     "activities": "Activités",
     "navigation": "Navigation",
     "contact": "Contact",
@@ -48,17 +48,16 @@
     "breadcrumb": "Fil d'Ariane",
     "learnMore": "En savoir plus",
     "introTitle": "Qui sommes-nous",
-    "areasTitle": "Nos activités",
-    "areasServicesLink": "Voir les services",
-    "areasCatalogLink": "Voir le catalogue",
-    "featuredServicesTitle": "Nos services",
+    "areasTitle": "Nos services",
+    "featuredServicesTitle": "Autres services",
     "allServices": "Tous les services",
     "featuredProductsTitle": "Produits à la une",
     "allProducts": "Voir tout le catalogue",
     "whyTitle": "Pourquoi choisir MSLAB",
     "ctaTitle": "Un projet d'impression, un besoin en fournitures ou en livres ?",
-    "ctaBody": "Envoyez-nous votre demande de devis ou contactez-nous directement.",
-    "ctaWhatsApp": "Écrire sur WhatsApp"
+    "ctaBody": "Décrivez votre besoin dans une demande de devis ou contactez-nous : notre équipe revient vers vous.",
+    "ctaWhatsApp": "Écrire sur WhatsApp",
+    "heroLead": "MSLAB accompagne les professionnels, les établissements et les particuliers à travers une offre dédiée à l'impression, aux fournitures et aux produits de papeterie."
   },
   "about": {
     "presentationTitle": "Présentation",
@@ -77,7 +76,7 @@
   },
   "servicesPage": {
     "listTitle": "Nos services",
-    "empty": "Les services de MSLAB seront présentés ici prochainement. Pour toute demande, contactez-nous.",
+    "empty": "Nos services sont en cours de mise en ligne. En attendant, décrivez votre besoin : nous vous répondons.",
     "otherServices": "Autres services",
     "askQuote": "Demander un devis pour ce service"
   },
@@ -105,7 +104,7 @@
     "resultsFor": "Résultats pour « {q} »",
     "noResults": "Aucun produit ne correspond à votre recherche.",
     "noResultsHint": "Essayez un autre terme, ou décrivez votre besoin dans une demande de devis.",
-    "emptyCatalog": "Le catalogue sera bientôt disponible. Pour toute demande, contactez-nous ou demandez un devis.",
+    "emptyCatalog": "Notre catalogue en ligne s'enrichit progressivement. Décrivez votre besoin dans une demande de devis : nous vous répondons avec les produits disponibles.",
     "pagination": "Pagination",
     "previous": "Précédent",
     "next": "Suivant",
@@ -192,34 +191,34 @@
     "viewQuote": "Voir ma demande ({count})"
   },
   "legalPages": {
-    "pending": "Ce contenu est en cours de préparation par MSLAB.",
+    "pending": "Ce contenu sera publié prochainement.",
     "contact": "Pour toute question concernant l’entreprise ou vos données personnelles, contactez-nous.",
     "publisherTitle": "Éditeur du site"
   },
   "pages": {
     "home": {
       "title": "Impression, fournitures de bureau, papeterie et livres",
-      "description": "MSLAB, entreprise marocaine : impression et services d'impression, fournitures de bureau et papeterie, livres et services aux entreprises."
+      "description": "MSLAB, entreprise marocaine : impression et reprographie, fournitures de bureau, papeterie et fournitures scolaires, livres et ouvrages. Demandez votre devis en ligne."
     },
     "about": {
       "title": "À propos de MSLAB",
-      "description": "Découvrez MSLAB, entreprise marocaine spécialisée dans l'impression, les fournitures de bureau et les livres."
+      "description": "MSLAB, entreprise marocaine au service des professionnels, des établissements et des particuliers : impression, fournitures de bureau, papeterie et livres."
     },
     "services": {
       "title": "Services",
-      "description": "Les services d'impression et services aux entreprises proposés par MSLAB."
+      "description": "MSLAB accompagne les professionnels, les établissements et les particuliers à travers une offre dédiée à l'impression, aux fournitures et aux produits de papeterie."
     },
     "catalog": {
       "title": "Catalogue",
-      "description": "Le catalogue MSLAB : fournitures de bureau, papeterie, livres et produits d'impression."
+      "description": "Fournitures de bureau, papeterie et fournitures scolaires, livres et ouvrages : parcourez le catalogue MSLAB et demandez un devis."
     },
     "contact": {
       "title": "Contact",
-      "description": "Contactez MSLAB pour toute demande d'information."
+      "description": "Une question, un projet d'impression ou un besoin en fournitures ? Écrivez à MSLAB, notre équipe vous répond."
     },
     "quote": {
       "title": "Demande de devis",
-      "description": "Demandez un devis à MSLAB pour un ou plusieurs produits ou un besoin d'impression sur mesure."
+      "description": "Sélectionnez des produits du catalogue ou décrivez votre besoin d'impression : MSLAB étudie votre demande et vous recontacte."
     },
     "legal": {
       "title": "Mentions légales",

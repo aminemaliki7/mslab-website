@@ -63,7 +63,7 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
       {result.items.length > 0 ? (
         <ul className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {result.items.map((product) => (
-            <li key={product.id}>
+            <li key={product.id} className="reveal">
               <ProductCard
                 product={product}
                 href={localizedPath(locale, { route: "product", slug: product.slug })}

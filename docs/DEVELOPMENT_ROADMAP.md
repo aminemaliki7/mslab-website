@@ -10,8 +10,8 @@
 | M5 | Quotation workflow (multi-product, custom items), contact system, notifications | Done (branch `feat/foundation`; email provider not chosen → delivery disabled) |
 | M6 | Admin auth, dashboard, products, categories, services, quotations, inquiries, settings | Built (branch `feat/foundation`); signed-in flows await the first admin account |
 | M7 | Translation completion and full RTL audit (routing already in M1) | Done (branch `feat/foundation`); Arabic/English UI copy still needs native review; visual RTL pass pending a visible browser |
-| M8 | SEO, accessibility, performance, security, Playwright suites (desktop/tablet/mobile) | Pending |
-| M9 | Production readiness review, Vercel preparation (no deploy without approval) | Pending |
+| M8 | SEO, accessibility, performance, security, Playwright suites (desktop/tablet/mobile) | Done (branch `feat/foundation`); signed-in admin E2E needs owner-provided test credentials |
+| M9 | Production readiness review, Vercel preparation (no deploy without approval) | Done — see `PRODUCTION_READINESS.md` (launch blocked by content + owner actions) and `DEPLOYMENT_RUNBOOK.md` |
 
 ---
 
@@ -93,3 +93,15 @@ Artwork file uploads for print quotes; DB-managed services; inquiry CSV export; 
 3. Move the repo out of OneDrive / flatten nested folder.
 4. Create Supabase **dev** project; choose email provider; secure domain.
 5. Start Phase 2.
+
+## Quality gates (M8)
+| Command | What it checks |
+|---|---|
+| `npm run lint` · `npm run typecheck` · `npm run build` | static checks, production build |
+| `npm run test:unit` | validation, phone rules, dictionary parity, RTL-safe classes |
+| `npm run test:integration` | public DB API + RLS (dev project) |
+| `BASE_URL=… npm run test:http` | forms without JavaScript |
+| `npm run test:e2e` | Playwright: 3 viewports, fr/ar/en, RTL, quote list, contact, axe WCAG 2.2 AA, admin guard, headers |
+| `BASE_URL=… node scripts/perf-check.mjs` | LCP/CLS/page weight on throttled mobile |
+
+M8 measurements (throttled Pixel 7, 4× CPU): LCP 0.4–1.1 s, CLS 0, fonts 29–51 KB on fr/en pages (197 KB on Arabic pages), JS ≈ 490 KB uncompressed (framework baseline).
