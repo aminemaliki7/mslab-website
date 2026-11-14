@@ -22,6 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const LOGO_INTRO_SCRIPT =
+  "try{if(!sessionStorage.getItem('mslab-intro')){sessionStorage.setItem('mslab-intro','1');document.documentElement.classList.add('logo-intro')}}catch(e){}";
+
 export const viewport: Viewport = {
   themeColor: "#0e1a2b",
 };
@@ -32,7 +35,12 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[lang]">)
   const { enabledLocales } = await getSiteSettings();
   if (!enabledLocales.includes(locale)) redirect(`/${defaultLocale}`);
   return (
-    <html lang={localeMeta[locale].htmlLang} dir={getDirection(locale)} className={fontVariables}>
+    // suppressHydrationWarning: the intro script below adds a class to <html> before React hydrates.
+    <html lang={localeMeta[locale].htmlLang} dir={getDirection(locale)} className={fontVariables} suppressHydrationWarning>
+      <head>
+        {/* Logo intro (globals.css): only on the first page of a visit. Runs before first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: LOGO_INTRO_SCRIPT }} />
+      </head>
       <body className="flex min-h-dvh flex-col antialiased">{children}</body>
     </html>
   );

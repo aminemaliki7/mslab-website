@@ -27,7 +27,7 @@ export function LanguageLinks({
   if (shown.length < 2) return null;
   return (
     <nav aria-label={label} className={className}>
-      <ul className="border-line flex items-center rounded-[var(--radius-control)] border p-0.5">
+      <ul className="border-line flex items-center rounded-full border p-0.5">
         {shown.map((locale) => {
           const isCurrent = locale === current;
           return (
@@ -39,9 +39,9 @@ export function LanguageLinks({
                 aria-current={isCurrent ? "true" : undefined}
                 prefetch={false}
                 className={cn(
-                  "inline-flex h-8 min-w-9 items-center justify-center rounded-[4px] px-2 text-xs font-semibold transition-colors",
+                  "inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold transition-colors",
                   isCurrent ? "bg-primary text-on-primary" : "text-fg-muted hover:text-fg hover:bg-surface",
-                  locale === "ar" && "font-[family-name:var(--font-arabic)] text-sm",
+                  locale === "ar" && "font-[family-name:var(--font-arabic)]",
                 )}
               >
                 {/* Accessible name = visible label + full language name ("FR Français"):

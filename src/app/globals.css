@@ -131,7 +131,18 @@
   from { transform: translateY(24px); }
   to { transform: none; }
 }
-
+/* Logo intro: the corner of the sheet turns over along the fold line (axis 1,1) and lands as
+   the cyan flap. Front half turns edge-on, then the flap turns in from the other side. */
+@keyframes mslab-corner-front {
+  0% { transform: none; opacity: 1; }
+  99% { transform: rotate3d(1, 1, 0, 89deg); opacity: 1; }
+  100% { transform: rotate3d(1, 1, 0, 90deg); opacity: 0; }
+}
+@keyframes mslab-corner-flap {
+  0% { transform: rotate3d(1, 1, 0, -90deg); }
+  70% { transform: rotate3d(1, 1, 0, 14deg); }
+  100% { transform: none; }
+}
 @layer components {
   /* SVG parts animate around their own box. */
   .anim-float,
@@ -153,6 +164,29 @@
     animation: mslab-grow-x 0.9s var(--ease-out-soft) both;
   }
   [dir="rtl"] .anim-grow-x { transform-origin: right center; }
+
+  /* Header logo intro, once per visit: <html class="logo-intro"> is set by an inline script
+     in app/[lang]/layout.tsx before first paint. Without the class the logo is static. */
+  .logo-corner-front,
+  .logo-corner-flap {
+    transform-box: view-box;
+    transform-origin: 28px 4px; /* middle of the fold line (24,0)–(32,8) */
+  }
+  .logo-corner-front { opacity: 0; }
+  .logo-corner-flap { transition: transform 0.35s var(--ease-out-soft); }
+  .logo-corner-flap-front,
+  .logo-corner-flap-back { transition: opacity 0.14s ease 0.14s; }
+  .logo-corner-flap-back { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .logo-intro .logo-corner-front { animation: mslab-corner-front 0.35s ease-in 0.45s both; }
+    .logo-intro .logo-corner-flap { animation: mslab-corner-flap 0.5s var(--ease-out-soft) 0.8s backwards; }
+    .logo-lockup:hover .logo-corner-flap,
+    a:focus-visible .logo-lockup .logo-corner-flap { transform: rotate3d(1, 1, 0, -145deg); }
+    .logo-lockup:hover .logo-corner-flap-front,
+    a:focus-visible .logo-lockup .logo-corner-flap-front { opacity: 0; }
+    .logo-lockup:hover .logo-corner-flap-back,
+    a:focus-visible .logo-lockup .logo-corner-flap-back { opacity: 1; }
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {

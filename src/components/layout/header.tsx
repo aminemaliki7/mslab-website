@@ -33,7 +33,7 @@ export async function Header() {
       <header className="bg-bg/95 border-line sticky top-0 z-40 border-b backdrop-blur-sm">
         <Container className="relative flex h-[4.5rem] items-center justify-between gap-6">
           <Link href={localizedPath(locale, { route: "home" })} className="shrink-0" aria-label={`MSLAB — ${dict.nav.home}`}>
-            <Wordmark />
+            <Wordmark intro />
           </Link>
 
           {/* Path-aware client parts are wrapped in Suspense: on routes whose URL is only known
