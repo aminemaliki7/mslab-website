@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 32" width="672" height="128" role="img" aria-labelledby="t">
+  <title id="t">MSLAB</title>
+  <path fill="#0E1A2B" d="M6 0H24L32 8V26A6 6 0 0 1 26 32H6A6 6 0 0 1 0 26V6A6 6 0 0 1 6 0Z"/>
+  <path fill="#0B6E8A" d="M24 0V6A2 2 0 0 0 26 8H32Z"/>
+  <path fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" d="M8.5 23.5V10.5L16 18L23.5 10.5V23.5"/>
+  <!-- Wordmark. On the website it is rendered as live text in Geist; this file is for documents and partners. -->
+  <text x="42" y="24" fill="#0E1A2B" font-family="Geist, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">MSLAB</text>
+</svg>

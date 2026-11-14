@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "siteName": "MSLAB",
+    "defaultDescription": "MSLAB, entreprise marocaine : impression et services d'impression, fournitures de bureau et papeterie, livres et services aux entreprises."
+  },
+  "common": {
+    "skipToContent": "Aller au contenu",
+    "requestQuote": "Demander un devis",
+    "contactUs": "Nous contacter",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "language": "Langue",
+    "mainNavigation": "Navigation principale"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "catalog": "Catalogue",
+    "contact": "Contact"
+  },
+  "businessAreas": {
+    "printing": "Impression et services d'impression",
+    "office": "Fournitures de bureau et papeterie",
+    "books": "Livres et produits associés",
+    "b2b": "Services aux entreprises"
+  },
+  "footer": {
+    "about": "MSLAB est une entreprise marocaine spécialisée dans l'impression, les fournitures de bureau, la papeterie et les livres.",
+    "activities": "Activités",
+    "navigation": "Navigation",
+    "contact": "Contact",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "rights": "Tous droits réservés."
+  },
+  "whatsapp": {
+    "label": "Contacter MSLAB sur WhatsApp",
+    "prefill": "Bonjour MSLAB, je souhaite obtenir des informations."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "La page demandée n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'accueil",
+    "browseCatalog": "Voir le catalogue"
+  },
+  "sections": {
+    "breadcrumb": "Fil d'Ariane",
+    "learnMore": "En savoir plus",
+    "introTitle": "Qui sommes-nous",
+    "areasTitle": "Nos activités",
+    "areasServicesLink": "Voir les services",
+    "areasCatalogLink": "Voir le catalogue",
+    "featuredServicesTitle": "Nos services",
+    "allServices": "Tous les services",
+    "featuredProductsTitle": "Produits à la une",
+    "allProducts": "Voir tout le catalogue",
+    "whyTitle": "Pourquoi choisir MSLAB",
+    "ctaTitle": "Un projet d'impression, un besoin en fournitures ou en livres ?",
+    "ctaBody": "Envoyez-nous votre demande de devis ou contactez-nous directement.",
+    "ctaWhatsApp": "Écrire sur WhatsApp"
+  },
+  "about": {
+    "presentationTitle": "Présentation",
+    "missionTitle": "Notre mission",
+    "valuesTitle": "Nos valeurs",
+    "expertiseTitle": "Nos domaines d'activité",
+    "servicesListTitle": "Services proposés",
+    "infoTitle": "Informations sur l'entreprise",
+    "companyName": "Nom commercial",
+    "legalName": "Raison sociale",
+    "address": "Adresse",
+    "openingHours": "Horaires",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "map": "Voir sur la carte"
+  },
+  "servicesPage": {
+    "listTitle": "Nos services",
+    "empty": "Les services de MSLAB seront présentés ici prochainement. Pour toute demande, contactez-nous.",
+    "otherServices": "Autres services",
+    "askQuote": "Demander un devis pour ce service"
+  },
+  "product": {
+    "viewDetails": "Voir le produit",
+    "sku": "Réf.",
+    "noImage": "Image non disponible",
+    "requestQuote": "Demander un devis pour ce produit",
+    "specifications": "Caractéristiques",
+    "description": "Description",
+    "related": "Produits de la même catégorie",
+    "category": "Catégorie",
+    "imageNumber": "Image {n} sur {total}",
+    "quoteHint": "Indiquez les quantités et vos besoins dans la demande de devis. MSLAB vous recontacte."
+  },
+  "catalog": {
+    "searchLabel": "Rechercher un produit",
+    "searchPlaceholder": "Nom, référence…",
+    "categoryLabel": "Catégorie",
+    "allCategories": "Toutes les catégories",
+    "submit": "Rechercher",
+    "reset": "Réinitialiser",
+    "categoriesTitle": "Catégories",
+    "resultsCount": "{count} produit(s)",
+    "resultsFor": "Résultats pour « {q} »",
+    "noResults": "Aucun produit ne correspond à votre recherche.",
+    "noResultsHint": "Essayez un autre terme, ou décrivez votre besoin dans une demande de devis.",
+    "emptyCatalog": "Le catalogue sera bientôt disponible. Pour toute demande, contactez-nous ou demandez un devis.",
+    "pagination": "Pagination",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "pageOf": "Page {page} sur {total}",
+    "subcategories": "Sous-catégories"
+  },
+  "emails": {
+    "ackSubject": "MSLAB — votre demande {reference} a bien été reçue",
+    "ackGreeting": "Bonjour {name},",
+    "ackContactBody": "Nous avons bien reçu votre message. Notre équipe vous répondra dès que possible.",
+    "ackQuoteBody": "Nous avons bien reçu votre demande de devis. Notre équipe l'étudie et revient vers vous.",
+    "ackReference": "Référence : {reference}",
+    "ackFooter": "Ceci est un message automatique, merci de ne pas y répondre directement."
+  },
+  "forms": {
+    "required": "requis",
+    "optional": "facultatif",
+    "fullName": "Nom complet",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "phoneHint": "Exemple : 06 12 34 56 78 ou +212 6 12 34 56 78",
+    "company": "Entreprise",
+    "subject": "Objet",
+    "message": "Message",
+    "additionalRequirements": "Précisions complémentaires",
+    "preferredContact": "Moyen de contact préféré",
+    "contactMethods": {
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "whatsapp": "WhatsApp"
+    },
+    "consent": "J'accepte que MSLAB utilise ces informations pour traiter ma demande.",
+    "privacyLink": "Politique de confidentialité",
+    "honeypot": "Ne pas remplir ce champ",
+    "sending": "Envoi en cours…",
+    "errorSummary": "Le formulaire contient des erreurs. Vérifiez les champs signalés.",
+    "errors": {
+      "required": "Ce champ est requis.",
+      "too_short": "Ce texte est trop court.",
+      "too_long": "Ce texte est trop long.",
+      "invalid_email": "Adresse e-mail invalide.",
+      "invalid_phone": "Numéro de téléphone invalide.",
+      "consent_required": "Votre accord est nécessaire pour envoyer la demande.",
+      "invalid_quantity": "Quantité invalide (nombre entier, minimum 1).",
+      "no_items": "Ajoutez au moins un produit ou un besoin.",
+      "too_many_items": "Trop d'articles dans une même demande (maximum 50).",
+      "invalid_item": "Ce produit n'est plus disponible.",
+      "rate_limited": "Trop de demandes envoyées. Réessayez dans quelques minutes.",
+      "server_error": "L'envoi a échoué. Réessayez, ou contactez-nous par un autre moyen."
+    }
+  },
+  "contactPage": {
+    "formTitle": "Envoyer un message",
+    "submit": "Envoyer le message",
+    "successTitle": "Message envoyé",
+    "successBody": "Merci, votre message a bien été reçu.",
+    "successReference": "Référence de votre message : {reference}",
+    "sendAnother": "Envoyer un autre message",
+    "detailsTitle": "Coordonnées",
+    "whatsappCta": "Écrire sur WhatsApp",
+    "quoteCta": "Besoin d'un devis ? Utilisez la demande de devis détaillée."
+  },
+  "quotePage": {
+    "itemsTitle": "Produits et besoins",
+    "itemsHint": "Ajoutez des produits depuis le catalogue ou décrivez un besoin sur mesure (impression, fournitures…).",
+    "emptyList": "Votre demande ne contient encore aucun article.",
+    "browseCatalog": "Parcourir le catalogue",
+    "addCustom": "Ajouter un besoin sur mesure",
+    "customLabel": "Description du besoin",
+    "customPlaceholder": "Ex. : impression de flyers A5",
+    "quantity": "Quantité",
+    "specifications": "Spécifications (facultatif)",
+    "specificationsPlaceholder": "Format, couleur, papier, délai…",
+    "remove": "Retirer",
+    "customItem": "Besoin sur mesure",
+    "customerTitle": "Vos coordonnées",
+    "submit": "Envoyer la demande de devis",
+    "successTitle": "Demande de devis envoyée",
+    "successBody": "Merci ! Votre demande a bien été reçue. MSLAB vous recontactera.",
+    "successReference": "Référence de votre demande : {reference}",
+    "newRequest": "Faire une nouvelle demande",
+    "addToQuote": "Ajouter à ma demande de devis",
+    "addedToQuote": "Ajouté à votre demande",
+    "viewQuote": "Voir ma demande ({count})"
+  },
+  "legalPages": {
+    "pending": "Ce contenu est en cours de préparation par MSLAB.",
+    "contact": "Pour toute question concernant l’entreprise ou vos données personnelles, contactez-nous.",
+    "publisherTitle": "Éditeur du site"
+  },
+  "pages": {
+    "home": {
+      "title": "Impression, fournitures de bureau, papeterie et livres",
+      "description": "MSLAB, entreprise marocaine : impression et services d'impression, fournitures de bureau et papeterie, livres et services aux entreprises."
+    },
+    "about": {
+      "title": "À propos de MSLAB",
+      "description": "Découvrez MSLAB, entreprise marocaine spécialisée dans l'impression, les fournitures de bureau et les livres."
+    },
+    "services": {
+      "title": "Services",
+      "description": "Les services d'impression et services aux entreprises proposés par MSLAB."
+    },
+    "catalog": {
+      "title": "Catalogue",
+      "description": "Le catalogue MSLAB : fournitures de bureau, papeterie, livres et produits d'impression."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contactez MSLAB pour toute demande d'information."
+    },
+    "quote": {
+      "title": "Demande de devis",
+      "description": "Demandez un devis à MSLAB pour un ou plusieurs produits ou un besoin d'impression sur mesure."
+    },
+    "legal": {
+      "title": "Mentions légales",
+      "description": "Mentions légales du site MSLAB."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "description": "Comment MSLAB traite les données personnelles transmises via ce site."
+    }
+  }
+}

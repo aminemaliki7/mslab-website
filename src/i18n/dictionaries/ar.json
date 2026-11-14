@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "siteName": "MSLAB",
+    "defaultDescription": "MSLAB، شركة مغربية: الطباعة وخدمات الطباعة، اللوازم المكتبية والقرطاسية، الكتب وخدمات الشركات."
+  },
+  "common": {
+    "skipToContent": "الانتقال إلى المحتوى",
+    "requestQuote": "طلب عرض سعر",
+    "contactUs": "اتصل بنا",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "language": "اللغة",
+    "mainNavigation": "التنقل الرئيسي"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "services": "الخدمات",
+    "catalog": "الكتالوج",
+    "contact": "اتصل بنا"
+  },
+  "businessAreas": {
+    "printing": "الطباعة وخدمات الطباعة",
+    "office": "اللوازم المكتبية والقرطاسية",
+    "books": "الكتب والمنتجات المرتبطة بها",
+    "b2b": "خدمات الشركات"
+  },
+  "footer": {
+    "about": "MSLAB شركة مغربية متخصصة في الطباعة واللوازم المكتبية والقرطاسية والكتب.",
+    "activities": "الأنشطة",
+    "navigation": "التنقل",
+    "contact": "التواصل",
+    "legal": "الإشعار القانوني",
+    "privacy": "الخصوصية",
+    "rights": "جميع الحقوق محفوظة."
+  },
+  "whatsapp": {
+    "label": "تواصل مع MSLAB عبر واتساب",
+    "prefill": "مرحبًا MSLAB، أرغب في الحصول على معلومات."
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "body": "الصفحة المطلوبة غير موجودة أو تم نقلها.",
+    "backHome": "العودة إلى الرئيسية",
+    "browseCatalog": "تصفح الكتالوج"
+  },
+  "sections": {
+    "breadcrumb": "مسار التنقل",
+    "learnMore": "اعرف المزيد",
+    "introTitle": "من نحن",
+    "areasTitle": "أنشطتنا",
+    "areasServicesLink": "عرض الخدمات",
+    "areasCatalogLink": "عرض الكتالوج",
+    "featuredServicesTitle": "خدماتنا",
+    "allServices": "جميع الخدمات",
+    "featuredProductsTitle": "منتجات مميزة",
+    "allProducts": "عرض الكتالوج كاملاً",
+    "whyTitle": "لماذا تختار MSLAB",
+    "ctaTitle": "مشروع طباعة، أو حاجة إلى لوازم مكتبية أو كتب؟",
+    "ctaBody": "أرسلوا لنا طلب عرض السعر أو تواصلوا معنا مباشرة.",
+    "ctaWhatsApp": "راسلنا عبر واتساب"
+  },
+  "about": {
+    "presentationTitle": "تقديم",
+    "missionTitle": "مهمتنا",
+    "valuesTitle": "قيمنا",
+    "expertiseTitle": "مجالات نشاطنا",
+    "servicesListTitle": "الخدمات المقدمة",
+    "infoTitle": "معلومات عن الشركة",
+    "companyName": "الاسم التجاري",
+    "legalName": "الاسم القانوني",
+    "address": "العنوان",
+    "openingHours": "أوقات العمل",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "map": "عرض على الخريطة"
+  },
+  "servicesPage": {
+    "listTitle": "خدماتنا",
+    "empty": "سيتم عرض خدمات MSLAB هنا قريبًا. لأي طلب، تواصلوا معنا.",
+    "otherServices": "خدمات أخرى",
+    "askQuote": "طلب عرض سعر لهذه الخدمة"
+  },
+  "product": {
+    "viewDetails": "عرض المنتج",
+    "sku": "المرجع",
+    "noImage": "الصورة غير متوفرة",
+    "requestQuote": "طلب عرض سعر لهذا المنتج",
+    "specifications": "المواصفات",
+    "description": "الوصف",
+    "related": "منتجات من نفس الفئة",
+    "category": "الفئة",
+    "imageNumber": "الصورة {n} من {total}",
+    "quoteHint": "حدّدوا الكميات واحتياجاتكم في طلب عرض السعر، وسيتواصل معكم فريق MSLAB."
+  },
+  "catalog": {
+    "searchLabel": "البحث عن منتج",
+    "searchPlaceholder": "الاسم، المرجع…",
+    "categoryLabel": "الفئة",
+    "allCategories": "جميع الفئات",
+    "submit": "بحث",
+    "reset": "إعادة التعيين",
+    "categoriesTitle": "الفئات",
+    "resultsCount": "{count} منتج",
+    "resultsFor": "نتائج البحث عن «{q}»",
+    "noResults": "لا يوجد منتج يطابق بحثك.",
+    "noResultsHint": "جرّبوا كلمة أخرى، أو صِفوا حاجتكم في طلب عرض سعر.",
+    "emptyCatalog": "سيكون الكتالوج متاحًا قريبًا. لأي طلب، تواصلوا معنا أو اطلبوا عرض سعر.",
+    "pagination": "ترقيم الصفحات",
+    "previous": "السابق",
+    "next": "التالي",
+    "pageOf": "الصفحة {page} من {total}",
+    "subcategories": "الفئات الفرعية"
+  },
+  "emails": {
+    "ackSubject": "MSLAB — تم استلام طلبكم {reference}",
+    "ackGreeting": "مرحبًا {name}،",
+    "ackContactBody": "لقد توصلنا برسالتكم، وسيرد عليكم فريقنا في أقرب وقت ممكن.",
+    "ackQuoteBody": "لقد توصلنا بطلب عرض السعر الخاص بكم، وسيدرسه فريقنا ويعود إليكم.",
+    "ackReference": "المرجع: {reference}",
+    "ackFooter": "هذه رسالة آلية، يرجى عدم الرد عليها مباشرة."
+  },
+  "forms": {
+    "required": "مطلوب",
+    "optional": "اختياري",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "phoneHint": "مثال: 06 12 34 56 78 أو ‎+212 6 12 34 56 78",
+    "company": "الشركة",
+    "subject": "الموضوع",
+    "message": "الرسالة",
+    "additionalRequirements": "تفاصيل إضافية",
+    "preferredContact": "وسيلة التواصل المفضلة",
+    "contactMethods": {
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "whatsapp": "واتساب"
+    },
+    "consent": "أوافق على أن تستخدم MSLAB هذه المعلومات لمعالجة طلبي.",
+    "privacyLink": "سياسة الخصوصية",
+    "honeypot": "لا تملأ هذا الحقل",
+    "sending": "جارٍ الإرسال…",
+    "errorSummary": "يحتوي النموذج على أخطاء. يرجى مراجعة الحقول المشار إليها.",
+    "errors": {
+      "required": "هذا الحقل مطلوب.",
+      "too_short": "هذا النص قصير جدًا.",
+      "too_long": "هذا النص طويل جدًا.",
+      "invalid_email": "عنوان البريد الإلكتروني غير صالح.",
+      "invalid_phone": "رقم الهاتف غير صالح.",
+      "consent_required": "موافقتكم ضرورية لإرسال الطلب.",
+      "invalid_quantity": "كمية غير صالحة (عدد صحيح، 1 على الأقل).",
+      "no_items": "أضيفوا منتجًا واحدًا على الأقل أو حاجة خاصة.",
+      "too_many_items": "عدد كبير من العناصر في طلب واحد (50 كحد أقصى).",
+      "invalid_item": "هذا المنتج لم يعد متوفرًا.",
+      "rate_limited": "تم إرسال طلبات كثيرة. حاولوا مرة أخرى بعد بضع دقائق.",
+      "server_error": "فشل الإرسال. حاولوا مرة أخرى أو تواصلوا معنا بوسيلة أخرى."
+    }
+  },
+  "contactPage": {
+    "formTitle": "إرسال رسالة",
+    "submit": "إرسال الرسالة",
+    "successTitle": "تم إرسال الرسالة",
+    "successBody": "شكرًا، لقد توصلنا برسالتكم.",
+    "successReference": "مرجع رسالتكم: {reference}",
+    "sendAnother": "إرسال رسالة أخرى",
+    "detailsTitle": "معلومات الاتصال",
+    "whatsappCta": "راسلنا عبر واتساب",
+    "quoteCta": "تحتاجون إلى عرض سعر؟ استعملوا طلب عرض السعر المفصل."
+  },
+  "quotePage": {
+    "itemsTitle": "المنتجات والاحتياجات",
+    "itemsHint": "أضيفوا منتجات من الكتالوج أو صِفوا حاجة خاصة (طباعة، لوازم…).",
+    "emptyList": "لا يحتوي طلبكم على أي عنصر بعد.",
+    "browseCatalog": "تصفح الكتالوج",
+    "addCustom": "إضافة حاجة خاصة",
+    "customLabel": "وصف الحاجة",
+    "customPlaceholder": "مثال: طباعة مطويات A5",
+    "quantity": "الكمية",
+    "specifications": "المواصفات (اختياري)",
+    "specificationsPlaceholder": "المقاس، اللون، نوع الورق، الأجل…",
+    "remove": "حذف",
+    "customItem": "حاجة خاصة",
+    "customerTitle": "معلوماتكم",
+    "submit": "إرسال طلب عرض السعر",
+    "successTitle": "تم إرسال طلب عرض السعر",
+    "successBody": "شكرًا! لقد توصلنا بطلبكم، وسيتواصل معكم فريق MSLAB.",
+    "successReference": "مرجع طلبكم: {reference}",
+    "newRequest": "تقديم طلب جديد",
+    "addToQuote": "إضافة إلى طلب عرض السعر",
+    "addedToQuote": "تمت الإضافة إلى طلبكم",
+    "viewQuote": "عرض طلبي ({count})"
+  },
+  "legalPages": {
+    "pending": "هذا المحتوى قيد الإعداد من طرف MSLAB.",
+    "contact": "لأي سؤال يتعلق بالشركة أو ببياناتكم الشخصية، تواصلوا معنا.",
+    "publisherTitle": "ناشر الموقع"
+  },
+  "pages": {
+    "home": {
+      "title": "الطباعة، اللوازم المكتبية، القرطاسية والكتب",
+      "description": "MSLAB، شركة مغربية: الطباعة وخدمات الطباعة، اللوازم المكتبية والقرطاسية، الكتب وخدمات الشركات."
+    },
+    "about": {
+      "title": "من نحن",
+      "description": "تعرّف على MSLAB، شركة مغربية متخصصة في الطباعة واللوازم المكتبية والكتب."
+    },
+    "services": {
+      "title": "الخدمات",
+      "description": "خدمات الطباعة وخدمات الشركات التي تقدمها MSLAB."
+    },
+    "catalog": {
+      "title": "الكتالوج",
+      "description": "كتالوج MSLAB: اللوازم المكتبية والقرطاسية والكتب ومنتجات الطباعة."
+    },
+    "contact": {
+      "title": "اتصل بنا",
+      "description": "تواصل مع MSLAB لأي استفسار."
+    },
+    "quote": {
+      "title": "طلب عرض سعر",
+      "description": "اطلب عرض سعر من MSLAB لمنتج أو عدة منتجات أو لحاجة طباعة خاصة."
+    },
+    "legal": {
+      "title": "الإشعار القانوني",
+      "description": "الإشعار القانوني لموقع MSLAB."
+    },
+    "privacy": {
+      "title": "سياسة الخصوصية",
+      "description": "كيف تعالج MSLAB البيانات الشخصية المرسلة عبر هذا الموقع."
+    }
+  }
+}

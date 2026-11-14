@@ -1,5 +1,20 @@
 # Development Roadmap
 
+## Phase 2 MVP milestones (current — supersedes the phase list below where they differ)
+| M | Scope | Status |
+|---|---|---|
+| M1 | Architecture conflicts resolved (ADR-009…018), design system, i18n routing + proxy, global layout & navigation | Done (branch `feat/foundation`) |
+| M2 | Supabase migrations, RLS, storage policies, typed data access, seed strategy (moved before catalog — ADR-016) | Done on `mslab-dev` (branch `feat/foundation`) |
+| M3 | Homepage, About, Services pages | Done (branch `feat/foundation`) |
+| M4 | Catalog, product details, search, filtering, pagination, related products | Done (branch `feat/foundation`) |
+| M5 | Quotation workflow (multi-product, custom items), contact system, notifications | Done (branch `feat/foundation`; email provider not chosen → delivery disabled) |
+| M6 | Admin auth, dashboard, products, categories, services, quotations, inquiries, settings | Built (branch `feat/foundation`); signed-in flows await the first admin account |
+| M7 | Translation completion and full RTL audit (routing already in M1) | Done (branch `feat/foundation`); Arabic/English UI copy still needs native review; visual RTL pass pending a visible browser |
+| M8 | SEO, accessibility, performance, security, Playwright suites (desktop/tablet/mobile) | Pending |
+| M9 | Production readiness review, Vercel preparation (no deploy without approval) | Pending |
+
+---
+
 Each phase ends with a reviewed PR to `main`, a green build, and a Vercel preview. Phases 2+ assume the Phase 1 decisions are approved.
 
 ```mermaid

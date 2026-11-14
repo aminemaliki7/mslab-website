@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * MSLAB design tokens — see docs/DESIGN_SYSTEM.md.
+ * Palette is PROVISIONAL (ADR-018): replace the raw ink/paper/accent values when the
+ * MSLAB logo and brand colors are supplied. Components use semantic tokens only.
+ */
+@theme {
+  /* Raw palette */
+  --color-ink-950: #08111d;
+  --color-ink-900: #0e1a2b;
+  --color-ink-800: #1b2a40;
+  --color-ink-700: #2a3a52;
+  --color-slate-500: #5b6779;
+  --color-slate-400: #8a93a1;
+  --color-line-300: #c9c6bc;
+  --color-line-200: #e3e1da;
+  --color-paper-100: #efede6;
+  --color-paper-50: #f7f6f2;
+  --color-cyan-700: #0b6e8a;
+  --color-cyan-800: #085870;
+  --color-cyan-50: #e7f2f5;
+
+  /* Semantic tokens (use these in components) */
+  --color-fg: var(--color-ink-900);
+  --color-fg-muted: var(--color-slate-500);
+  --color-fg-subtle: var(--color-slate-400);
+  --color-bg: #ffffff;
+  --color-surface: var(--color-paper-50);
+  --color-surface-strong: var(--color-paper-100);
+  --color-line: var(--color-line-200);
+  --color-line-strong: var(--color-line-300);
+  --color-primary: var(--color-ink-900);
+  --color-primary-hover: var(--color-ink-700);
+  --color-on-primary: #ffffff;
+  --color-accent: var(--color-cyan-700);
+  --color-accent-hover: var(--color-cyan-800);
+  --color-accent-soft: var(--color-cyan-50);
+  --color-focus: var(--color-cyan-700);
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecea;
+  --color-success: #1e7a46;
+  --color-success-soft: #e8f4ec;
+  --color-warning: #8a5a00;
+  --color-warning-soft: #fdf3dc;
+
+  /* Typography — variables are injected by next/font in app/[lang]/layout.tsx */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Shape & motion */
+  --radius-control: 6px;
+  --radius-card: 10px;
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Arabic: dedicated font and more generous leading */
+  :lang(ar) body,
+  [lang="ar"] {
+    font-family: var(--font-arabic);
+    line-height: 1.8;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-accent-soft);
+    color: var(--color-fg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

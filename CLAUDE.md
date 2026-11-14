@@ -12,7 +12,7 @@ The primary business goal is to **generate qualified B2B inquiries** and make MS
 
 ## 1. Non-negotiable rules
 
-1. **Never invent business information.** No made-up prices, phone numbers, addresses, statistics, client logos, testimonials, certifications, years of experience or services. If content is missing, use an explicit placeholder from `src/config/business.ts` (planned) marked `TODO(content)` and list it in `docs/PROJECT_OVERVIEW.md` → *Missing information*.
+1. **Never invent business information.** No made-up prices, phone numbers, addresses, statistics, client logos, testimonials, certifications, years of experience or services. Company facts come from the `site_settings` table (edited in `/admin/settings`, ADR-014); when a value is empty, hide the element — never render a placeholder value. Mark gaps in code as `TODO(content)` and list them in `docs/PROJECT_OVERVIEW.md` → *Missing information*.
 2. **This is Next.js 16.4 — not the version in your training data.** Before using any Next.js API, read the matching guide in `node_modules/next/dist/docs/`. Notable differences: `proxy.ts` (not `middleware.ts`), `cacheComponents` + `'use cache'`, `next/root-params`, `updateTag`, `catchError`, `PageProps`/`LayoutProps` global helpers, async `params`/`searchParams`/`cookies()`/`headers()`.
 3. **Secrets never reach the client.** Only `NEXT_PUBLIC_*` variables may be read in Client Components. Never print, log, commit or paste secret values. `.env*` is git-ignored — keep it that way.
 4. **Every Supabase table has RLS enabled.** No table ships without policies reviewed against `docs/DATABASE_SCHEMA.md`.

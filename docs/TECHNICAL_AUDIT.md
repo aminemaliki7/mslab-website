@@ -101,6 +101,9 @@ Read from `node_modules/next/dist/docs/` (these supersede general knowledge):
 
 Nothing is deleted in Phase 1; the template is replaced deliberately in Phase 2 with justification in the PR.
 
+## 8a. Observed during development (M7)
+OneDrive converted generated folders in `.next/` into cloud placeholders (reparse points); `next build` then fails with `EPERM: operation not permitted, unlink '.next/...'`. Workaround used: delete `.next/` (except `.next/dev` while a dev server runs) with `rmdir /s /q`, then rebuild. **Fix: move the repository out of OneDrive** (e.g. `C:\dev\mslab-website`) or exclude the folder from sync.
+
 ## 8. Findings requiring action
 1. **Make the first commit** of the scaffold + Phase 1 docs so later changes are reviewable.
 2. **Flatten or relocate the repo** (nested same-name folder inside OneDrive). Recommended: move to a non-synced path (e.g. `C:\dev\mslab-website`).

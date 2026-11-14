@@ -41,6 +41,15 @@ Every arrow into Supabase is subject to RLS or a hardened definer function; noth
 - Session-dependent UI rendered behind `<Suspense>`; never cached with `'use cache'` (use `'use cache: private'` only if needed).
 - Logout clears the session server-side.
 
+### Implemented in M6
+- `proxy.ts` refreshes Supabase cookies for `/admin/*` only and adds `X-Robots-Tag: noindex, nofollow`.
+- `features/admin/auth.ts`: `getAdmin()` (React `cache`) = `auth.getUser()` + active `admin_profiles` row; `requireAdmin()` is called by the panel layout **and** by every admin page and server action.
+- Login (`signIn`): one generic error for every failure; a valid non-admin account is signed out immediately. No registration page exists.
+- Uploads: real type detected from file bytes (JPEG/PNG/WebP/AVIF), 5 MB max, server-generated paths, Storage RLS enforces admin + folder.
+- Admin search terms are sanitized before PostgREST `or()` filters (`features/admin/search.ts`).
+- Verified without credentials: all 15 admin URLs redirect to `/admin/login` with no data in the HTML; DB role checks for settings, quotation notes/status, image rows, immutable quote items.
+- Not yet verified: signed-in flows (needs an admin account — see DATABASE_SCHEMA §7). Password reset is done from the Supabase dashboard for now.
+
 ## 3. Row Level Security
 - Enabled on all `public` tables; per-command policies; see `DATABASE_SCHEMA.md` §5.
 - `security definer` functions: `set search_path = ''`, fully-qualified names, minimal grants, input validation inside.
@@ -68,6 +77,9 @@ Every arrow into Supabase is subject to RLS or a hardened definer function; noth
 - Phone normalization to E.164; emails lower-cased and validated.
 
 ## 5. Anti-spam for public forms
+
+_Implemented in M5_ (`features/inquiries/actions.ts`): honeypot field `website` and min fill time (3 s, set client-side as `startedAt`; absent without JS) → **silent drop** with a generic success; Zod validation (`schema.ts`, unit-tested); per-IP-hash rate limit + idempotent `submissionId` inside the RPCs; RPCs callable only with the server key. The client IP is read from `x-forwarded-for` / `x-real-ip`, which is trustworthy on Vercel (set by the platform) but spoofable when self-hosted without a proxy — revisit if hosting changes. Notification outcomes are written back through `record_submission_notification` (same key guard).
+
 1. Honeypot field (visually hidden, `tabindex=-1`, `autocomplete=off`).
 2. Signed render timestamp (HMAC with server secret) — reject submissions faster than 3 s or older than 24 h.
 3. `ip_hash = sha256(ip ‖ IP_HASH_SALT)` rate limit inside `submit_inquiry`.

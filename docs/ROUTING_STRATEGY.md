@@ -89,6 +89,9 @@ flowchart TD
 - Language switcher: needs the route key and, for entity pages, all available translated slugs (fetched with the entity).
 
 ## 6. Search & filter URLs
+
+_Implemented in M4:_ `features/catalog/search-params.ts` (Zod, invalid values silently dropped), GET form (works without JS), results streamed inside `<Suspense>` because `searchParams` is request-time data. `?q=` and `?category=` on the index emit `noindex, follow`; category pages are the canonical, indexable way to browse a category. A selected parent category includes its child categories' products. Search matches names (all locales), SKU and short descriptions via the trigram-indexed `search_text` column.
+
 `/fr/catalogue?q=ramette&category=<uuid>&availability=in_stock&page=2`
 - Validated with Zod; invalid values ignored.
 - Pages with `q` are `noindex, follow`; category pages are canonical without query params; pagination pages canonical to themselves.
@@ -109,5 +112,11 @@ Every indexable page: canonical + `alternates.languages` (fr, ar, en, x-default�
 
 ## 8. Redirects & errors
 - Slug change on a published entity → entry in `slug_redirects` (Phase 4) consulted by the entity page before `notFound()` → `permanentRedirect()`.
-- Unknown locale → 404 (not redirect) to avoid soft-404 chains.
+- Unknown first segment (e.g. `/de`) is treated as an unprefixed path: one 307 to the negotiated locale, then a real 404 from the localized catch-all (`app/[lang]/(site)/[...rest]`). Proxy cannot tell a mistyped locale from a legitimate unprefixed link such as `/contact`.
+- URLs outside every root layout fall back to `app/global-not-found.tsx` (`experimental.globalNotFound`).
+- **Entity pages (services, later products/categories)** prerender every published slug (`generateStaticParams`; a `__none__` placeholder keeps the build valid when none exist). Slugs created after the build render on first request. For those runtime renders Next.js has already started streaming, so:
+  - unknown slug → localized not-found UI + `noindex`, but HTTP **200** (documented Next.js behavior);
+  - another locale's slug (e.g. `/en/services/<french-slug>`) → `permanentRedirect` delivered as client redirect + `<meta http-equiv="refresh" content="0">`, HTTP 200.
+  Prebuilt slugs get real status codes. Revisit in M8 if crawl reports show issues.
+- **Language switcher** reads the page's own `<link rel="alternate" hreflang>` tags, so entity pages with per-locale slugs switch to the correct translated URL without extra wiring.
 - Localized `not-found.tsx` with links to catalog and contact.

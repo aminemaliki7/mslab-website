@@ -154,6 +154,19 @@ Clean module boundaries; reusable primitives; strict TS; Server Components by de
 | ADR-003 | 2026-11-14 | Localized URL segments via typed route map + proxy rewrites | Proposed (Arabic segment script open) |
 | ADR-004 | 2026-11-14 | Two root layouts: `app/[lang]` (public) and `app/admin` (back office) | Proposed |
 | ADR-005 | 2026-11-14 | Public inquiries only via `submit_inquiry` SECURITY DEFINER RPC | Proposed |
-| ADR-006 | 2026-11-14 | Services content in dictionaries for v1 (not DB) | Proposed |
-| ADR-007 | 2026-11-14 | No public prices in catalog until MSLAB defines policy | Proposed |
-| ADR-008 | 2026-11-14 | Email provider TBD; integrate via HTTP API in `after()` | Open |
+| ADR-006 | 2026-11-14 | ~~Services content in dictionaries for v1~~ → superseded by ADR-012 | Superseded |
+| ADR-007 | 2026-11-14 | No public prices in catalog until MSLAB defines policy | Accepted |
+| ADR-008 | 2026-11-14 | Email provider TBD; integrate via HTTP API in `after()` behind a provider-agnostic interface (dev driver logs only) | Accepted (provider open) |
+| ADR-009 | 2026-11-14 | Table names follow the Phase 2 brief: `admin_profiles`, `categories`, `products`, `product_images`, `services`, `inquiries` (contact only), `quotation_requests`, `quotation_items`, plus `site_settings` | Accepted |
+| ADR-010 | 2026-11-14 | Localized content stored as per-locale columns (`name_fr` required, `name_ar`/`name_en` optional, per-locale slugs) instead of translation tables; public fallback to French | Accepted |
+| ADR-011 | 2026-11-14 | Product lifecycle `status` = `draft \| published \| archived`; availability removed from MVP (never invented) | Accepted |
+| ADR-012 | 2026-11-14 | Services are DB-managed with admin CRUD | Accepted |
+| ADR-013 | 2026-11-14 | Separate status vocabularies: quotations `new, in_review, contacted, quoted, accepted, rejected, closed`; contact inquiries `new, read, replied, closed, spam` (+ `read_at`) | Accepted |
+| ADR-014 | 2026-11-14 | Company details live in a `site_settings` singleton editable in `/admin/settings`; empty fields are hidden publicly | Accepted |
+| ADR-015 | 2026-11-14 | Admin UI in French; Arabic input fields render `dir="rtl"`; full Arabic admin UI deferred | Accepted |
+| ADR-016 | 2026-11-14 | i18n routing built in Milestone 1 (not M7); database (M2) precedes catalog (M3) | Accepted |
+| ADR-017 | 2026-11-14 | Multi-product quotes use a client-side "quote list" (localStorage) feeding the quotation form — not a cart, no checkout | Accepted |
+| ADR-018 | 2026-11-14 | "Ink & paper" palette as semantic tokens; Geist (Latin) + IBM Plex Sans Arabic | Accepted |
+| ADR-019 | 2026-11-14 | Original SVG logo (folded sheet + "M" monogram, ink/cyan) created at the owner's request; used in header, footer, admin and favicon | Accepted (approved by the owner 2026-11-14; trademark check recommended before print use) |
+
+> **Phase 2 note:** ADR-009 to ADR-014 change the data model described in `DATABASE_SCHEMA.md`. That document is rewritten together with the migrations in Milestone 2; where it conflicts with these ADRs, the ADRs win.
