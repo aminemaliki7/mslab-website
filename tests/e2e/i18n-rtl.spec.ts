@@ -2,9 +2,9 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, isMobile, LOCALES, watchConsole } from "./helpers";
 
 const PAGES: Record<(typeof LOCALES)[number], string[]> = {
-  fr: ["/fr", "/fr/a-propos", "/fr/services", "/fr/services/impression-reprographie", "/fr/catalogue", "/fr/catalogue/exemple-papeterie", "/fr/produits/exemple-cahier", "/fr/contact", "/fr/devis", "/fr/mentions-legales"],
-  ar: ["/ar", "/ar/a-propos", "/ar/services", "/ar/services/impression-reprographie", "/ar/catalogue", "/ar/catalogue/exemple-papeterie", "/ar/produits/exemple-cahier", "/ar/contact", "/ar/devis", "/ar/confidentialite"],
-  en: ["/en", "/en/about", "/en/services", "/en/services/printing-reprographics", "/en/catalog", "/en/catalog/exemple-stationery", "/en/products/exemple-notebook", "/en/contact", "/en/quote", "/en/legal-notice"],
+  fr: ["/fr", "/fr/a-propos", "/fr/services", "/fr/services/impression-reprographie", "/fr/services/impression-a-la-demande", "/fr/suivi-commande", "/fr/catalogue", "/fr/catalogue/exemple-papeterie", "/fr/produits/exemple-cahier", "/fr/contact", "/fr/devis", "/fr/mentions-legales"],
+  ar: ["/ar", "/ar/a-propos", "/ar/services", "/ar/services/impression-reprographie", "/ar/services/impression-a-la-demande", "/ar/suivi-commande", "/ar/catalogue", "/ar/catalogue/exemple-papeterie", "/ar/produits/exemple-cahier", "/ar/contact", "/ar/devis", "/ar/confidentialite"],
+  en: ["/en", "/en/about", "/en/services", "/en/services/printing-reprographics", "/en/services/print-on-demand", "/en/order-tracking", "/en/catalog", "/en/catalog/exemple-stationery", "/en/products/exemple-notebook", "/en/contact", "/en/quote", "/en/legal-notice"],
 };
 
 for (const locale of LOCALES) {

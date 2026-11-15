@@ -20,6 +20,7 @@
   --color-cyan-700: #0b6e8a;
   --color-cyan-800: #085870;
   --color-cyan-50: #e7f2f5;
+  --color-cyan-300: #5ba7bc; /* accent text on dark ink (6.4:1) */
 
   /* Semantic tokens (use these in components) */
   --color-fg: var(--color-ink-900);
@@ -143,6 +144,10 @@
   70% { transform: rotate3d(1, 1, 0, 14deg); }
   100% { transform: none; }
 }
+@keyframes mslab-crop-mark-enter {
+  from { transform: scale(0.65); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
 @layer components {
   /* SVG parts animate around their own box. */
   .anim-float,
@@ -165,6 +170,13 @@
   }
   [dir="rtl"] .anim-grow-x { transform-origin: right center; }
 
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-crop-mark { opacity: 0; animation: mslab-crop-mark-enter 0.35s var(--ease-out-soft) both; }
+    .hero-crop-mark-2 { animation-delay: 0.07s; }
+    .hero-crop-mark-3 { animation-delay: 0.14s; }
+    .hero-crop-mark-4 { animation-delay: 0.21s; }
+  }
+
   /* Header logo intro, once per visit: <html class="logo-intro"> is set by an inline script
      in app/[lang]/layout.tsx before first paint. Without the class the logo is static. */
   .logo-corner-front,
@@ -173,19 +185,22 @@
     transform-origin: 28px 4px; /* middle of the fold line (24,0)–(32,8) */
   }
   .logo-corner-front { opacity: 0; }
-  .logo-corner-flap { transition: transform 0.35s var(--ease-out-soft); }
+  .logo-corner-flap { transition: transform 0.35s var(--ease-out-soft), filter 0.35s var(--ease-out-soft); }
   .logo-corner-flap-front,
   .logo-corner-flap-back { transition: opacity 0.14s ease 0.14s; }
   .logo-corner-flap-back { opacity: 0; }
+  .logo-lockup:hover .logo-corner-flap,
+  a:focus-visible .logo-lockup .logo-corner-flap {
+    transform: perspective(48px) rotate3d(1, 1, 0, -145deg) translateZ(2px);
+    filter: drop-shadow(0 1px 1px rgb(8 17 29 / 0.45));
+  }
+  .logo-lockup:hover .logo-corner-flap-front,
+  a:focus-visible .logo-lockup .logo-corner-flap-front { opacity: 0; }
+  .logo-lockup:hover .logo-corner-flap-back,
+  a:focus-visible .logo-lockup .logo-corner-flap-back { opacity: 1; }
   @media (prefers-reduced-motion: no-preference) {
     .logo-intro .logo-corner-front { animation: mslab-corner-front 0.35s ease-in 0.45s both; }
     .logo-intro .logo-corner-flap { animation: mslab-corner-flap 0.5s var(--ease-out-soft) 0.8s backwards; }
-    .logo-lockup:hover .logo-corner-flap,
-    a:focus-visible .logo-lockup .logo-corner-flap { transform: rotate3d(1, 1, 0, -145deg); }
-    .logo-lockup:hover .logo-corner-flap-front,
-    a:focus-visible .logo-lockup .logo-corner-flap-front { opacity: 0; }
-    .logo-lockup:hover .logo-corner-flap-back,
-    a:focus-visible .logo-lockup .logo-corner-flap-back { opacity: 1; }
   }
 
   @media (prefers-reduced-motion: no-preference) {

@@ -25,7 +25,7 @@ export default async function QuotationsAdminPage({ searchParams }: PageProps<"/
 
   let query = db
     .from("quotation_requests")
-    .select("id, reference, full_name, company_name, email, status, created_at, notification_error, quotation_items(count)")
+    .select("id, reference, kind, full_name, company_name, email, status, created_at, notification_error, quotation_items(count)")
     .order("created_at", { ascending: false })
     .limit(100);
   if (status) query = query.eq("status", status);
@@ -45,6 +45,7 @@ export default async function QuotationsAdminPage({ searchParams }: PageProps<"/
                 <Link href={`/admin/quotations/${r.id}`} className="hover:text-accent font-[family-name:var(--font-geist-mono)] font-medium">
                   {r.reference}
                 </Link>
+                {r.kind === "custom" ? <p className="text-accent text-xs font-semibold">Impression à la demande</p> : null}
                 {r.notification_error ? <p className="text-warning text-xs">E-mail non envoyé</p> : null}
               </Td>
               <Td>

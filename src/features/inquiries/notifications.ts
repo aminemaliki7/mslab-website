@@ -111,3 +111,45 @@ export async function notifyQuote(input: QuoteInput, reference: string, productN
     () => acknowledge(input.locale, input.email, input.fullName, reference, "quote"),
   );
 }
+
+/** Print-on-demand request (custom production): same pipeline as a quote. */
+export async function notifyCustomRequest(
+  input: Pick<QuoteInput, "fullName" | "companyName" | "email" | "phone" | "preferredContact" | "locale"> & {
+    projectType: string;
+    description: string;
+    quantity: number;
+    dimensions: string | null;
+    material: string | null;
+    deadline: string | null;
+  },
+  reference: string,
+) {
+  const text = [
+    `Nouvelle demande d'impression à la demande — ${reference}`,
+    "",
+    `Nom : ${input.fullName}`,
+    `Entreprise : ${input.companyName ?? "—"}`,
+    `E-mail : ${input.email}`,
+    `Téléphone : ${input.phone}`,
+    `Contact préféré : ${input.preferredContact}`,
+    `Langue : ${input.locale}`,
+    "",
+    `Projet : ${input.projectType}`,
+    `Quantité : ${input.quantity}`,
+    `Dimensions : ${input.dimensions ?? "—"}`,
+    `Matière : ${input.material ?? "—"}`,
+    `Date souhaitée : ${input.deadline ?? "—"}`,
+    "",
+    input.description,
+    "",
+    "Fichiers et finitions : voir l'administration.",
+    `Administration : ${siteUrl}/admin/quotations?ref=${encodeURIComponent(reference)}`,
+  ].join("\n");
+
+  await deliver(
+    "quote",
+    reference,
+    { subject: `[MSLAB] Impression à la demande ${reference}`, text, replyTo: input.email },
+    () => acknowledge(input.locale, input.email, input.fullName, reference, "quote"),
+  );
+}

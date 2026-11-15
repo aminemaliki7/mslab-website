@@ -16,6 +16,9 @@ export const quotationStatus: Record<Enums["quotation_status"], { label: string;
   contacted: { label: "Client contacté", tone: "warning" },
   quoted: { label: "Devis envoyé", tone: "accent" },
   accepted: { label: "Acceptée", tone: "success" },
+  in_production: { label: "En production", tone: "warning" },
+  ready: { label: "Prête", tone: "success" },
+  delivered: { label: "Livrée / remise", tone: "success" },
   rejected: { label: "Refusée", tone: "danger" },
   closed: { label: "Clôturée", tone: "neutral" },
 };

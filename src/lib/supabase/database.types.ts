@@ -110,6 +110,59 @@ export type Database = {
           },
         ]
       }
+      custom_request_details: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          depth: number | null
+          description: string
+          dimension_unit: string
+          finishings: string[]
+          height: number | null
+          material: string | null
+          project_type: string
+          quantity: number
+          quotation_request_id: string
+          width: number | null
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          depth?: number | null
+          description: string
+          dimension_unit?: string
+          finishings?: string[]
+          height?: number | null
+          material?: string | null
+          project_type: string
+          quantity: number
+          quotation_request_id: string
+          width?: number | null
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          depth?: number | null
+          description?: string
+          dimension_unit?: string
+          finishings?: string[]
+          height?: number | null
+          material?: string | null
+          project_type?: string
+          quantity?: number
+          quotation_request_id?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_request_details_quotation_request_id_fkey"
+            columns: ["quotation_request_id"]
+            isOneToOne: true
+            referencedRelation: "quotation_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiries: {
         Row: {
           consent: boolean
@@ -173,6 +226,72 @@ export type Database = {
         }
         Relationships: []
       }
+      mockup_products: {
+        Row: {
+          is_active: boolean
+          key: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          is_active?: boolean
+          key: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          is_active?: boolean
+          key?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      portfolio_items: {
+        Row: {
+          caption_ar: string | null
+          caption_en: string | null
+          caption_fr: string | null
+          created_at: string
+          id: string
+          image_path: string | null
+          sort_order: number
+          status: Database["public"]["Enums"]["content_status"]
+          title_ar: string | null
+          title_en: string | null
+          title_fr: string
+          updated_at: string
+        }
+        Insert: {
+          caption_ar?: string | null
+          caption_en?: string | null
+          caption_fr?: string | null
+          created_at?: string
+          id?: string
+          image_path?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["content_status"]
+          title_ar?: string | null
+          title_en?: string | null
+          title_fr: string
+          updated_at?: string
+        }
+        Update: {
+          caption_ar?: string | null
+          caption_en?: string | null
+          caption_fr?: string | null
+          created_at?: string
+          id?: string
+          image_path?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["content_status"]
+          title_ar?: string | null
+          title_en?: string | null
+          title_fr?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_images: {
         Row: {
           alt_ar: string | null
@@ -222,6 +341,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      production_options: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          kind: Database["public"]["Enums"]["production_option_kind"]
+          name_ar: string | null
+          name_en: string | null
+          name_fr: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind: Database["public"]["Enums"]["production_option_kind"]
+          name_ar?: string | null
+          name_en?: string | null
+          name_fr: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind?: Database["public"]["Enums"]["production_option_kind"]
+          name_ar?: string | null
+          name_en?: string | null
+          name_fr?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       products: {
         Row: {
@@ -319,6 +474,44 @@ export type Database = {
           },
         ]
       }
+      quotation_files: {
+        Row: {
+          created_at: string
+          id: string
+          mime_type: string | null
+          original_name: string
+          quotation_request_id: string
+          size_bytes: number | null
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mime_type?: string | null
+          original_name: string
+          quotation_request_id: string
+          size_bytes?: number | null
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mime_type?: string | null
+          original_name?: string
+          quotation_request_id?: string
+          size_bytes?: number | null
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotation_files_quotation_request_id_fkey"
+            columns: ["quotation_request_id"]
+            isOneToOne: false
+            referencedRelation: "quotation_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quotation_items: {
         Row: {
           created_at: string
@@ -381,6 +574,7 @@ export type Database = {
           id: string
           internal_notes: string | null
           ip_hash: string | null
+          kind: Database["public"]["Enums"]["request_kind"]
           locale: string
           message: string | null
           notification_error: string | null
@@ -404,6 +598,7 @@ export type Database = {
           id?: string
           internal_notes?: string | null
           ip_hash?: string | null
+          kind?: Database["public"]["Enums"]["request_kind"]
           locale?: string
           message?: string | null
           notification_error?: string | null
@@ -427,6 +622,7 @@ export type Database = {
           id?: string
           internal_notes?: string | null
           ip_hash?: string | null
+          kind?: Database["public"]["Enums"]["request_kind"]
           locale?: string
           message?: string | null
           notification_error?: string | null
@@ -446,6 +642,35 @@ export type Database = {
             columns: ["assigned_to"]
             isOneToOne: false
             referencedRelation: "admin_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotation_status_events: {
+        Row: {
+          created_at: string
+          id: number
+          quotation_request_id: string
+          status: Database["public"]["Enums"]["quotation_status"]
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          quotation_request_id: string
+          status: Database["public"]["Enums"]["quotation_status"]
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          quotation_request_id?: string
+          status?: Database["public"]["Enums"]["quotation_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotation_status_events_quotation_request_id_fkey"
+            columns: ["quotation_request_id"]
+            isOneToOne: false
+            referencedRelation: "quotation_requests"
             referencedColumns: ["id"]
           },
         ]
@@ -652,6 +877,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_upload_ticket: {
+        Args: { ip_hash: string | null; submission_key: string }
+        Returns: string
+      }
       record_submission_notification: {
         Args: { error_message: string | null; kind: string; reference: string; submission_key: string }
         Returns: undefined
@@ -660,9 +889,17 @@ export type Database = {
         Args: { payload: Json; submission_key: string }
         Returns: string
       }
+      submit_custom_request: {
+        Args: { payload: Json; submission_key: string }
+        Returns: string
+      }
       submit_quotation_request: {
         Args: { payload: Json; submission_key: string }
         Returns: string
+      }
+      track_quotation: {
+        Args: { ip_hash: string | null; p_email: string; p_reference: string; submission_key: string }
+        Returns: Json
       }
     }
     Enums: {
@@ -670,14 +907,19 @@ export type Database = {
       contact_method: "email" | "phone" | "whatsapp"
       content_status: "draft" | "published" | "archived"
       inquiry_status: "new" | "read" | "replied" | "closed" | "spam"
+      production_option_kind: "material" | "finishing"
       quotation_status:
         | "new"
         | "in_review"
         | "contacted"
         | "quoted"
         | "accepted"
+        | "in_production"
+        | "ready"
+        | "delivered"
         | "rejected"
         | "closed"
+      request_kind: "catalog" | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -809,15 +1051,20 @@ export const Constants = {
       contact_method: ["email", "phone", "whatsapp"],
       content_status: ["draft", "published", "archived"],
       inquiry_status: ["new", "read", "replied", "closed", "spam"],
+      production_option_kind: ["material", "finishing"],
       quotation_status: [
         "new",
         "in_review",
         "contacted",
         "quoted",
         "accepted",
+        "in_production",
+        "ready",
+        "delivered",
         "rejected",
         "closed",
       ],
+      request_kind: ["catalog", "custom"],
     },
   },
 } as const

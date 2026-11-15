@@ -11,6 +11,7 @@ const ITEMS = [
   { href: "/admin/products", label: "Produits" },
   { href: "/admin/categories", label: "Catégories" },
   { href: "/admin/services", label: "Services" },
+  { href: "/admin/print-on-demand", label: "Impression à la demande" },
   { href: "/admin/settings", label: "Paramètres" },
 ];
 

@@ -35,6 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: "catalog" },
     { route: "contact" },
     { route: "quote" },
+    { route: "track" },
   ];
   if (settings.legalNotice.fr) staticKeys.push({ route: "legal" });
   if (settings.privacyPolicy.fr) staticKeys.push({ route: "privacy" });

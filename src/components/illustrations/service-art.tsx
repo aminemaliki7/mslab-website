@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { BusinessSupplyIllustration, LibraryIllustration, PrintShopIllustration, StationeryIllustration } from "./scenes";
+import { BusinessSupplyIllustration, LibraryIllustration, PrintOnDemandIllustration, PrintShopIllustration, StationeryIllustration } from "./scenes";
 
 /**
  * Picture for each of MSLAB's four core services, keyed by the service's French slug
@@ -11,10 +11,14 @@ export const SERVICE_ART: Record<string, ComponentType<{ className?: string }>> 
   "fournitures-de-bureau": BusinessSupplyIllustration,
   "papeterie-fournitures-scolaires": StationeryIllustration,
   "livres-ouvrages": LibraryIllustration,
+  "impression-a-la-demande": PrintOnDemandIllustration,
 };
 
 /** The four core services in display order (homepage picture cards). */
-export const CORE_SERVICE_SLUGS = Object.keys(SERVICE_ART);
+export const CORE_SERVICE_SLUGS = ["impression-reprographie", "fournitures-de-bureau", "papeterie-fournitures-scolaires", "livres-ouvrages"];
+
+/** French slug of the print-on-demand service (dedicated page with gallery, form and tracking). */
+export const PRINT_ON_DEMAND_SLUG = "impression-a-la-demande";
 
 export function ServiceArt({ slugFr, className }: { slugFr: string; className?: string }) {
   const Art = SERVICE_ART[slugFr];

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
 import { ServiceCard } from "@/components/catalog/service-card";
-import { SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
+import { PRINT_ON_DEMAND_SLUG, SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
 import { RichText } from "@/components/content/rich-text";
 import { CtaBand } from "@/components/layout/cta-band";
 import { ButtonLink } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, type RouteKey } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
+import { PrintOnDemandPage } from "./print-on-demand";
 
 /** Placeholder keeps the build valid (Cache Components needs ≥ 1 param) when no service is published. */
 const NO_SERVICE = "__none__";
@@ -59,6 +60,8 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
   const { locale, service } = await load(params);
   const [dict, all] = await Promise.all([getDictionary(locale), listServices(locale)]);
   const others = all.filter((s) => s.id !== service.id).slice(0, 3);
+
+  if (service.slugs.fr === PRINT_ON_DEMAND_SLUG) return <PrintOnDemandPage locale={locale} dict={dict} service={service} />;
 
   return (
     <>

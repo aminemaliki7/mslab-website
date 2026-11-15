@@ -167,6 +167,7 @@ Clean module boundaries; reusable primitives; strict TS; Server Components by de
 | ADR-016 | 2026-11-14 | i18n routing built in Milestone 1 (not M7); database (M2) precedes catalog (M3) | Accepted |
 | ADR-017 | 2026-11-14 | Multi-product quotes use a client-side "quote list" (localStorage) feeding the quotation form — not a cart, no checkout | Accepted |
 | ADR-018 | 2026-11-14 | "Ink & paper" palette as semantic tokens; Geist (Latin) + IBM Plex Sans Arabic | Accepted |
+| ADR-021 | 2026-11-15 | Print on demand: custom requests reuse `quotation_requests` (`kind = custom`) + `custom_request_details`; visitor files upload **directly from the browser** to the private `custom-uploads` bucket with a single-use, rate-limited upload ticket (no Vercel 4.5 MB body limit, no service-role key); materials/finishes and the portfolio are admin-managed; order tracking = reference + e-mail through a rate-limited RPC, history in `quotation_status_events` | Accepted |
 | ADR-020 | 2026-11-14 | Production database on the Supabase **Free** plan (owner decision); mitigations: daily keep-alive workflow, manual backup routine, usage monitoring | Accepted |
 | ADR-019 | 2026-11-14 | Original SVG logo (folded sheet + "M" monogram, ink/cyan) created at the owner's request; used in header, footer, admin and favicon | Accepted (approved by the owner 2026-11-14; trademark check recommended before print use) |
 

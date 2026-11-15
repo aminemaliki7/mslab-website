@@ -314,3 +314,60 @@ export function BusinessSupplyIllustration({ className }: { className?: string }
     </Svg>
   );
 }
+
+/** Five-point star used as the customer's "logo" in the print-on-demand scene. */
+function starPath(cx: number, cy: number, r: number): string {
+  const points = Array.from({ length: 10 }, (_, i) => {
+    const radius = i % 2 === 0 ? r : r * 0.45;
+    const angle = (Math.PI / 5) * i - Math.PI / 2;
+    return `${(cx + radius * Math.cos(angle)).toFixed(1)} ${(cy + radius * Math.sin(angle)).toFixed(1)}`;
+  });
+  return `M${points.join("L")}Z`;
+}
+
+/**
+ * Print on demand: a sketched idea (the customer's design) becomes produced items carrying
+ * that design — a box, a tote bag and cards. Generic objects, no brand.
+ */
+export function PrintOnDemandIllustration({ className }: { className?: string }) {
+  return (
+    <Svg viewBox="0 0 200 150" className={className}>
+      <ellipse cx="104" cy="136" rx="92" ry="6" fill={C.paperDeep} />
+      {/* the idea: a sketch on paper, with a pencil */}
+      <g transform="rotate(-6 46 78)">
+        <rect x="14" y="34" width="62" height="84" rx="3" fill={C.white} stroke={C.lineStrong} strokeWidth="1.5" />
+        <path
+          className="anim-draw"
+          style={{ ["--dash" as string]: 140 }}
+          d={starPath(45, 70, 20)}
+          stroke={C.cyan}
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+        />
+        <path d="M24 102H66M24 109H52" stroke={C.line} strokeWidth="2" strokeLinecap="round" />
+      </g>
+      <g transform="rotate(38 74 104)">
+        <rect x="56" y="100" width="40" height="7" fill={C.pencil} />
+        <path d="M96 100L104 103.5L96 107Z" fill={C.kraft} />
+        <rect x="52" y="100" width="5" height="7" rx="1" fill="#E89A9A" />
+      </g>
+      {/* becomes */}
+      <path d="M88 64H104" stroke={C.inkSoft} strokeWidth="2" strokeLinecap="round" strokeDasharray="2 4" />
+      <path d="M102 59L108 64L102 69" stroke={C.inkSoft} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* produced items carrying the design */}
+      <g className="anim-float anim-float-slow">
+        <path d="M148 40C148 30 168 30 168 40" stroke={C.ink} strokeWidth="2.5" fill="none" />
+        <path d="M140 42H176L180 100H136Z" fill={C.cyan} />
+        <path d={starPath(158, 70, 12)} fill={C.white} />
+      </g>
+      <path d="M112 88L126 80H164L150 88Z" fill={C.kraftDark} />
+      <rect x="112" y="88" width="52" height="42" rx="2" fill={C.kraft} />
+      <path d={starPath(138, 109, 10)} fill={C.ink} />
+      <g transform="rotate(-8 182 118)">
+        <rect x="166" y="106" width="28" height="18" rx="2" fill={C.white} stroke={C.lineStrong} strokeWidth="1.2" />
+        <path d={starPath(174, 115, 4.5)} fill={C.cyan} />
+        <path d="M181 113H190M181 118H187" stroke={C.line} strokeWidth="1.6" strokeLinecap="round" />
+      </g>
+    </Svg>
+  );
+}

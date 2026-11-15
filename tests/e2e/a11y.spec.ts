@@ -6,6 +6,8 @@ const PAGES = [
   "/fr",
   "/fr/a-propos",
   "/fr/services/impression-reprographie",
+  "/fr/services/impression-a-la-demande",
+  "/fr/suivi-commande",
   "/fr/catalogue",
   "/fr/produits/exemple-cahier",
   "/fr/contact",
@@ -14,6 +16,7 @@ const PAGES = [
   "/ar/catalogue",
   "/ar/produits/exemple-cahier",
   "/ar/devis",
+  "/ar/services/impression-a-la-demande",
   "/admin/login",
 ];
 

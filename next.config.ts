@@ -13,7 +13,8 @@ const supabaseOrigin = supabaseHost ? `https://${supabaseHost}` : "";
  * Content-Security-Policy "without nonces" (bundled Next docs, content-security-policy.md):
  * nonces would force dynamic rendering of every page and lose the Cache Components static
  * shells, so inline scripts/styles are allowed but every other source is locked to this origin.
- * The browser never talks to Supabase directly (server-side data access only).
+ * The browser talks to Supabase only to upload print-on-demand files to Storage (ADR-021);
+ * all data access stays server-side.
  */
 const csp = [
   "default-src 'self'",
@@ -21,7 +22,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${supabaseOrigin}`.trim(),
   "font-src 'self'",
-  `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
+  // Supabase: visitors' files for print-on-demand requests upload straight to Storage.
+  `connect-src 'self' ${supabaseOrigin}${isDev ? " ws: wss:" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

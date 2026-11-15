@@ -17,6 +17,9 @@ export const ERROR_CODES = [
   "no_items",
   "too_many_items",
   "invalid_item",
+  "invalid_number",
+  "invalid_date",
+  "invalid_option",
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 
@@ -42,7 +45,7 @@ export function normalizePhone(input: string): string | null {
   return /^\+[1-9]\d{6,14}$/.test(digits) ? digits : null;
 }
 
-const text = (min: number, max: number) =>
+export const text = (min: number, max: number) =>
   z
     .string({ error: "required" })
     .trim()
@@ -50,7 +53,7 @@ const text = (min: number, max: number) =>
     .min(min, { error: "too_short" })
     .max(max, { error: "too_long" });
 
-const optionalText = (max: number) =>
+export const optionalText = (max: number) =>
   z
     .string()
     .trim()
@@ -58,7 +61,7 @@ const optionalText = (max: number) =>
     .optional()
     .transform((value) => (value ? value : null));
 
-const email = z
+export const email = z
   .string({ error: "required" })
   .trim()
   .toLowerCase()
@@ -66,7 +69,7 @@ const email = z
   .max(254, { error: "too_long" })
   .pipe(z.email({ error: "invalid_email" }));
 
-const requiredPhone = z
+export const requiredPhone = z
   .string({ error: "required" })
   .trim()
   .min(1, { error: "required" })
@@ -93,11 +96,11 @@ const optionalPhone = z
     return phone;
   });
 
-const consent = z
+export const consent = z
   .union([z.literal("on"), z.literal("true"), z.literal(true)], { error: "consent_required" })
   .transform(() => true as const);
 
-const common = {
+export const common = {
   locale: z.enum(LOCALES).catch("fr"),
   sourcePath: z
     .string()

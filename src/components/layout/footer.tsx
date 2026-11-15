@@ -19,6 +19,7 @@ export async function Footer() {
     { href: localizedPath(locale, { route: "about" }), label: dict.nav.about },
     { href: localizedPath(locale, { route: "contact" }), label: dict.nav.contact },
     { href: localizedPath(locale, { route: "quote" }), label: dict.common.requestQuote },
+    { href: localizedPath(locale, { route: "track" }), label: dict.footer.tracking },
   ];
 
   const headingClass = "text-xs font-semibold tracking-[0.08em] text-white/60 uppercase rtl:tracking-normal rtl:text-sm";

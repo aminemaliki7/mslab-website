@@ -49,3 +49,29 @@ on conflict (slug_fr) do update set
   slug_en = excluded.slug_en,
   summary_fr = excluded.summary_fr, summary_ar = excluded.summary_ar, summary_en = excluded.summary_en,
   status = excluded.status, is_featured = excluded.is_featured, sort_order = excluded.sort_order;
+
+-- Print on demand (provided by the owner on 2026-11-15, English source text; fr/ar translated,
+-- to be reviewed). Dedicated page: gallery, custom request form, order tracking.
+insert into public.services (
+  name_fr, name_ar, name_en,
+  slug_fr, slug_ar, slug_en,
+  summary_fr, summary_ar, summary_en,
+  description_fr, description_ar, description_en,
+  status, is_featured, sort_order
+) values (
+  'Impression à la demande', 'الطباعة حسب الطلب', 'Print on demand',
+  'impression-a-la-demande', null, 'print-on-demand',
+  'Votre idée. Votre design. Notre production.',
+  'فكرتكم. تصميمكم. إنتاجنا.',
+  'Your idea. Your design. Our production.',
+  'Donnez vie à vos idées. Des objets personnalisés aux supports professionnels, jusqu''aux produits sur mesure : nous vous aidons à concrétiser vos projets.',
+  'حوّلوا أفكاركم إلى واقع. من الأغراض المخصصة والمطبوعات المهنية إلى المنتجات حسب الطلب، نساعدكم على تجسيد مشاريعكم.',
+  'Turn your ideas into reality. From personalized objects and business materials to custom-made products, we help bring your projects to life.',
+  'published', false, 50
+)
+on conflict (slug_fr) do update set
+  name_fr = excluded.name_fr, name_ar = excluded.name_ar, name_en = excluded.name_en,
+  slug_en = excluded.slug_en,
+  summary_fr = excluded.summary_fr, summary_ar = excluded.summary_ar, summary_en = excluded.summary_en,
+  description_fr = excluded.description_fr, description_ar = excluded.description_ar, description_en = excluded.description_en,
+  status = excluded.status, is_featured = excluded.is_featured, sort_order = excluded.sort_order;

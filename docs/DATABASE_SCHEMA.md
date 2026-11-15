@@ -120,3 +120,20 @@ Production starts **empty**; real categories, products, services and settings ar
 - Artwork uploads for print quotes (private bucket) — deferred.
 - Inquiry retention period (Loi 09-08) → scheduled purge job.
 - Arabic slugs: Latin (current assumption) vs Arabic script.
+
+## 9. Print on demand (migration `20261115100000_print_on_demand.sql`)
+
+| Object | Purpose | Access |
+|---|---|---|
+| `quotation_requests.kind` (`catalog` \| `custom`) | A print-on-demand request is a quotation request of kind `custom` | as before (admin only) |
+| `quotation_status` + `in_production`, `ready`, `delivered` | Production stages for order tracking | — |
+| `custom_request_details` (1:1) | Project type, description, quantity, dimensions + unit, material and finishes (French-name snapshots), deadline | admin read |
+| `quotation_files` | Files attached to a request (`custom-uploads` object paths, name, MIME, size) | admin read |
+| `quotation_status_events` | Status history, written by trigger on insert/status change | admin read; customers via `track_quotation` |
+| `production_options` (`material` \| `finishing`) | Lists offered in the form, fr/ar/en names | public reads active rows; admin manages |
+| `portfolio_items` | Gallery of real products made by MSLAB (photo in `catalog/portfolio/…`) | public reads published; admin manages |
+| `private.upload_tickets`, `private.tracking_attempts` | Upload tickets (≤ 10/h/IP, valid 2 h, single use) and tracking rate limit (≤ 10/10 min/IP) | not exposed |
+| Bucket `custom-uploads` (private, 15 MB/file, print MIME types) | Visitors may only INSERT `<ticket>/<file>` while the ticket is fresh and unused, ≤ 5 files; admins read/delete; no public read | Storage RLS |
+| RPCs `create_upload_ticket`, `submit_custom_request`, `track_quotation` | Server-key guarded like the other submission RPCs | — |
+
+Abandoned uploads (ticket never submitted) stay in the bucket: clean them periodically from the Supabase dashboard (folders whose ticket has `used_at` null and is older than a day).

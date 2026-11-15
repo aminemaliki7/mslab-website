@@ -15,6 +15,7 @@ const sections = {
   quote: { fr: "devis", ar: "devis", en: "quote" },
   legal: { fr: "mentions-legales", ar: "mentions-legales", en: "legal-notice" },
   privacy: { fr: "confidentialite", ar: "confidentialite", en: "privacy" },
+  track: { fr: "suivi-commande", ar: "suivi-commande", en: "order-tracking" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type Section = keyof typeof sections;

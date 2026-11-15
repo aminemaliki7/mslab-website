@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ServiceCard } from "@/components/catalog/service-card";
 import { SuppliesArt } from "@/components/illustrations/product-art";
-import { HeroScene } from "@/components/illustrations/scenes";
-import { CORE_SERVICE_SLUGS, ServiceArt } from "@/components/illustrations/service-art";
+import { HeroScene, PrintOnDemandIllustration } from "@/components/illustrations/scenes";
+import { CORE_SERVICE_SLUGS, PRINT_ON_DEMAND_SLUG, ServiceArt } from "@/components/illustrations/service-art";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
 import { CtaBand } from "@/components/layout/cta-band";
@@ -50,7 +50,8 @@ export default async function HomePage() {
 
   const about = forLocale(settings.about, locale);
   // Core services already appear as picture cards; list only other featured ones below.
-  const otherFeatured = services.filter((s) => s.isFeatured && !CORE_SERVICE_SLUGS.includes(s.slugs.fr));
+  const otherFeatured = services.filter((s) => s.isFeatured && !CORE_SERVICE_SLUGS.includes(s.slugs.fr) && s.slugs.fr !== PRINT_ON_DEMAND_SLUG);
+  const printOnDemand = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
   const highlights = toLines(forLocale(settings.highlights, locale));
 
   return (
@@ -77,6 +78,16 @@ export default async function HomePage() {
       ) : null}
 
       <CoreServices locale={locale} dict={dict} services={services} tone={about ? "surface" : "default"} />
+
+      {printOnDemand ? (
+        <PrintOnDemandBand
+          href={localizedPath(locale, { route: "service", slug: printOnDemand.slug })}
+          eyebrow={printOnDemand.name}
+          title={printOnDemand.summary ?? dict.printOnDemand.heroTitle}
+          body={dict.printOnDemand.heroLead}
+          cta={dict.printOnDemand.bandCta}
+        />
+      ) : null}
 
       {otherFeatured.length > 0 ? (
         <Section aria-labelledby="services-heading">
@@ -187,13 +198,13 @@ function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 }
 
 function CropMarks() {
-  const mark = "border-line-strong absolute size-6";
+  const mark = "hero-crop-mark border-line-strong absolute size-6";
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-4 hidden sm:block lg:inset-8">
-      <span className={`${mark} start-0 top-0 border-s border-t`} />
-      <span className={`${mark} end-0 top-0 border-e border-t`} />
-      <span className={`${mark} start-0 bottom-0 border-s border-b`} />
-      <span className={`${mark} end-0 bottom-0 border-e border-b`} />
+      <span className={`${mark} hero-crop-mark-1 start-0 top-0 border-s border-t`} />
+      <span className={`${mark} hero-crop-mark-2 end-0 top-0 border-e border-t`} />
+      <span className={`${mark} hero-crop-mark-3 start-0 bottom-0 border-s border-b`} />
+      <span className={`${mark} hero-crop-mark-4 end-0 bottom-0 border-e border-b`} />
     </div>
   );
 }
@@ -251,6 +262,31 @@ function CoreServices({ locale, dict, services, tone }: { locale: Locale; dict: 
         </ul>
       </Container>
     </Section>
+  );
+}
+
+/** Print on demand highlight: idea → production, picture first on phones. */
+function PrintOnDemandBand({ href, eyebrow, title, body, cta }: { href: string; eyebrow: string; title: string; body: string; cta: string }) {
+  return (
+    <section aria-labelledby="pod-band-heading" className="bg-ink-900 overflow-hidden text-white">
+      <Container className="grid items-center gap-10 py-14 lg:grid-cols-12 lg:py-20">
+        <div className="lg:col-span-6">
+          <p className="text-cyan-300 text-sm font-semibold">{eyebrow}</p>
+          <h2 id="pod-band-heading" className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+            {title}
+          </h2>
+          <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/75">{body}</p>
+          <ButtonLink href={href} variant="accent" size="lg" className="mt-8">
+            {cta}
+          </ButtonLink>
+        </div>
+        <div className="order-first lg:order-none lg:col-span-6">
+          <div className="bg-surface mx-auto max-w-md rounded-[var(--radius-card)] p-6 sm:p-8">
+            <PrintOnDemandIllustration className="w-full" />
+          </div>
+        </div>
+      </Container>
+    </section>
   );
 }
 

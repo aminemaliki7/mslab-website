@@ -2,6 +2,7 @@
 
 import { refresh } from "next/cache";
 import { z } from "zod";
+import { Constants } from "@/lib/supabase/database.types";
 import { createSessionClient } from "@/lib/supabase/server";
 import { failure, fromDb, fromZod, success, type AdminActionState } from "./action-state";
 import { requireAdmin } from "./auth";
@@ -10,7 +11,7 @@ import { requireAdmin } from "./auth";
 
 const quotationUpdate = z.object({
   id: z.uuid(),
-  status: z.enum(["new", "in_review", "contacted", "quoted", "accepted", "rejected", "closed"]),
+  status: z.enum(Constants.public.Enums.quotation_status),
   internal_notes: z
     .string()
     .trim()
