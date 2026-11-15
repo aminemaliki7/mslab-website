@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "../globals.css";
 import { redirect } from "next/navigation";
 import { getSiteSettings } from "@/features/settings/queries";
@@ -24,6 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const LOGO_INTRO_SCRIPT =
   "try{if(!sessionStorage.getItem('mslab-intro')){sessionStorage.setItem('mslab-intro','1');document.documentElement.classList.add('logo-intro')}}catch(e){}";
+const GTM_ID = "GTM-MDTX63Q6";
+const GTM_BOOTSTRAP = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!=='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`;
 
 export const viewport: Viewport = {
   themeColor: "#0e1a2b",
@@ -45,7 +48,14 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[lang]">)
         {/* Logo intro (globals.css): only on the first page of a visit. Runs before first paint. */}
         <script dangerouslySetInnerHTML={{ __html: LOGO_INTRO_SCRIPT }} />
       </head>
-      <body className="flex min-h-dvh flex-col antialiased">{children}</body>
+      <body className="flex min-h-dvh flex-col antialiased">
+        {children}
+        {process.env.VERCEL_ENV === "production" ? (
+          <Script id="google-tag-manager" strategy="afterInteractive">
+            {GTM_BOOTSTRAP}
+          </Script>
+        ) : null}
+      </body>
     </html>
   );
 }

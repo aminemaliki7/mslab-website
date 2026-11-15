@@ -27,7 +27,7 @@ Use these facts; MSLAB decides the legal wording:
 | Recipients | MSLAB staff; processors: database/storage hosting (Supabase), website hosting (Vercel), email provider (not chosen yet) |
 | Transfers outside Morocco | database in the EU (Paris region) for the development project; production region to be decided |
 | Retention period | **to be decided by MSLAB** (then implemented as an automatic purge) |
-| Analytics / trackers | none at the moment |
+| Analytics / trackers | Google Tag Manager container `GTM-MDTX63Q6` loads on production site pages; the tags, cookies, and data collection depend on the container configuration and must be documented and reviewed by MSLAB |
 | Rights | access, rectification, opposition under Law 09-08 — specify how to exercise them (email/address) |
 | CNDP | declaration/authorization reference, if applicable — **MSLAB's responsibility** |
 
@@ -36,3 +36,4 @@ Use these facts; MSLAB decides the legal wording:
 - Contact point for data-protection requests
 - Production hosting regions (impacts "transfers" section)
 - Email provider (impacts "recipients" section)
+- Google Tag Manager tags, consent requirements, and privacy notice wording

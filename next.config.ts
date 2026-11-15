@@ -8,6 +8,10 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
 const isDev = process.env.NODE_ENV === "development";
 const isProduction = process.env.VERCEL_ENV === "production";
 const supabaseOrigin = supabaseHost ? `https://${supabaseHost}` : "";
+const gtmScriptOrigin = isProduction ? " https://www.googletagmanager.com" : "";
+const analyticsOrigins = isProduction
+  ? " https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net"
+  : "";
 
 /**
  * Content-Security-Policy "without nonces" (bundled Next docs, content-security-policy.md):
@@ -18,12 +22,12 @@ const supabaseOrigin = supabaseHost ? `https://${supabaseHost}` : "";
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${gtmScriptOrigin}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: ${supabaseOrigin}`.trim(),
+  `img-src 'self' data: blob: ${supabaseOrigin}${analyticsOrigins}`.trim(),
   "font-src 'self'",
   // Supabase: visitors' files for print-on-demand requests upload straight to Storage.
-  `connect-src 'self' ${supabaseOrigin}${isDev ? " ws: wss:" : ""}`,
+  `connect-src 'self' ${supabaseOrigin}${isDev ? " ws: wss:" : ""}${analyticsOrigins}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
