@@ -9,7 +9,7 @@ const shots = [
   ["mobile", "/fr", "home-fr-mobile"],
   ["desktop", "/fr/a-propos", "about-fr"],
   ["desktop", "/fr/catalogue", "catalog-fr"],
-  ["desktop", "/fr/produits/exemple-cahier", "product-fr"],
+  ["desktop", "/fr/produits/cahier", "product-fr"],
   ["desktop", "/ar/devis", "quote-ar"],
   ["mobile", "/fr/contact", "contact-fr-mobile"],
   ["desktop", "/fr/page-inexistante", "404-fr"],

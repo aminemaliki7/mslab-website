@@ -4,6 +4,7 @@ import { lang } from "next/root-params";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductArt } from "@/components/illustrations/product-art";
+import { resolveVisualKey } from "@/features/catalog/visual";
 import { JsonLd } from "@/components/content/json-ld";
 import { RichText } from "@/components/content/rich-text";
 import { AddToQuoteButton } from "@/components/quote/add-to-quote-button";
@@ -116,7 +117,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
               images={product.images}
               thumbLabelTemplate={dict.product.imageNumber}
               noImageLabel={dict.product.noImage}
-              placeholder={<ProductArt slugFr={product.slugFr} className="w-full max-w-sm" />}
+              placeholder={<ProductArt kind={resolveVisualKey(product)} className="w-full max-w-sm" />}
             />
 
             <div>

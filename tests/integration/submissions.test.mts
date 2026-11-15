@@ -25,8 +25,9 @@ if (!url.includes("xccgcoznshndfquwsuwq")) throw new Error("Refusing to run: not
 const db = createClient<Database>(url, key, { auth: { persistSession: false } });
 const ipHash = (seed: string) => createHash("sha256").update(seed).digest("hex");
 
-const SAMPLE_PRODUCT = "b0000000-0000-4000-8000-000000000001"; // published sample
-const SAMPLE_PRODUCT_2 = "b0000000-0000-4000-8000-000000000005"; // published sample
+const SAMPLE_PRODUCT = "b0000000-0000-4000-8000-000000000001"; // "Cahier" (supabase/seed/initial_catalog.sql)
+const SAMPLE_PRODUCT_2 = "b0000000-0000-4000-8000-000000000005"; // "Livre"
+// Not a published product (the former dev-only draft id, deleted by initial_catalog.sql).
 const DRAFT_PRODUCT = "b0000000-0000-4000-8000-000000000006";
 // Snapshot preservation after product deletion needs admin rights to delete the product;
 // it is verified with SQL (docs/DATABASE_SCHEMA.md §5) and by the admin E2E tests in M6/M8.
@@ -67,7 +68,7 @@ function quotePayload(items: Json[], overrides: Payload = {}): Payload {
 
 describe("public catalog reads (RLS)", () => {
   it("returns published products only — never drafts", async () => {
-    const { data, error } = await db.from("products").select("id, status").like("slug_fr", "exemple-%");
+    const { data, error } = await db.from("products").select("id, status");
     assert.equal(error, null);
     assert.ok(data && data.length >= 5);
     assert.ok(data.every((p) => p.status === "published"));
@@ -142,7 +143,7 @@ describe("quotation request RPC", () => {
     assert.match(String(data), /^MSQ-\d{4}-\d{6}$/);
   });
 
-  it("rejects draft (unpublished) products and stores nothing", async () => {
+  it("rejects products that are not published and stores nothing", async () => {
     const { error } = await db.rpc("submit_quotation_request", {
       payload: quotePayload([{ product_id: DRAFT_PRODUCT, quantity: 1 }], { company_name: "SHOULD-NOT-EXIST" }),
       submission_key: submissionKey,

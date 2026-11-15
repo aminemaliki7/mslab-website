@@ -1,10 +1,12 @@
 import type { ComponentType } from "react";
+import type { ProductVisualKey } from "@/features/catalog/visual";
 import { C, Svg } from "./scenes";
 
 /**
- * Picture for a product that has no uploaded photo yet: a drawing of the kind of object it is,
- * picked from its French slug (docs/DESIGN_SYSTEM.md §11). An uploaded photo always
- * wins. Drawings are generic objects — never a brand, a price or a claim about the product.
+ * Picture for a product that has no uploaded photo yet: a drawing of the kind of object it is
+ * (docs/DESIGN_SYSTEM.md §11). Which drawing is decided by `resolveProductVisual` in
+ * features/catalog/visual.ts; an uploaded photo always wins. Drawings are generic objects —
+ * never a brand, a price or a claim about the product.
  */
 type Art = ComponentType<{ className?: string }>;
 
@@ -191,31 +193,11 @@ const ART = {
   paper: PaperArt,
   print: PrintArt,
   supplies: SuppliesArt,
-} satisfies Record<string, Art>;
+} satisfies Record<ProductVisualKey, Art>;
 
-export type ProductArtKind = keyof typeof ART;
+export type ProductArtKind = ProductVisualKey;
 
-/** Keyword → drawing. Checked in order on the accent-free French slug. */
-const RULES: [RegExp, ProductArtKind][] = [
-  [/cahier|carnet|bloc|agenda|repertoire|notebook/, "notebook"],
-  [/stylo|crayon|feutre|marqueur|surligneur|porte-mine|\bpens?\b|pencil|marker/, "pen"],
-  [/livre|ouvrage|manuel|roman|dictionnaire|encyclopedie|book/, "book"],
-  [/classeur|chemise|dossier|pochette|trieur|archive|binder|folder/, "binder"],
-  [/agrafeuse|agrafe|perforatrice|stapler|punch/, "stapler"],
-  [/ramette|\brames?\b|papier|feuille|enveloppe|paper|ream/, "paper"],
-  [/impression|imprime|flyer|depliant|affiche|brochure|carte|kakemono|print/, "print"],
-];
-
-/** Kind of drawing for a product with no photo (generic office supplies when nothing matches). */
-export function productArtKind(slugFr: string): ProductArtKind {
-  const text = slugFr
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-  return RULES.find(([pattern]) => pattern.test(text))?.[1] ?? "supplies";
-}
-
-export function ProductArt({ slugFr, className }: { slugFr: string; className?: string }) {
-  const Drawing = ART[productArtKind(slugFr)];
+export function ProductArt({ kind, className }: { kind: ProductVisualKey; className?: string }) {
+  const Drawing = ART[kind];
   return <Drawing className={className} />;
 }

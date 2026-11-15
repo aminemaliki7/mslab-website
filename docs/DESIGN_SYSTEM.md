@@ -101,7 +101,7 @@ Trademark check of the logo before print/signage use (logo approved 2026-11-14),
 | `ChecklistIllustration` (clipboard ticking itself) | `index.tsx` | Quote header |
 | `EnvelopeIllustration` (letter rising) | `index.tsx` | Contact header |
 | `LostSheetIllustration` | `index.tsx` | 404 page |
-| `ProductArt` (notebook, pen, book, binder, stapler, paper, print, generic supplies) | `product-art.tsx` | Products without photos (cards, gallery). Drawing chosen from keywords in the French slug (`productArtKind`); an uploaded photo always wins |
+| `ProductArt` (notebook, pen, book, binder, stapler, paper, print, generic supplies) | `product-art.tsx` | Products without photos (cards, gallery). Chosen by `resolveProductVisual` (`src/features/catalog/visual.ts`): an uploaded photo always wins; otherwise the drawing MSLAB picked (`visual_key`), else keywords in the French slug |
 | `ProductPlaceholderIllustration` | `index.tsx` | Neutral fallback icon (no longer used on public pages) |
 
 The four homepage activities are **picture cards**: illustration first, then number, label and link.

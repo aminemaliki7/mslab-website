@@ -17,12 +17,12 @@ const humanPause = (page: import("@playwright/test").Page) => page.waitForTimeou
 test("multi-product quote: add from product pages, custom item, submit, list cleared", async ({ page }) => {
   const problems = watchConsole(page);
 
-  await page.goto("/fr/produits/exemple-cahier");
+  await page.goto("/fr/produits/cahier");
   await page.getByRole("button", { name: "Ajouter à ma demande de devis" }).click();
   await expect(page.getByRole("button", { name: "Ajouté à votre demande" })).toBeDisabled();
   await expect(page.getByRole("link", { name: "Voir ma demande (1)" })).toBeVisible();
 
-  await page.goto("/fr/produits/exemple-livre");
+  await page.goto("/fr/produits/livre");
   await page.getByRole("button", { name: "Ajouter à ma demande de devis" }).click();
   await page.getByRole("link", { name: "Voir ma demande (2)" }).click();
   await expect(page).toHaveURL(/\/fr\/devis$/);

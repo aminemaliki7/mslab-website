@@ -11,7 +11,7 @@ Status of each prerequisite: see `PRODUCTION_READINESS.md`.
 | Code | any branch, local | PR branches | `main` |
 | Hosting | `next dev` / `next start` | Vercel Preview | Vercel Production |
 | Database | Supabase `mslab-dev` (eu-west-3) | Supabase `mslab-dev` | **new** Supabase project `mslab-prod` |
-| Sample data | yes (`exemple-*`) | yes | **never** |
+| Initial catalog (`supabase/seed/initial_catalog.sql`) | yes | yes | yes, once at setup |
 | Indexing | blocked | blocked (`robots.txt` + `X-Robots-Tag`) | allowed |
 
 ## 1. Repository (GitHub)

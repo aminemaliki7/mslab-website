@@ -5,6 +5,7 @@ import { pick, slugFor } from "@/i18n/localize";
 import type { Tables } from "@/lib/supabase/database.types";
 import { createPublicClient } from "@/lib/supabase/public";
 import { catalogImageUrl } from "@/lib/supabase/storage";
+import type { ProductVisualKey } from "./visual";
 
 /** Cache tags — admin mutations call updateTag() with these (Milestone 6). */
 export const CATALOG_TAG = "catalog";
@@ -35,8 +36,10 @@ export type ProductSummary = {
   id: string;
   name: string;
   slug: string;
-  /** Stable identifier (picks the drawing shown when there is no photo). */
+  /** Stable identifier (automatic drawing when there is no photo and no `visualKey`). */
   slugFr: string;
+  /** Drawing chosen by MSLAB for when there is no photo (features/catalog/visual.ts). */
+  visualKey: ProductVisualKey | null;
   sku: string | null;
   shortDescription: string | null;
   categoryId: string | null;
@@ -98,6 +101,8 @@ function toProductSummary(row: ProductSummaryRow, locale: Locale): ProductSummar
     name,
     slug: slugFor(row, locale),
     slugFr: row.slug_fr,
+    // TODO(catalog step 2): read products.visual_key once the column exists.
+    visualKey: null,
     sku: row.sku,
     shortDescription: pick(row, "short_description", locale),
     categoryId: row.category_id,

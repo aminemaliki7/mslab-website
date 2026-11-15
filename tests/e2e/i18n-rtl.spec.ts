@@ -2,9 +2,9 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, isMobile, LOCALES, watchConsole } from "./helpers";
 
 const PAGES: Record<(typeof LOCALES)[number], string[]> = {
-  fr: ["/fr", "/fr/a-propos", "/fr/services", "/fr/services/impression-reprographie", "/fr/services/impression-a-la-demande", "/fr/suivi-commande", "/fr/catalogue", "/fr/catalogue/exemple-papeterie", "/fr/produits/exemple-cahier", "/fr/contact", "/fr/devis", "/fr/mentions-legales"],
-  ar: ["/ar", "/ar/a-propos", "/ar/services", "/ar/services/impression-reprographie", "/ar/services/impression-a-la-demande", "/ar/suivi-commande", "/ar/catalogue", "/ar/catalogue/exemple-papeterie", "/ar/produits/exemple-cahier", "/ar/contact", "/ar/devis", "/ar/confidentialite"],
-  en: ["/en", "/en/about", "/en/services", "/en/services/printing-reprographics", "/en/services/print-on-demand", "/en/order-tracking", "/en/catalog", "/en/catalog/exemple-stationery", "/en/products/exemple-notebook", "/en/contact", "/en/quote", "/en/legal-notice"],
+  fr: ["/fr", "/fr/a-propos", "/fr/services", "/fr/services/impression-reprographie", "/fr/services/impression-a-la-demande", "/fr/suivi-commande", "/fr/catalogue", "/fr/catalogue/papeterie", "/fr/produits/cahier", "/fr/contact", "/fr/devis", "/fr/mentions-legales"],
+  ar: ["/ar", "/ar/a-propos", "/ar/services", "/ar/services/impression-reprographie", "/ar/services/impression-a-la-demande", "/ar/suivi-commande", "/ar/catalogue", "/ar/catalogue/papeterie", "/ar/produits/cahier", "/ar/contact", "/ar/devis", "/ar/confidentialite"],
+  en: ["/en", "/en/about", "/en/services", "/en/services/printing-reprographics", "/en/services/print-on-demand", "/en/order-tracking", "/en/catalog", "/en/catalog/stationery", "/en/products/notebook", "/en/contact", "/en/quote", "/en/legal-notice"],
 };
 
 for (const locale of LOCALES) {
@@ -40,10 +40,10 @@ test("English segment under /fr redirects to the localized URL", async ({ page }
 });
 
 test("language switcher keeps the page and uses translated slugs", async ({ page }) => {
-  await page.goto("/fr/produits/exemple-cahier");
+  await page.goto("/fr/produits/cahier");
   if (isMobile(page)) await page.getByRole("button", { name: "Ouvrir le menu" }).click();
   await page.getByRole("link", { name: "English" }).first().click();
-  await expect(page).toHaveURL(/\/en\/products\/exemple-notebook$/);
+  await expect(page).toHaveURL(/\/en\/products\/notebook$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });
 
@@ -84,8 +84,8 @@ test("catalog search and category filter (works as a GET form)", async ({ page }
   await page.getByLabel("Rechercher un produit").fill("stylo");
   await page.getByRole("button", { name: "Rechercher" }).click();
   await expect(page).toHaveURL(/q=stylo/);
-  await expect(page.getByRole("link", { name: /Stylo \(exemple\)/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Cahier \(exemple\)/ })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Stylo/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Cahier/ })).toHaveCount(0);
 });
 
 test("security headers are present", async ({ request }) => {

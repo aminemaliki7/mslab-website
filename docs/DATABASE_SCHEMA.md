@@ -99,7 +99,7 @@ Public bucket (objects served by public URL), 5 MB limit, MIME allowlist `jpeg/p
 ## 6. Seed strategy
 | File | Use |
 |---|---|
-| `supabase/seed/sample_catalog.sql` | **Dev only.** 3 categories, 6 products (1 draft, 1 without Arabic to test fallback), 2 services. Every row labeled "(exemple)/(sample)/(مثال)", slugs prefixed `exemple-`. No company info, prices, stock, clients or statistics. Applied to `mslab-dev`. |
+| `supabase/seed/initial_catalog.sql` | **Real content** (confirmed by MSLAB 2026-11-15): 3 categories, 5 products, names only (fr/ar/en). No descriptions, SKUs, specs, prices or stock until MSLAB adds them in the admin. Idempotent; replaced the former `exemple-*` sample data in place (same UUIDs). Applied to `mslab-dev`; run once on production at setup. |
 | `supabase/seed/remove_sample_catalog.sql` | Removes all sample rows (quote snapshots survive). |
 | `supabase/seed/remove_test_submissions.sql` | Removes rows created by integration tests. |
 

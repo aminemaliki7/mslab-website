@@ -2,7 +2,7 @@
 // Usage: start the production server, then: BASE_URL=http://localhost:3001 node scripts/perf-check.mjs
 import { chromium, devices } from "@playwright/test";
 const BASE = process.env.BASE_URL ?? "http://localhost:3100";
-const pages = ["/fr", "/ar", "/fr/catalogue", "/fr/produits/exemple-cahier", "/fr/devis", "/fr/contact"];
+const pages = ["/fr", "/ar", "/fr/catalogue", "/fr/produits/cahier", "/fr/devis", "/fr/contact"];
 const browser = await chromium.launch();
 const context = await browser.newContext({ ...devices["Pixel 7"] });
 for (const path of pages) {
