@@ -22,7 +22,15 @@
 
 # misc
 .DS_Store
+Thumbs.db
+desktop.ini
 *.pem
+*.log
+.idea/
+.history/
+.vscode-test/
+.turbo/
+.cache/
 
 # debug
 npm-debug.log*
@@ -36,6 +44,10 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# local Supabase CLI state
+.supabase/
+/supabase/.temp/
 
 # typescript
 *.tsbuildinfo
