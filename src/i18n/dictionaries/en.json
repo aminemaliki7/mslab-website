@@ -58,7 +58,16 @@
     "ctaTitle": "A printing project, or a need for supplies or books?",
     "ctaBody": "Describe your needs in a quotation request or contact us: our team will get back to you.",
     "ctaWhatsApp": "Message us on WhatsApp",
-    "heroLead": "MSLAB supports professionals, institutions and individuals with an offering dedicated to printing, supplies and stationery products."
+    "heroLead": "Printing, custom products and supplies: MSLAB turns your ideas and files into products, for individuals, businesses and institutions.",
+    "clientsTitle": "They trust us.",
+    "clientsSubtitle": "Institutions and organizations.",
+    "proofLabel": "Try it: type your name or your brand's",
+    "proofPlaceholder": "Your brand",
+    "proofCta": "Continue in the studio",
+    "proofNote": "Indicative preview. Nothing is sent.",
+    "servicesTitle": "What we produce",
+    "processCta": "Create my preview",
+    "catalogTitle": "The catalogue"
   },
   "about": {
     "presentationTitle": "Overview",
@@ -243,6 +252,15 @@
     "heroLead": "Turn your ideas into reality. From personalized objects and business materials to custom-made products, we help bring your projects to life.",
     "startCta": "Start my project",
     "trackCta": "Track my order",
+    "heroPoints": [
+      "Live preview of your design",
+      "PDF, AI, PSD, JPG and PNG accepted",
+      "Online order tracking"
+    ],
+    "designCta": "Create my preview",
+    "productsTitle": "Choose your product",
+    "productsLead": "Apparel, objects, packaging or stationery: pick a product and place your logo or text on it.",
+    "customize": "Customize",
     "stepsTitle": "How it works",
     "step1Title": "Share your idea",
     "step1Body": "Describe your project and attach your files, sketches or logos.",
@@ -251,6 +269,31 @@
     "step3Title": "We produce it",
     "step3Body": "Once you approve, your project goes into production. Follow its progress online.",
     "galleryTitle": "Our work",
+    "faqTitle": "Frequently asked questions",
+    "faq": [
+      {
+        "q": "Which files can I send?",
+        "a": "Up to 5 files of 15 MB each, in PDF, AI, EPS, PSD, JPG, PNG or TIFF format. A PNG logo with a transparent background gives the best preview."
+      },
+      {
+        "q": "Does the preview match the final result?",
+        "a": "The preview is indicative. Sizes, colors and the final rendering are confirmed with your quote, before any production."
+      },
+      {
+        "q": "How much does my project cost?",
+        "a": "Each project is priced according to the product, quantity and finishes you choose. You receive a proposal, and nothing is produced without your approval."
+      },
+      {
+        "q": "Is my design sent when I use the preview?",
+        "a": "No. The preview runs only in your browser. Your files reach us only when you send your request."
+      },
+      {
+        "q": "How do I track my order?",
+        "a": "After sending your request, you receive a reference. Enter it on the tracking page to follow your project's progress."
+      }
+    ],
+    "finalTitle": "Ready to bring your idea to life?",
+    "finalBody": "Describe your project in a few minutes: MSLAB reviews it and gets back to you with a proposal.",
     "formTitle": "Describe your project",
     "formLead": "The more precise your description, the better suited our proposal will be.",
     "projectSection": "Your project",

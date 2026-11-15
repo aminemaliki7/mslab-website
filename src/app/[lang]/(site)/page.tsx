@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/catalog/product-card";
-import { ServiceCard } from "@/components/catalog/service-card";
-import { SuppliesArt } from "@/components/illustrations/product-art";
-import { HeroScene, PrintOnDemandIllustration } from "@/components/illustrations/scenes";
-import { CORE_SERVICE_SLUGS, PRINT_ON_DEMAND_SLUG, ServiceArt } from "@/components/illustrations/service-art";
+import { ServiceIndex, type ServiceIndexRow } from "@/components/catalog/service-index";
+import { ClientLogos } from "@/components/content/client-logos";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
+import { ControlStrip } from "@/components/home/control-strip";
+import { LiveProof } from "@/components/home/live-proof";
+import { SuppliesArt } from "@/components/illustrations/product-art";
+import { HeroScene } from "@/components/illustrations/scenes";
+import { CORE_SERVICE_SLUGS, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { CtaBand } from "@/components/layout/cta-band";
-import { ButtonLink } from "@/components/ui/button";
 import { ArrowLink } from "@/components/ui/arrow-link";
+import { ButtonLink } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/icons";
-import { Container, Eyebrow, Heading, Lead, Section } from "@/components/ui/layout";
-import { listFeaturedProducts } from "@/features/catalog/queries";
-import { listServices, type ServiceSummary } from "@/features/services/queries";
+import { Container, Heading, Lead, Section } from "@/components/ui/layout";
+import { CLIENT_LOGOS } from "@/config/client-logos";
+import { listCategories, listFeaturedProducts } from "@/features/catalog/queries";
+import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
+import { listMockupProducts } from "@/features/print-on-demand/queries";
+import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import type { Locale } from "@/i18n/config";
 import { getDictionary, getLocale, type Dictionary } from "@/i18n/dictionaries";
@@ -35,92 +41,124 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Homepage. Only verified content: the four core services (owner-provided, DB-managed) shown as
- * picture cards; products, company presentation and "why choose" points come from the database
- * and each section is omitted while its data is empty.
+ * Homepage (docs/ART_DIRECTION.md). Narrative: what MSLAB does (tagline + live proof) →
+ * what it produces (services index) → how an order works (three steps) → the catalogue →
+ * who MSLAB is → organizations → contact. Only verified content: services, products,
+ * presentation and "why" points come from the database; a section is omitted while its data
+ * is empty.
  */
 export default async function HomePage() {
   const locale = await getLocale();
-  const [dict, settings, services, products] = await Promise.all([
+  const [dict, settings, services, products, categories, mockups] = await Promise.all([
     getDictionary(locale),
     getSiteSettings(),
     listServices(locale),
     listFeaturedProducts(locale, 4),
+    listCategories(locale),
+    listMockupProducts(),
   ]);
 
   const about = forLocale(settings.about, locale);
-  // Core services already appear as picture cards; list only other featured ones below.
-  const otherFeatured = services.filter((s) => s.isFeatured && !CORE_SERVICE_SLUGS.includes(s.slugs.fr) && s.slugs.fr !== PRINT_ON_DEMAND_SLUG);
-  const printOnDemand = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
   const highlights = toLines(forLocale(settings.highlights, locale));
+  const printOnDemand = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
+  const podHref = printOnDemand ? localizedPath(locale, { route: "service", slug: printOnDemand.slug }) : null;
+  const servicesHref = localizedPath(locale, { route: "services" });
+
+  // Services index: print on demand first, then the four core activities, then other featured services.
+  const coreLabels: Record<string, string> = {
+    "impression-reprographie": dict.businessAreas.printing,
+    "fournitures-de-bureau": dict.businessAreas.office,
+    "papeterie-fournitures-scolaires": dict.businessAreas.school,
+    "livres-ouvrages": dict.businessAreas.books,
+  };
+  const indexed = new Set([PRINT_ON_DEMAND_SLUG, ...CORE_SERVICE_SLUGS]);
+  const rows: ServiceIndexRow[] = [
+    ...(printOnDemand ? [{ slugFr: PRINT_ON_DEMAND_SLUG, name: printOnDemand.name, summary: dict.printOnDemand.heroLead, href: podHref ?? servicesHref }] : []),
+    ...CORE_SERVICE_SLUGS.map((slugFr) => {
+      const service = services.find((s) => s.slugs.fr === slugFr);
+      return {
+        slugFr,
+        name: service?.name ?? coreLabels[slugFr] ?? slugFr,
+        summary: service?.summary ?? null,
+        href: service ? localizedPath(locale, { route: "service", slug: service.slug }) : servicesHref,
+      };
+    }),
+    ...services
+      .filter((s) => s.isFeatured && !indexed.has(s.slugs.fr))
+      .map((s) => ({ slugFr: s.slugs.fr, name: s.name, summary: s.summary, href: localizedPath(locale, { route: "service", slug: s.slug }) })),
+  ];
+
+  const steps = [
+    { title: dict.printOnDemand.step1Title, body: dict.printOnDemand.step1Body },
+    { title: dict.printOnDemand.step2Title, body: dict.printOnDemand.step2Body },
+    { title: dict.printOnDemand.step3Title, body: dict.printOnDemand.step3Body },
+  ];
+  const topCategories = categories.filter((c) => !c.parentId);
 
   return (
     <>
       <OrganizationJsonLd locale={locale} />
-      <Hero locale={locale} dict={dict} />
+      <Hero locale={locale} dict={dict} mockups={mockups} studioHref={podHref ? `${podHref}#studio` : null} />
 
-      {about ? (
-        <Section aria-labelledby="intro-heading">
-          <Container className="grid gap-8 lg:grid-cols-12">
+      {/* ─── What we produce: an index, not cards ─────────────────────────── */}
+      <Section aria-labelledby="services-heading">
+        <Container>
+          <SectionHeader id="services-heading" title={dict.sections.servicesTitle} link={{ href: servicesHref, label: dict.sections.allServices }} />
+          <ServiceIndex rows={rows} className="mt-8 lg:mt-10" />
+        </Container>
+      </Section>
+
+      {/* ─── How an order works (a real sequence, so it is numbered) ──────── */}
+      {podHref ? (
+        <section aria-labelledby="process-heading" className="bg-ink-900 text-white">
+          <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
             <div className="lg:col-span-4">
-              <Heading as="h2" size="lg" id="intro-heading">
-                {dict.sections.introTitle}
-              </Heading>
+              <h2 id="process-heading" className="type-display text-3xl text-balance sm:text-4xl">
+                {dict.printOnDemand.stepsTitle}
+              </h2>
+              <ButtonLink href={`${podHref}#studio`} variant="accent" size="lg" className="mt-8">
+                {dict.sections.processCta}
+              </ButtonLink>
             </div>
-            <div className="lg:col-span-8">
-              <RichText text={about.split(/\n\s*\n/)[0] ?? about} className="text-lg" />
-              <ArrowLink href={localizedPath(locale, { route: "about" })} className="mt-6">
-                {dict.sections.learnMore}
-              </ArrowLink>
-            </div>
-          </Container>
-        </Section>
-      ) : null}
-
-      <CoreServices locale={locale} dict={dict} services={services} tone={about ? "surface" : "default"} />
-
-      {printOnDemand ? (
-        <PrintOnDemandBand
-          href={localizedPath(locale, { route: "service", slug: printOnDemand.slug })}
-          eyebrow={printOnDemand.name}
-          title={printOnDemand.summary ?? dict.printOnDemand.heroTitle}
-          body={dict.printOnDemand.heroLead}
-          cta={dict.printOnDemand.bandCta}
-        />
-      ) : null}
-
-      {otherFeatured.length > 0 ? (
-        <Section aria-labelledby="services-heading">
-          <Container>
-            <SectionHeader
-              id="services-heading"
-              title={dict.sections.featuredServicesTitle}
-              link={{ href: localizedPath(locale, { route: "services" }), label: dict.sections.allServices }}
-            />
-            <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {otherFeatured.map((service) => (
-                <li key={service.id} className="reveal">
-                  <ServiceCard
-                    service={service}
-                    href={localizedPath(locale, { route: "service", slug: service.slug })}
-                    cta={dict.sections.learnMore}
-                  />
+            <ol className="grid gap-8 sm:grid-cols-3 lg:col-span-8">
+              {steps.map((step, index) => (
+                <li key={step.title} className="border-t border-white/25 pt-5">
+                  <span className="type-display text-cyan-300 block text-5xl" dir="ltr">
+                    {index + 1}
+                  </span>
+                  <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
+                  <p className="mt-2 leading-relaxed text-white/75">{step.body}</p>
                 </li>
               ))}
-            </ul>
+            </ol>
           </Container>
-        </Section>
+        </section>
       ) : null}
 
+      {/* ─── Catalogue (product cards unchanged) ──────────────────────────── */}
       {products.length > 0 ? (
         <Section aria-labelledby="products-heading" tone="surface">
           <Container>
             <SectionHeader
               id="products-heading"
-              title={dict.sections.featuredProductsTitle}
+              title={dict.sections.catalogTitle}
               link={{ href: localizedPath(locale, { route: "catalog" }), label: dict.sections.allProducts }}
             />
-            <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {topCategories.length > 0 ? (
+              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-1">
+                {topCategories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={localizedPath(locale, { route: "category", slug: category.slug })}
+                      className="text-fg-muted hover:text-fg decoration-line-strong hover:decoration-fg inline-flex min-h-11 items-center underline underline-offset-4"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product) => (
                 <li key={product.id} className="reveal">
                   <ProductCard
@@ -141,150 +179,97 @@ export default async function HomePage() {
         </Section>
       ) : null}
 
-      {highlights.length > 0 ? (
-        <Section aria-labelledby="why-heading">
-          <Container>
-            <Heading as="h2" size="lg" id="why-heading">
-              {dict.sections.whyTitle}
-            </Heading>
-            <ol className="border-line mt-10 grid border-t sm:grid-cols-2 lg:grid-cols-3">
-              {highlights.map((point, index) => (
-                <li key={index} className="reveal border-line flex gap-4 border-b py-6 sm:pe-8">
-                  <span className="text-accent font-[family-name:var(--font-geist-mono)] text-sm" dir="ltr">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-fg font-medium leading-snug">{point}</span>
-                </li>
-              ))}
-            </ol>
+      {/* ─── Who we are + why (owner-managed text; hidden while empty) ────── */}
+      {about || highlights.length > 0 ? (
+        <Section aria-labelledby={about ? "intro-heading" : "why-heading"}>
+          <Container className="grid gap-12 lg:grid-cols-12">
+            {about ? (
+              <div className={highlights.length > 0 ? "lg:col-span-6" : "lg:col-span-8"}>
+                <Heading as="h2" size="lg" id="intro-heading" className="type-display">
+                  {dict.sections.introTitle}
+                </Heading>
+                <RichText text={about.split(/\n\s*\n/)[0] ?? about} className="mt-6 text-lg" />
+                <ArrowLink href={localizedPath(locale, { route: "about" })} className="mt-6">
+                  {dict.sections.learnMore}
+                </ArrowLink>
+              </div>
+            ) : null}
+            {highlights.length > 0 ? (
+              <div className={about ? "lg:col-span-5 lg:col-start-8" : "lg:col-span-12"}>
+                <Heading as="h2" size="lg" id="why-heading" className="type-display">
+                  {dict.sections.whyTitle}
+                </Heading>
+                <ul className="border-fg mt-6 border-t-2">
+                  {highlights.map((point, index) => (
+                    <li key={index} className="border-line text-fg border-b py-4 font-medium leading-snug">
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </Container>
         </Section>
       ) : null}
+
+      <ClientLogos locale={locale} title={dict.sections.clientsTitle} subtitle={dict.sections.clientsSubtitle} logos={CLIENT_LOGOS} />
 
       <CtaBand />
     </>
   );
 }
 
-function Hero({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  return (
-    <section className="bg-surface border-line relative overflow-hidden border-b">
-      {/* Print-trade detail: registration crop marks framing the hero (decorative). */}
-      <CropMarks />
-      <Container className="relative grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-12 lg:gap-12 lg:py-20">
-        <div className="lg:col-span-6">
-        <Eyebrow>MSLAB</Eyebrow>
-        <Heading as="h1" size="display" className="mt-4 max-w-3xl">
-          {dict.pages.home.title}
-        </Heading>
-        <Lead className="mt-6 max-w-2xl">{dict.sections.heroLead}</Lead>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <ButtonLink href={localizedPath(locale, { route: "quote" })} size="lg">
-            {dict.common.requestQuote}
-          </ButtonLink>
-          <ButtonLink href={localizedPath(locale, { route: "contact" })} variant="secondary" size="lg">
-            {dict.common.contactUs}
-          </ButtonLink>
-        </div>
-        </div>
-        {/* The scene explains the four activities at a glance — shown on every screen size. */}
-        {/* Phones: the scene comes first (compact) so the activities are understood before reading. */}
-        <div className="order-first lg:order-none lg:col-span-6">
-          <HeroScene className="mx-auto w-full max-w-[19rem] sm:max-w-md lg:max-w-xl" />
-        </div>
-      </Container>
-    </section>
-  );
-}
-
-function CropMarks() {
-  const mark = "hero-crop-mark border-line-strong absolute size-6";
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-4 hidden sm:block lg:inset-8">
-      <span className={`${mark} hero-crop-mark-1 start-0 top-0 border-s border-t`} />
-      <span className={`${mark} hero-crop-mark-2 end-0 top-0 border-e border-t`} />
-      <span className={`${mark} hero-crop-mark-3 start-0 bottom-0 border-s border-b`} />
-      <span className={`${mark} hero-crop-mark-4 end-0 bottom-0 border-e border-b`} />
-    </div>
-  );
-}
-
 /**
- * The four core services as picture cards (picture first: understandable without reading).
- * Names come from the dictionaries; each card links to the service page when it is published,
- * otherwise to the services list.
+ * Hero: the tagline set large, one sentence per line, beside the live proof (type a name,
+ * see it on products). Falls back to the activities scene when no mockup product is active.
  */
-function CoreServices({ locale, dict, services, tone }: { locale: Locale; dict: Dictionary; services: ServiceSummary[]; tone: "default" | "surface" }) {
-  const labels: Record<string, string> = {
-    "impression-reprographie": dict.businessAreas.printing,
-    "fournitures-de-bureau": dict.businessAreas.office,
-    "papeterie-fournitures-scolaires": dict.businessAreas.school,
-    "livres-ouvrages": dict.businessAreas.books,
-  };
-  return (
-    <Section aria-labelledby="areas-heading" tone={tone}>
-      <Container>
-        <Heading as="h2" size="lg" id="areas-heading">
-          {dict.sections.areasTitle}
-        </Heading>
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {CORE_SERVICE_SLUGS.map((slugFr, index) => {
-            const service = services.find((s) => s.slugs.fr === slugFr);
-            const href = service
-              ? localizedPath(locale, { route: "service", slug: service.slug })
-              : localizedPath(locale, { route: "services" });
-            return (
-              <li key={slugFr} className="reveal">
-                <Link
-                  href={href}
-                  className="group border-line bg-bg hover:border-line-strong flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-18px_rgb(14_26_43/0.45)]"
-                >
-                  <span className="bg-surface border-line block border-b px-6 pt-6 pb-4">
-                    <span className="mx-auto block max-w-[15rem] transition-transform duration-300 group-hover:-translate-y-1">
-                      <ServiceArt slugFr={slugFr} className="w-full" />
-                    </span>
-                  </span>
-                  <span className="flex flex-1 flex-col gap-3 p-5">
-                    <span className="text-fg-subtle font-[family-name:var(--font-geist-mono)] text-sm" dir="ltr">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-fg block text-lg font-semibold leading-snug">{service?.name ?? labels[slugFr]}</span>
-                    {service?.summary ? <span className="text-fg-muted text-sm leading-relaxed">{service.summary}</span> : null}
-                    <span className="text-accent mt-auto inline-flex items-center gap-1.5 pt-1 text-sm font-medium">
-                      {dict.sections.learnMore}
-                      <ArrowIcon width={16} height={16} className="transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </Container>
-    </Section>
-  );
-}
+function Hero({ locale, dict, mockups, studioHref }: { locale: Locale; dict: Dictionary; mockups: MockupKey[]; studioHref: string | null }) {
+  // "Votre idée. Votre design. Notre production." → one sentence per line.
+  const lines = dict.printOnDemand.heroTitle.split(/(?<=\.)\s+/);
+  const t = dict.printOnDemand.studio;
 
-/** Print on demand highlight: idea → production, picture first on phones. */
-function PrintOnDemandBand({ href, eyebrow, title, body, cta }: { href: string; eyebrow: string; title: string; body: string; cta: string }) {
   return (
-    <section aria-labelledby="pod-band-heading" className="bg-ink-900 overflow-hidden text-white">
-      <Container className="grid items-center gap-10 py-14 lg:grid-cols-12 lg:py-20">
+    <section className="bg-surface border-line overflow-hidden border-b">
+      <Container className="grid items-center gap-10 pt-10 pb-8 sm:pt-14 lg:grid-cols-12 lg:gap-10 lg:pt-20 lg:pb-12">
         <div className="lg:col-span-6">
-          <p className="text-cyan-300 text-sm font-semibold">{eyebrow}</p>
-          <h2 id="pod-band-heading" className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
-            {title}
-          </h2>
-          <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/75">{body}</p>
-          <ButtonLink href={href} variant="accent" size="lg" className="mt-8">
-            {cta}
-          </ButtonLink>
-        </div>
-        <div className="order-first lg:order-none lg:col-span-6">
-          <div className="bg-surface mx-auto max-w-md rounded-[var(--radius-card)] p-6 sm:p-8">
-            <PrintOnDemandIllustration className="w-full" />
+          <h1 className="type-display text-fg text-[clamp(2rem,8.2vw,3.5rem)] lg:text-[clamp(2.75rem,4vw,3.75rem)]">
+            {lines.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </h1>
+          <Lead className="mt-6 max-w-xl">{dict.sections.heroLead}</Lead>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <ButtonLink href={localizedPath(locale, { route: "quote" })} size="lg">
+              {dict.common.requestQuote}
+            </ButtonLink>
+            <ButtonLink href={localizedPath(locale, { route: "contact" })} variant="secondary" size="lg">
+              {dict.common.contactUs}
+            </ButtonLink>
           </div>
         </div>
+        <div className="lg:col-span-6">
+          {mockups.length > 0 && studioHref ? (
+            <LiveProof
+              products={mockups}
+              names={t.products}
+              studioHref={studioHref}
+              labels={{
+                field: dict.sections.proofLabel,
+                placeholder: dict.sections.proofPlaceholder,
+                cta: dict.sections.proofCta,
+                note: dict.sections.proofNote,
+                preview: t.previewLabel,
+              }}
+            />
+          ) : (
+            <HeroScene className="mx-auto w-full max-w-[19rem] sm:max-w-md lg:max-w-xl" />
+          )}
+        </div>
+      </Container>
+      <Container className="pb-6">
+        <ControlStrip />
       </Container>
     </section>
   );
@@ -316,7 +301,7 @@ function CatalogCard({ href, title, body }: { href: string; title: string; body:
 function SectionHeader({ id, title, link }: { id: string; title: string; link: { href: string; label: string } }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
-      <Heading as="h2" size="lg" id={id}>
+      <Heading as="h2" size="xl" id={id} className="type-display">
         {title}
       </Heading>
       <ArrowLink href={link.href}>{link.label}</ArrowLink>

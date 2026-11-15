@@ -7,8 +7,8 @@ type Variant = "primary" | "secondary" | "accent" | "ghost" | "inverse" | "inver
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] font-medium whitespace-nowrap " +
-  "transition-colors duration-150 ease-[var(--ease-out-soft)] disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] text-center font-medium sm:whitespace-nowrap " +
+  "transition-[color,background-color,border-color,transform] duration-150 ease-[var(--ease-out-soft)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
   primary: "bg-primary text-on-primary hover:bg-primary-hover",
@@ -20,9 +20,9 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-3 text-sm",
-  md: "h-11 px-5 text-[0.9375rem]",
-  lg: "h-12 px-6 text-base",
+  sm: "min-h-9 px-3 py-1 text-sm",
+  md: "min-h-11 px-5 py-2 text-[0.9375rem]",
+  lg: "min-h-12 px-6 py-2.5 text-base",
 };
 
 export function buttonClasses(variant: Variant = "primary", size: Size = "md", className?: string) {

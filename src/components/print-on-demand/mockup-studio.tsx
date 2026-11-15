@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
 import { CloseIcon } from "@/components/ui/icons";
@@ -10,6 +10,8 @@ import { format } from "@/i18n/format";
 import { cn } from "@/lib/utils";
 import { mockupHandoff } from "./mockup-handoff";
 import { DEFAULT_COLORS, MOCKUPS, type Design, type MockupKey } from "./mockups";
+import { proofText } from "./proof-text";
+import { studioSelect } from "./studio-select";
 
 type T = Dictionary["printOnDemand"]["studio"];
 
@@ -36,13 +38,25 @@ export function MockupStudio({ products, t, formId }: { products: MockupKey[]; t
   const [selected, setSelected] = useState<MockupKey>(products[0] ?? "tshirt");
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [text, setText] = useState("");
+  // Starts with the text typed in the homepage live proof (if any) until the visitor edits it here.
+  const handedText = useSyncExternalStore(proofText.subscribe, proofText.read, proofText.server);
+  const [typedText, setTypedText] = useState<string | null>(null);
+  const text = typedText ?? handedText;
   const [scale, setScale] = useState(0.7);
   const [dx, setDx] = useState(0);
   const [dy, setDy] = useState(0);
   const [colors, setColors] = useState<Record<MockupKey, string>>(DEFAULT_COLORS);
   const [error, setError] = useState<string | null>(null);
   const [handedOver, setHandedOver] = useState(false);
+
+  // A product card elsewhere on the page asked for this product.
+  useEffect(
+    () =>
+      studioSelect.subscribe((key) => {
+        if (products.includes(key)) setSelected(key);
+      }),
+    [products],
+  );
 
   // Release the previous object URL whenever the image changes or the studio unmounts.
   useEffect(() => {
@@ -120,7 +134,7 @@ export function MockupStudio({ products, t, formId }: { products: MockupKey[]; t
             <label htmlFor={`${uid}-text`} className="text-fg text-sm font-medium">
               {t.textLabel}
             </label>
-            <Input id={`${uid}-text`} className="mt-2" maxLength={40} placeholder={t.textPlaceholder} value={text} onChange={(e) => setText(e.target.value)} />
+            <Input id={`${uid}-text`} className="mt-2" maxLength={40} placeholder={t.textPlaceholder} value={text} onChange={(e) => setTypedText(e.target.value)} />
           </div>
         ) : null}
 
@@ -141,7 +155,7 @@ export function MockupStudio({ products, t, formId }: { products: MockupKey[]; t
                   aria-label={t.colors[swatch.key]}
                   aria-pressed={active}
                   className={cn(
-                    "size-8 rounded-full border transition-shadow",
+                    "size-10 rounded-full border transition-shadow",
                     active ? "ring-accent border-white ring-2 ring-offset-2" : "border-line-strong hover:ring-line-strong hover:ring-2",
                   )}
                   style={{ backgroundColor: swatch.hex }}
@@ -205,7 +219,7 @@ function Slider({ id, label, min, max, value, onChange }: { id: string; label: s
         </output>
       </div>
       {/* LTR in every language: "right" means right on the product. */}
-      <input id={id} type="range" dir="ltr" min={min} max={max} value={value} onChange={(e) => onChange(Number(e.target.value))} className="accent-accent mt-2 w-full" />
+      <input id={id} type="range" dir="ltr" min={min} max={max} value={value} onChange={(e) => onChange(Number(e.target.value))} className="accent-accent mt-1 h-8 w-full" />
     </div>
   );
 }

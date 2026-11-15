@@ -27,6 +27,10 @@ const LOGO_INTRO_SCRIPT =
 
 export const viewport: Viewport = {
   themeColor: "#0e1a2b",
+  width: "device-width",
+  initialScale: 1,
+  // Lets the page extend under the notch / home indicator; components add env(safe-area-inset-*) padding.
+  viewportFit: "cover",
 };
 
 export default async function LocaleLayout({ children }: LayoutProps<"/[lang]">) {

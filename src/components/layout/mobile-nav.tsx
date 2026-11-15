@@ -45,7 +45,13 @@ export function MobileNav({ items, cta, labels, children }: Props) {
       if (event.key === "Escape") setOpenedOn(null);
     };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    // The page behind must not scroll while the menu is open.
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.documentElement.style.overflow = previousOverflow;
+    };
   }, [open]);
 
   return (
@@ -64,9 +70,10 @@ export function MobileNav({ items, cta, labels, children }: Props) {
       <div
         id={panelId}
         hidden={!open}
-        className="bg-bg border-line absolute inset-x-0 top-full border-b shadow-[0_12px_24px_-16px_rgb(14_26_43/0.25)]"
+        // Never taller than the screen below the header (landscape phones): the panel scrolls instead.
+        className="bg-bg border-line absolute inset-x-0 top-full max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain border-b shadow-[0_12px_24px_-16px_rgb(14_26_43/0.25)]"
       >
-        <nav aria-label={labels.navigation} className="mx-auto max-w-[75rem] px-4 py-4 sm:px-6">
+        <nav aria-label={labels.navigation} className="mx-auto max-w-[75rem] px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
           <ul className="flex flex-col">
             {items.map((item) => (
               <li key={item.section}>

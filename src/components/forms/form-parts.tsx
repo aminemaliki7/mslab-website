@@ -34,7 +34,7 @@ export function ConsentField({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "consent-error" : undefined}
         />
-        <label htmlFor="consent" className="text-fg text-sm leading-relaxed">
+        <label htmlFor="consent" className="text-fg py-1 text-sm leading-relaxed">
           {label}{" "}
           <Link href={privacyHref} className="text-accent underline underline-offset-2">
             {privacyLabel}

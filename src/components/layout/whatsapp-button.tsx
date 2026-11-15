@@ -23,7 +23,7 @@ export async function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={dict.whatsapp.label}
-      className="fixed end-4 bottom-4 z-30 inline-flex size-14 items-center justify-center rounded-full bg-[#1f8f4e] text-white shadow-[0_6px_20px_-6px_rgb(14_26_43/0.45)] transition-transform hover:scale-105 sm:end-6 sm:bottom-6"
+      className="fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex size-14 items-center justify-center rounded-full bg-[#1f8f4e] text-white shadow-[0_6px_20px_-6px_rgb(14_26_43/0.45)] transition-transform hover:scale-105 sm:end-6 sm:bottom-6"
     >
       <WhatsAppIcon width={28} height={28} />
     </a>

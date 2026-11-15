@@ -73,7 +73,7 @@ export function Checkbox({ className, ...props }: Omit<ComponentProps<"input">, 
   return (
     <input
       type="checkbox"
-      className={cn("accent-accent border-line-strong mt-1 size-4 shrink-0 rounded", className)}
+      className={cn("accent-accent border-line-strong mt-1 size-6 shrink-0 rounded", className)}
       {...props}
     />
   );

@@ -22,13 +22,13 @@ export function CategoryNav({
   const childrenOf = (id: string) => categories.filter((c) => c.parentId === id);
   const itemClass = (active: boolean) =>
     cn(
-      "block rounded-[var(--radius-control)] px-3 py-2 text-[0.9375rem] transition-colors",
+      "flex min-h-11 items-center rounded-[var(--radius-control)] px-3 py-2 text-[0.9375rem] transition-colors",
       active ? "bg-surface-strong text-fg font-semibold" : "text-fg-muted hover:bg-surface hover:text-fg",
     );
 
   return (
     <nav aria-labelledby="category-nav-heading">
-      <h2 id="category-nav-heading" className="text-fg-muted mb-3 px-3 text-xs font-semibold tracking-[0.08em] uppercase rtl:tracking-normal rtl:text-sm">
+      <h2 id="category-nav-heading" className="text-fg-muted mb-3 px-3 text-sm font-semibold">
         {dict.catalog.categoriesTitle}
       </h2>
       <ul className="space-y-0.5">

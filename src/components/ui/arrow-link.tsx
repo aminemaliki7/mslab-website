@@ -5,7 +5,7 @@ import { ArrowIcon } from "./icons";
 
 /** Secondary text link with a direction-aware arrow (mirrored in RTL). */
 export function ArrowLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
-  const classes = cn("text-accent hover:text-accent-hover group inline-flex items-center gap-1.5 text-sm font-medium", className);
+  const classes = cn("text-accent hover:text-accent-hover group inline-flex min-h-11 items-center gap-1.5 text-sm font-medium", className);
   const content = (
     <>
       {children}

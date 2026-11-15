@@ -22,8 +22,9 @@ export async function Footer() {
     { href: localizedPath(locale, { route: "track" }), label: dict.footer.tracking },
   ];
 
-  const headingClass = "text-xs font-semibold tracking-[0.08em] text-white/60 uppercase rtl:tracking-normal rtl:text-sm";
-  const linkClass = "text-white/85 hover:text-white underline-offset-4 hover:underline";
+  const headingClass = "text-sm font-semibold text-white";
+  // Rows are 44 px tall on touch screens (padding, not font size).
+  const linkClass = "inline-flex min-h-11 items-center text-white/85 underline-offset-4 hover:text-white hover:underline md:min-h-8";
 
   return (
     <footer className="bg-ink-900 mt-auto text-white">
@@ -44,7 +45,7 @@ export async function Footer() {
 
         <div className="lg:col-span-2">
           <h2 className={headingClass}>{dict.footer.navigation}</h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-2 text-sm">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className={linkClass}>
@@ -87,18 +88,18 @@ export async function Footer() {
       </Container>
 
       <div className="border-t border-white/10">
-        <Container className="flex flex-col gap-3 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
+        <Container className="flex flex-col gap-1 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © MSLAB. {dict.footer.rights}
           </p>
-          <ul className="flex gap-5">
+          <ul className="flex gap-6">
             <li>
-              <Link href={localizedPath(locale, { route: "legal" })} className="hover:text-white">
+              <Link href={localizedPath(locale, { route: "legal" })} className="inline-flex min-h-11 items-center hover:text-white">
                 {dict.footer.legal}
               </Link>
             </li>
             <li>
-              <Link href={localizedPath(locale, { route: "privacy" })} className="hover:text-white">
+              <Link href={localizedPath(locale, { route: "privacy" })} className="inline-flex min-h-11 items-center hover:text-white">
                 {dict.footer.privacy}
               </Link>
             </li>

@@ -21,6 +21,11 @@
   --color-cyan-800: #085870;
   --color-cyan-50: #e7f2f5;
   --color-cyan-300: #5ba7bc; /* accent text on dark ink (6.4:1) */
+  /* Process colors: printer's control strip only (docs/ART_DIRECTION.md) — never UI fills. */
+  --color-process-c: #0b6e8a;
+  --color-process-m: #c2255c;
+  --color-process-y: #f2c14e;
+  --color-process-k: #0e1a2b;
 
   /* Semantic tokens (use these in components) */
   --color-fg: var(--color-ink-900);
@@ -46,8 +51,8 @@
   --color-warning-soft: #fdf3dc;
 
   /* Typography — variables are injected by next/font in app/[lang]/layout.tsx */
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: var(--font-plex-arabic), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   /* Shape & motion */
@@ -59,6 +64,7 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
     scroll-padding-top: 5rem;
   }
 
@@ -149,6 +155,20 @@
   to { transform: scale(1); opacity: 1; }
 }
 @layer components {
+  /* Display type: Archivo at expanded width (Latin only; Arabic keeps its own face). */
+  .type-display {
+    font-variation-settings: "wdth" 118;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+  }
+  :lang(ar) .type-display {
+    font-variation-settings: normal;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.35;
+  }
+
   /* SVG parts animate around their own box. */
   .anim-float,
   .anim-print,

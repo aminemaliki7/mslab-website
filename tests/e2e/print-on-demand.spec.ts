@@ -12,8 +12,13 @@ test("page explains the service and links to the form and tracking", async ({ pa
   await page.goto("/fr/services/impression-a-la-demande");
   await expect(page.locator("main h1")).toHaveText("Votre idée. Votre design. Notre production.");
   await expect(page.getByRole("heading", { name: "Comment ça marche" })).toBeVisible();
+  // Hero CTA jumps to the studio; the closing band jumps to the form. Wait until the page is
+  // interactive (as a visitor would): a click during hydration has its #hash reset by the router.
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("link", { name: "Créer mon aperçu" })).toHaveAttribute("href", "#studio");
   await page.getByRole("link", { name: "Démarrer mon projet" }).click();
   await expect(page).toHaveURL(/#demande$/);
+  await expect(page.getByRole("heading", { name: "Décrivez votre projet" })).toBeInViewport();
   await expect(page.getByRole("link", { name: "Suivre ma commande" }).first()).toHaveAttribute("href", "/fr/suivi-commande");
   expect(problems).toEqual([]);
 });
@@ -86,7 +91,8 @@ test("mockup studio: text on a product, then use it in the request form", async 
   await page.goto("/fr/services/impression-a-la-demande");
   await expect(page.getByRole("heading", { name: "Visualisez votre design" })).toBeVisible();
   await page.getByLabel("Ou un texte").fill("ATELIER");
-  await page.getByRole("button", { name: /Carte de visite/ }).click();
+  // Scoped to the studio: the product cards above also have a "Carte de visite" button.
+  await page.locator("#studio").getByRole("button", { name: /Carte de visite/ }).click();
   await expect(page.getByRole("img", { name: "Aperçu : Carte de visite" })).toContainText("ATELIER");
   await page.getByRole("button", { name: "Bleu nuit" }).click();
   await expect(page.getByRole("button", { name: "Bleu nuit" })).toHaveAttribute("aria-pressed", "true");

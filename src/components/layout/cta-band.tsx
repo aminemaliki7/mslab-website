@@ -15,7 +15,7 @@ export async function CtaBand() {
     <section aria-labelledby="cta-heading" className="bg-ink-900 text-white">
       <Container className="flex flex-col gap-8 py-14 lg:flex-row lg:items-center lg:justify-between lg:py-16">
         <div className="max-w-2xl">
-          <h2 id="cta-heading" className="text-2xl font-semibold leading-snug tracking-tight text-balance sm:text-3xl">
+          <h2 id="cta-heading" className="type-display text-2xl leading-[1.1] text-balance sm:text-3xl">
             {dict.sections.ctaTitle}
           </h2>
           <p className="mt-3 text-white/75">{dict.sections.ctaBody}</p>

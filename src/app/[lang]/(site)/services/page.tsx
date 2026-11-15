@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HeroScene } from "@/components/illustrations/scenes";
-import { ServiceCard } from "@/components/catalog/service-card";
+import { ServiceIndex } from "@/components/catalog/service-index";
 import { CtaBand } from "@/components/layout/cta-band";
 import { PageHeader } from "@/components/layout/page-header";
 import { ArrowLink } from "@/components/ui/arrow-link";
@@ -35,17 +35,15 @@ export default async function ServicesPage() {
             {dict.servicesPage.listTitle}
           </Heading>
           {services.length > 0 ? (
-            <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {services.map((service) => (
-                <li key={service.id} className="reveal">
-                  <ServiceCard
-                    service={service}
-                    href={localizedPath(locale, { route: "service", slug: service.slug })}
-                    cta={dict.sections.learnMore}
-                  />
-                </li>
-              ))}
-            </ul>
+            <ServiceIndex
+              className="mt-8"
+              rows={services.map((service) => ({
+                slugFr: service.slugs.fr,
+                name: service.name,
+                summary: service.summary,
+                href: localizedPath(locale, { route: "service", slug: service.slug }),
+              }))}
+            />
           ) : (
             <div className="border-line mt-10 rounded-[var(--radius-card)] border border-dashed p-8">
               <p className="text-fg-muted max-w-xl">{dict.servicesPage.empty}</p>

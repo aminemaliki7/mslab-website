@@ -58,7 +58,16 @@
     "ctaTitle": "Un projet d'impression, un besoin en fournitures ou en livres ?",
     "ctaBody": "Décrivez votre besoin dans une demande de devis ou contactez-nous : notre équipe revient vers vous.",
     "ctaWhatsApp": "Écrire sur WhatsApp",
-    "heroLead": "MSLAB accompagne les professionnels, les établissements et les particuliers à travers une offre dédiée à l'impression, aux fournitures et aux produits de papeterie."
+    "heroLead": "Impression, objets personnalisés et fournitures : MSLAB transforme vos idées et vos fichiers en produits, pour les particuliers, les entreprises et les institutions.",
+    "clientsTitle": "Ils nous font confiance.",
+    "clientsSubtitle": "Institutions et organismes.",
+    "proofLabel": "Essayez : écrivez votre nom ou celui de votre marque",
+    "proofPlaceholder": "Votre marque",
+    "proofCta": "Continuer dans le studio",
+    "proofNote": "Aperçu indicatif. Rien n'est envoyé.",
+    "servicesTitle": "Ce que nous produisons",
+    "processCta": "Créer mon aperçu",
+    "catalogTitle": "Le catalogue"
   },
   "about": {
     "presentationTitle": "Présentation",
@@ -243,6 +252,15 @@
     "heroLead": "Donnez vie à vos idées. Des objets personnalisés aux supports professionnels, jusqu'aux produits sur mesure : nous vous aidons à concrétiser vos projets.",
     "startCta": "Démarrer mon projet",
     "trackCta": "Suivre ma commande",
+    "heroPoints": [
+      "Aperçu de votre design en direct",
+      "PDF, AI, PSD, JPG et PNG acceptés",
+      "Suivi de votre commande en ligne"
+    ],
+    "designCta": "Créer mon aperçu",
+    "productsTitle": "Choisissez votre support",
+    "productsLead": "Textile, objets, packaging ou papeterie : sélectionnez un produit et placez-y votre logo ou votre texte.",
+    "customize": "Personnaliser",
     "stepsTitle": "Comment ça marche",
     "step1Title": "Partagez votre idée",
     "step1Body": "Décrivez votre projet et joignez vos fichiers, croquis ou logos.",
@@ -251,6 +269,31 @@
     "step3Title": "Nous produisons",
     "step3Body": "Après votre accord, votre projet passe en production. Suivez son avancement en ligne.",
     "galleryTitle": "Nos réalisations",
+    "faqTitle": "Questions fréquentes",
+    "faq": [
+      {
+        "q": "Quels fichiers puis-je envoyer ?",
+        "a": "Jusqu'à 5 fichiers de 15 Mo chacun, aux formats PDF, AI, EPS, PSD, JPG, PNG ou TIFF. Un logo en PNG à fond transparent donne le meilleur aperçu."
+      },
+      {
+        "q": "L'aperçu correspond-il au résultat final ?",
+        "a": "L'aperçu est indicatif. Les formats, les couleurs et le rendu final sont confirmés avec votre devis, avant toute production."
+      },
+      {
+        "q": "Combien coûte mon projet ?",
+        "a": "Chaque projet est chiffré selon le support, la quantité et les finitions choisies. Vous recevez une proposition et rien n'est produit sans votre accord."
+      },
+      {
+        "q": "Mon visuel est-il envoyé quand j'utilise l'aperçu ?",
+        "a": "Non. L'aperçu fonctionne uniquement dans votre navigateur. Vos fichiers ne nous parviennent que lorsque vous envoyez votre demande."
+      },
+      {
+        "q": "Comment suivre ma commande ?",
+        "a": "Après l'envoi de votre demande, vous recevez une référence. Saisissez-la sur la page de suivi pour voir l'avancement de votre projet."
+      }
+    ],
+    "finalTitle": "Prêt à donner vie à votre idée ?",
+    "finalBody": "Décrivez votre projet en quelques minutes : MSLAB l'étudie et revient vers vous avec une proposition.",
     "formTitle": "Décrivez votre projet",
     "formLead": "Plus votre description est précise, plus notre proposition sera adaptée.",
     "projectSection": "Votre projet",
