@@ -37,11 +37,21 @@ test.describe("signed in (owner-provided test account)", () => {
   });
 
   test("dashboard and navigation", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Tableau de bord" })).toBeVisible();
-    for (const label of ["Demandes de devis", "Messages", "Produits", "Catégories", "Services", "Paramètres"]) {
-      await page.getByRole("navigation", { name: "Administration" }).getByRole("link", { name: new RegExp(label) }).click();
+    await expect(page.getByRole("heading", { name: "À traiter" })).toBeVisible();
+    for (const label of ["Demandes de devis", "Messages", "Produits", "Catégories", "Services", "Informations de l'entreprise"]) {
+      await page.getByRole("navigation", { name: "Menu d'administration" }).getByRole("link", { name: new RegExp(label) }).click();
       await expect(page.locator("h1")).toBeVisible();
     }
+  });
+
+  test("interface language switches to English and Arabic (RTL), then back", async ({ page }) => {
+    await page.getByRole("button", { name: "English" }).first().click();
+    await expect(page.getByRole("heading", { name: "To handle" })).toBeVisible();
+    await page.getByRole("button", { name: "العربية" }).first().click();
+    await expect(page.getByRole("heading", { name: "للمعالجة" })).toBeVisible();
+    await expect(page.locator("[dir=rtl]").first()).toBeVisible();
+    await page.getByRole("button", { name: "Français" }).first().click();
+    await expect(page.getByRole("heading", { name: "À traiter" })).toBeVisible();
   });
 
   test("create, publish and delete a product", async ({ page }) => {

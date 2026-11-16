@@ -1,96 +1,129 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { AdminPageHeader, Panel, StatusBadge } from "@/components/admin/ui";
+import type { ReactNode } from "react";
+import { AdminPageHeader, Notice, Panel, StatusBadge, Tile } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
-import { formatDateTime, inquiryStatus, quotationStatus } from "@/features/admin/labels";
+import { formatAdminDateTime, type AdminLang } from "@/features/admin/dictionary";
+import { inquiryStatuses, quotationStatuses, type StatusLabel } from "@/features/admin/labels";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
+import { format } from "@/i18n/format";
 import { createSessionClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Tableau de bord" };
+export const generateMetadata = adminTitle((t) => t.dashboard.title);
 
+/**
+ * Dashboard, in the order the team works: what needs handling now (new requests and
+ * messages), quick actions for the common tasks, then the site at a glance and recent activity.
+ */
 export default async function DashboardPage() {
-  await requireAdmin();
+  const [admin, { lang, t }] = await Promise.all([requireAdmin(), getAdminT()]);
+  const d = t.dashboard;
   const db = await createSessionClient();
   const count = (q: PromiseLike<{ count: number | null }>) => q.then((r) => r.count ?? 0);
 
-  const [publishedProducts, publishedServices, newInquiries, newQuotations, quotations, inquiries, products, unsent] =
-    await Promise.all([
-      count(db.from("products").select("id", { count: "exact", head: true }).eq("status", "published")),
-      count(db.from("services").select("id", { count: "exact", head: true }).eq("status", "published")),
-      count(db.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new")),
-      count(db.from("quotation_requests").select("id", { count: "exact", head: true }).eq("status", "new")),
-      db.from("quotation_requests").select("id, reference, full_name, company_name, status, created_at").order("created_at", { ascending: false }).limit(5),
-      db.from("inquiries").select("id, reference, full_name, subject, status, created_at").order("created_at", { ascending: false }).limit(5),
-      db.from("products").select("id, name_fr, status, updated_at").order("updated_at", { ascending: false }).limit(5),
-      count(
-        db
-          .from("quotation_requests")
-          .select("id", { count: "exact", head: true })
-          .is("notified_at", null)
-          .not("notification_error", "is", null),
-      ),
-    ]);
+  const [newQuotations, newInquiries, publishedProducts, draftProducts, categories, publishedServices, quotations, inquiries, unsent] = await Promise.all([
+    count(db.from("quotation_requests").select("id", { count: "exact", head: true }).eq("status", "new")),
+    count(db.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new")),
+    count(db.from("products").select("id", { count: "exact", head: true }).eq("status", "published")),
+    count(db.from("products").select("id", { count: "exact", head: true }).eq("status", "draft")),
+    count(db.from("categories").select("id", { count: "exact", head: true })),
+    count(db.from("services").select("id", { count: "exact", head: true }).eq("status", "published")),
+    db.from("quotation_requests").select("id, reference, full_name, company_name, status, created_at").order("created_at", { ascending: false }).limit(5),
+    db.from("inquiries").select("id, reference, full_name, subject, status, created_at").order("created_at", { ascending: false }).limit(5),
+    count(db.from("quotation_requests").select("id", { count: "exact", head: true }).is("notified_at", null).not("notification_error", "is", null)),
+  ]);
 
-  const stats = [
-    { label: "Produits publiés", value: publishedProducts, href: "/admin/products?status=published" },
-    { label: "Services publiés", value: publishedServices, href: "/admin/services" },
-    { label: "Nouveaux messages", value: newInquiries, href: "/admin/inquiries?status=new" },
-    { label: "Nouvelles demandes de devis", value: newQuotations, href: "/admin/quotations?status=new" },
-  ];
+  const qStatus = quotationStatuses(t);
+  const iStatus = inquiryStatuses(t);
+  const firstName = (admin.profile.full_name ?? "").trim().split(/\s+/)[0];
 
   return (
     <>
-      <AdminPageHeader title="Tableau de bord" description="Vue d'ensemble de l'activité du site." />
+      <AdminPageHeader title={firstName ? format(d.hello, { name: firstName }) : d.title} description={d.intro} />
 
-      <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat) => (
-          <li key={stat.label}>
-            <Link href={stat.href} className="border-line bg-bg hover:border-line-strong block rounded-[var(--radius-card)] border p-5 transition-colors">
-              <p className="text-fg-muted text-sm">{stat.label}</p>
-              <p className="mt-2 text-3xl font-semibold tabular-nums">{stat.value}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {unsent > 0 ? <Notice tone="warning">{format(d.unsent, { count: unsent })}</Notice> : null}
 
-      {unsent > 0 ? (
-        <p className="bg-warning-soft text-warning mt-6 rounded-[var(--radius-control)] px-4 py-3 text-sm">
-          {unsent} demande(s) de devis n&apos;ont pas fait l&apos;objet d&apos;une notification e-mail (envoi désactivé ou en
-          échec). Consultez-les ci-dessous.
-        </p>
-      ) : null}
+      {/* 1. To handle */}
+      <section aria-labelledby="todo-heading">
+        <h2 id="todo-heading" className="text-fg mb-3 text-lg font-semibold">
+          {d.todoTitle}
+        </h2>
+        {newQuotations + newInquiries === 0 ? (
+          <p className="bg-success-soft text-success rounded-[var(--radius-card)] px-5 py-4 font-medium">{d.nothingTodo}</p>
+        ) : (
+          <ul className="grid gap-4 sm:grid-cols-2">
+            <li>
+              <TodoTile href="/admin/quotations?status=new" value={newQuotations} label={d.newQuotes} cta={d.open} />
+            </li>
+            <li>
+              <TodoTile href="/admin/inquiries?status=new" value={newInquiries} label={d.newMessages} cta={d.open} />
+            </li>
+          </ul>
+        )}
+      </section>
 
-      <div className="mt-8 grid gap-6 xl:grid-cols-2">
-        <Panel title="Dernières demandes de devis" actions={<Link href="/admin/quotations" className="text-accent text-sm">Tout voir</Link>}>
+      {/* 2. Quick actions */}
+      <section aria-labelledby="quick-heading" className="mt-10">
+        <h2 id="quick-heading" className="text-fg mb-3 text-lg font-semibold">
+          {d.quickTitle}
+        </h2>
+        <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { href: "/admin/products/new", label: d.addProduct },
+            { href: "/admin/categories#new", label: d.addCategory },
+            { href: "/admin/print-on-demand/portfolio/new", label: d.addWork },
+            { href: "/admin/settings", label: d.editCompany },
+          ].map((action) => (
+            <li key={action.href}>
+              <Tile href={action.href} className="flex h-full min-h-16 items-center gap-3 font-semibold">
+                <span aria-hidden="true" className="bg-accent-soft text-accent grid size-9 shrink-0 place-items-center rounded-full text-lg">
+                  +
+                </span>
+                {action.label}
+              </Tile>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 3. The site at a glance */}
+      <section aria-labelledby="site-heading" className="mt-10">
+        <h2 id="site-heading" className="text-fg mb-3 text-lg font-semibold">
+          {d.siteTitle}
+        </h2>
+        <ul className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          <Stat href="/admin/products?status=published" value={publishedProducts} label={d.publishedProducts} />
+          <Stat href="/admin/products?status=draft" value={draftProducts} label={d.draftProducts} />
+          <Stat href="/admin/categories" value={categories} label={d.categories} />
+          <Stat href="/admin/services" value={publishedServices} label={d.publishedServices} />
+        </ul>
+      </section>
+
+      {/* 4. Recent activity */}
+      <div className="mt-10 grid gap-6 xl:grid-cols-2">
+        <Panel title={d.recentQuotes} actions={<SeeAll href="/admin/quotations">{t.common.seeAll}</SeeAll>}>
           <ActivityList
+            lang={lang}
+            empty={d.noQuotes}
             items={(quotations.data ?? []).map((q) => ({
               href: `/admin/quotations/${q.id}`,
-              title: `${q.reference} — ${q.full_name}${q.company_name ? ` (${q.company_name})` : ""}`,
+              title: q.company_name ? `${q.full_name} (${q.company_name})` : q.full_name,
+              meta: q.reference,
               date: q.created_at,
-              badge: quotationStatus[q.status],
+              badge: qStatus[q.status],
             }))}
-            empty="Aucune demande de devis pour le moment."
           />
         </Panel>
-        <Panel title="Derniers messages" actions={<Link href="/admin/inquiries" className="text-accent text-sm">Tout voir</Link>}>
+        <Panel title={d.recentMessages} actions={<SeeAll href="/admin/inquiries">{t.common.seeAll}</SeeAll>}>
           <ActivityList
+            lang={lang}
+            empty={d.noMessages}
             items={(inquiries.data ?? []).map((i) => ({
               href: `/admin/inquiries/${i.id}`,
-              title: `${i.reference} — ${i.full_name} : ${i.subject}`,
+              title: i.subject,
+              meta: `${i.full_name} · ${i.reference}`,
               date: i.created_at,
-              badge: inquiryStatus[i.status],
+              badge: iStatus[i.status],
             }))}
-            empty="Aucun message pour le moment."
-          />
-        </Panel>
-        <Panel title="Produits modifiés récemment" className="xl:col-span-2">
-          <ActivityList
-            items={(products.data ?? []).map((p) => ({
-              href: `/admin/products/${p.id}`,
-              title: p.name_fr,
-              date: p.updated_at,
-              badge: { label: p.status === "published" ? "Publié" : p.status === "draft" ? "Brouillon" : "Archivé", tone: p.status === "published" ? "success" : "neutral" },
-            }))}
-            empty="Aucun produit."
           />
         </Panel>
       </div>
@@ -98,25 +131,60 @@ export default async function DashboardPage() {
   );
 }
 
-function ActivityList({
-  items,
-  empty,
-}: {
-  items: Array<{ href: string; title: string; date: string; badge: { label: string; tone: "neutral" | "accent" | "success" | "warning" | "danger" } }>;
-  empty: string;
-}) {
+function TodoTile({ href, value, label, cta }: { href: string; value: number; label: string; cta: string }) {
+  return (
+    <Tile href={href} className={value > 0 ? "border-accent bg-accent-soft/40" : undefined}>
+      <span className="flex items-end justify-between gap-4">
+        <span>
+          <span className="text-fg block text-4xl font-semibold tabular-nums" dir="ltr">
+            {value}
+          </span>
+          <span className="text-fg mt-1 block font-medium">{label}</span>
+        </span>
+        <span className="text-accent text-sm font-semibold">{cta}</span>
+      </span>
+    </Tile>
+  );
+}
+
+function Stat({ href, value, label }: { href: string; value: number; label: string }) {
+  return (
+    <li>
+      <Tile href={href} className="h-full">
+        <span className="text-fg block text-2xl font-semibold tabular-nums" dir="ltr">
+          {value}
+        </span>
+        <span className="text-fg-muted mt-1 block text-sm">{label}</span>
+      </Tile>
+    </li>
+  );
+}
+
+function SeeAll({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <Link href={href} className="text-accent inline-flex min-h-11 items-center text-sm font-medium">
+      {children}
+    </Link>
+  );
+}
+
+function ActivityList({ items, empty, lang }: { items: Array<{ href: string; title: string; meta: string; date: string; badge: StatusLabel }>; empty: string; lang: AdminLang }) {
   if (items.length === 0) return <p className="text-fg-muted text-sm">{empty}</p>;
   return (
     <ul className="divide-line -my-2 divide-y">
       {items.map((item) => (
-        <li key={item.href} className="flex items-center justify-between gap-4 py-2.5">
-          <div className="min-w-0">
-            <Link href={item.href} dir="auto" className="hover:text-accent block truncate text-start text-sm font-medium">
-              {item.title}
-            </Link>
-            <p className="text-fg-muted text-xs">{formatDateTime(item.date)}</p>
-          </div>
-          <StatusBadge status={item.badge} />
+        <li key={item.href}>
+          <Link href={item.href} className="hover:bg-surface -mx-2 flex items-center justify-between gap-4 rounded-[var(--radius-control)] px-2 py-3">
+            <span className="min-w-0">
+              <span dir="auto" className="text-fg block truncate text-start font-medium">
+                {item.title}
+              </span>
+              <span className="text-fg-muted block text-xs">
+                <span dir="auto">{item.meta}</span> · {formatAdminDateTime(item.date, lang)}
+              </span>
+            </span>
+            <StatusBadge status={item.badge} />
+          </Link>
         </li>
       ))}
     </ul>

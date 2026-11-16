@@ -6,6 +6,7 @@ import { Field, Input, Textarea } from "@/components/ui/form";
 import { submitContact, type FormState } from "@/features/inquiries/actions";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { QuickPicks } from "./quick-picks";
 import { format } from "@/i18n/format";
 import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "./form-parts";
 import { useEnhancedForm, useFocusFirstError } from "./use-enhanced-form";
@@ -73,9 +74,12 @@ function ContactFormInner({ locale, sourcePath, privacyHref, t, onReset }: Props
       <Field id="phone" label={`${t.forms.phone} (${t.forms.optional})`} hint={t.forms.phoneHint} error={message("phone")}>
         {(p) => <Input {...p} name="phone" type="tel" autoComplete="tel" dir="ltr" maxLength={32} defaultValue={values.phone} />}
       </Field>
-      <Field id="subject" label={t.forms.subject} required error={message("subject")}>
-        {(p) => <Input {...p} name="subject" maxLength={200} defaultValue={values.subject} />}
-      </Field>
+      <div className="space-y-3">
+        <Field id="subject" label={t.forms.subject} required error={message("subject")}>
+          {(p) => <Input {...p} name="subject" maxLength={200} defaultValue={values.subject} />}
+        </Field>
+        <QuickPicks label={`${t.forms.subject} — ${t.forms.quickPick}`} picks={Object.values(t.forms.subjects).map((subject) => ({ label: subject, values: { subject } }))} />
+      </div>
       <Field id="message" label={t.forms.message} required error={message("message")}>
         {(p) => <Textarea {...p} name="message" rows={6} maxLength={5000} defaultValue={values.message} />}
       </Field>

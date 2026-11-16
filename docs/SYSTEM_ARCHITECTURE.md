@@ -163,7 +163,7 @@ Clean module boundaries; reusable primitives; strict TS; Server Components by de
 | ADR-012 | 2026-11-14 | Services are DB-managed with admin CRUD | Accepted |
 | ADR-013 | 2026-11-14 | Separate status vocabularies: quotations `new, in_review, contacted, quoted, accepted, rejected, closed`; contact inquiries `new, read, replied, closed, spam` (+ `read_at`) | Accepted |
 | ADR-014 | 2026-11-14 | Company details live in a `site_settings` singleton editable in `/admin/settings`; empty fields are hidden publicly | Accepted |
-| ADR-015 | 2026-11-14 | Admin UI in French; Arabic input fields render `dir="rtl"`; full Arabic admin UI deferred | Accepted |
+| ADR-015 | 2026-11-14, revised 2026-11-16 | Admin UI in French, English or Arabic (RTL), chosen per admin from the sidebar/login page and stored in the `mslab-admin-lang` cookie. Text lives in `src/features/admin/dictionary.ts`; server actions keep returning French messages, translated for display by `translateMessage`. Arabic input fields render `dir="rtl"` | Accepted |
 | ADR-016 | 2026-11-14 | i18n routing built in Milestone 1 (not M7); database (M2) precedes catalog (M3) | Accepted |
 | ADR-017 | 2026-11-14 | Multi-product quotes use a client-side "quote list" (localStorage) feeding the quotation form — not a cart, no checkout | Accepted |
 | ADR-018 | 2026-11-14 | "Ink & paper" palette as semantic tokens; Geist (Latin) + IBM Plex Sans Arabic | Accepted |

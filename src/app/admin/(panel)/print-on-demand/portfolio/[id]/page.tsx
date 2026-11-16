@@ -1,18 +1,21 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionButton } from "@/components/admin/admin-form";
 import { PortfolioForm } from "@/components/admin/pod-forms";
-import { AdminPageHeader, Panel } from "@/components/admin/ui";
+import { AdminPageHeader, Notice, Panel } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { deletePortfolioItem } from "@/features/admin/pod-actions";
+import { format } from "@/i18n/format";
 import { createSessionClient } from "@/lib/supabase/server";
 import { catalogImageUrl } from "@/lib/supabase/storage";
 
-export const metadata: Metadata = { title: "Réalisation" };
+export const generateMetadata = adminTitle((t) => t.pod.work.pageTitle);
 
 /** Create ("new") or edit a portfolio item. */
 export default async function PortfolioItemPage({ params, searchParams }: PageProps<"/admin/print-on-demand/portfolio/[id]">) {
   await requireAdmin();
+  const { t } = await getAdminT();
+  const w = t.pod.work;
   const { id } = await params;
   const { created } = await searchParams;
   const isNew = id === "new";
@@ -23,20 +26,14 @@ export default async function PortfolioItemPage({ params, searchParams }: PagePr
 
   return (
     <>
-      <AdminPageHeader title={item ? item.title_fr : "Nouvelle réalisation"} back={{ href: "/admin/print-on-demand", label: "Impression à la demande" }} />
-      {created ? <p className="text-success mb-4 text-sm">Réalisation créée.</p> : null}
+      <AdminPageHeader title={item ? item.title_fr : w.newTitle} description={t.pod.galleryHint} back={{ href: "/admin/print-on-demand", label: t.pod.title }} />
+      {created ? <Notice>{w.created}</Notice> : null}
       <div className="space-y-6">
         <PortfolioForm item={item} imageUrl={item?.image_path ? catalogImageUrl(item.image_path) : null} />
         {item ? (
-          <Panel title="Zone de danger">
-            <p className="text-fg-muted mb-4 text-sm">La suppression retire aussi la photo. Pour la masquer seulement, choisissez « Archivé ».</p>
-            <ActionButton
-              action={deletePortfolioItem}
-              label="Supprimer la réalisation"
-              variant="secondary"
-              confirm={`Supprimer « ${item.title_fr} » ?`}
-              hidden={{ id: item.id }}
-            />
+          <Panel title={t.common.dangerZone}>
+            <p className="text-fg-muted mb-4 text-sm">{w.dangerText}</p>
+            <ActionButton action={deletePortfolioItem} label={w.deleteButton} variant="secondary" confirm={format(w.deleteConfirm, { name: item.title_fr })} hidden={{ id: item.id }} />
           </Panel>
         ) : null}
       </div>

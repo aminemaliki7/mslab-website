@@ -1,16 +1,20 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AdminPageHeader, EmptyState, FilterBar, StatusBadge, Table, Td } from "@/components/admin/ui";
+import { AdminPageHeader, EmptyState, FilterBar, Notice, StatusBadge, Table, Td } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
-import { formatDateTime, inquiryStatus } from "@/features/admin/labels";
+import { formatAdminDateTime } from "@/features/admin/dictionary";
+import { inquiryStatuses } from "@/features/admin/labels";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { safeSearchTerm } from "@/features/admin/search";
 import { createSessionClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Messages" };
+export const generateMetadata = adminTitle((t) => t.inquiries.title);
 
 export default async function InquiriesAdminPage({ searchParams }: PageProps<"/admin/inquiries">) {
   await requireAdmin();
+  const { lang, t } = await getAdminT();
+  const ti = t.inquiries;
+  const statuses = inquiryStatuses(t);
   const params = await searchParams;
   const db = await createSessionClient();
 
@@ -20,7 +24,7 @@ export default async function InquiriesAdminPage({ searchParams }: PageProps<"/a
   }
 
   const q = safeSearchTerm(params.q);
-  const status = typeof params.status === "string" && params.status in inquiryStatus ? (params.status as keyof typeof inquiryStatus) : undefined;
+  const status = typeof params.status === "string" && params.status in statuses ? (params.status as keyof typeof statuses) : undefined;
   let query = db
     .from("inquiries")
     .select("id, reference, full_name, email, subject, status, read_at, created_at")
@@ -33,32 +37,42 @@ export default async function InquiriesAdminPage({ searchParams }: PageProps<"/a
 
   return (
     <>
-      <AdminPageHeader title="Messages" description="Messages du formulaire de contact (100 plus récents, spam masqué par défaut)." />
-      <FilterBar action="/admin/inquiries" q={q} status={status} statuses={inquiryStatus} placeholder="Référence, nom, e-mail, objet…" />
-      {error ? <p className="text-danger text-sm">Impossible de charger les messages.</p> : null}
+      <AdminPageHeader title={ti.title} description={ti.description} />
+      <FilterBar
+        action="/admin/inquiries"
+        q={q}
+        status={status}
+        statuses={statuses}
+        labels={{ search: t.common.search, placeholder: ti.searchPlaceholder, status: t.common.status, allStatuses: t.common.allStatuses, submit: t.common.filter }}
+      />
+      {error ? <Notice tone="danger">{t.common.loadError}</Notice> : null}
       {data && data.length > 0 ? (
-        <Table head={["Message", "Expéditeur", "Statut", "Reçu le"]}>
+        <Table head={[ti.colMessage, ti.colSender, t.common.status, ti.colReceived]}>
           {data.map((m) => (
-            <tr key={m.id} className={!m.read_at ? "bg-accent-soft/40" : undefined}>
+            <tr key={m.id} className={!m.read_at ? "md:bg-accent-soft/40 max-md:!border-accent" : undefined}>
               <Td>
-                <Link href={`/admin/inquiries/${m.id}`} className={`hover:text-accent ${m.read_at ? "" : "font-semibold"}`}>
+                <Link href={`/admin/inquiries/${m.id}`} className={`hover:text-accent text-base underline-offset-4 hover:underline md:text-sm ${m.read_at ? "font-medium" : "font-semibold"}`}>
                   {m.subject}
                 </Link>
-                <p className="text-fg-muted font-[family-name:var(--font-geist-mono)] text-xs">{m.reference}</p>
+                <p className="text-fg-muted font-[family-name:var(--font-geist-mono)] text-xs" dir="ltr">
+                  {m.reference}
+                </p>
               </Td>
-              <Td>
+              <Td label={ti.colSender}>
                 <p>{m.full_name}</p>
                 <p className="text-fg-muted text-xs">{m.email}</p>
               </Td>
-              <Td>
-                <StatusBadge status={inquiryStatus[m.status]} />
+              <Td label={t.common.status}>
+                <StatusBadge status={statuses[m.status]} />
               </Td>
-              <Td className="text-fg-muted whitespace-nowrap">{formatDateTime(m.created_at)}</Td>
+              <Td label={ti.colReceived} className="text-fg-muted whitespace-nowrap">
+                {formatAdminDateTime(m.created_at, lang)}
+              </Td>
             </tr>
           ))}
         </Table>
       ) : (
-        <EmptyState>Aucun message{q || status ? " ne correspond à ces filtres" : " pour le moment"}.</EmptyState>
+        <EmptyState>{q || status ? t.common.noMatch : ti.empty}</EmptyState>
       )}
     </>
   );

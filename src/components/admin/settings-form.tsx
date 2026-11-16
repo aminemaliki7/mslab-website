@@ -5,65 +5,54 @@ import { CheckboxField, LocalizedField, TextField } from "@/components/admin/fie
 import { Panel } from "@/components/admin/ui";
 import { saveSettings } from "@/features/admin/settings-actions";
 import type { Tables } from "@/lib/supabase/database.types";
+import { useAdminT } from "./admin-i18n";
 
 export function SettingsForm({ settings }: { settings: Tables<"site_settings"> }) {
+  const { t } = useAdminT();
+  const s = t.settings;
   const values = {
     ...settings,
     whatsapp_number: settings.whatsapp_number ? `+${settings.whatsapp_number}` : null,
   } as unknown as Record<string, string | number | boolean | null>;
 
   return (
-    <AdminForm action={saveSettings} submitLabel="Enregistrer les paramètres">
+    <AdminForm action={saveSettings} submitLabel={s.save}>
       {(state) => {
         const e = state.fieldErrors;
         return (
           <>
-            <p className="bg-warning-soft text-warning rounded-[var(--radius-control)] px-4 py-3 text-sm">
-              N&apos;indiquez que des informations vérifiées. Un champ vide est simplement masqué sur le site.
-            </p>
+            <p className="bg-warning-soft text-warning rounded-[var(--radius-control)] px-4 py-3 text-sm">{s.warning}</p>
 
-            <Panel title="Entreprise">
-              <div className="grid gap-5 md:grid-cols-2">
-                <TextField name="company_name" label="Nom commercial" values={values} errors={e} maxLength={160} />
-                <TextField name="legal_name" label="Raison sociale" values={values} errors={e} maxLength={200} />
-              </div>
-            </Panel>
-
-            <Panel title="Coordonnées">
+            <Panel title={s.contact}>
               <div className="space-y-6">
                 <div className="grid gap-5 md:grid-cols-3">
-                  <TextField name="email" label="E-mail de contact" type="email" values={values} errors={e} dir="ltr" />
-                  <TextField name="phone" label="Téléphone" type="tel" values={values} errors={e} dir="ltr" />
-                  <TextField name="whatsapp_number" label="Numéro WhatsApp" type="tel" values={values} errors={e} dir="ltr" hint="Les boutons WhatsApp n'apparaissent que si ce champ est rempli." />
+                  <TextField name="phone" label={s.phone} type="tel" values={values} errors={e} dir="ltr" />
+                  <TextField name="whatsapp_number" label={s.whatsapp} type="tel" values={values} errors={e} dir="ltr" hint={s.whatsappHint} />
+                  <TextField name="email" label={s.email} type="email" values={values} errors={e} dir="ltr" />
                 </div>
-                <LocalizedField name="address" label="Adresse" values={values} errors={e} multiline rows={2} maxLength={300} />
-                <TextField name="maps_url" label="Lien Google Maps (https://…)" values={values} errors={e} dir="ltr" hint="Affiché uniquement si une adresse est renseignée." />
-                <LocalizedField name="opening_hours" label="Horaires d'ouverture" values={values} errors={e} multiline rows={2} maxLength={300} />
+                <LocalizedField name="address" label={s.address} values={values} errors={e} multiline rows={2} maxLength={300} />
+                <TextField name="maps_url" label={s.maps} values={values} errors={e} dir="ltr" hint={s.mapsHint} />
+                <LocalizedField name="opening_hours" label={s.hours} values={values} errors={e} multiline rows={2} maxLength={300} />
               </div>
             </Panel>
 
-            <Panel title="Présentation (page « À propos » et accueil)">
+            <Panel title={s.company}>
+              <div className="grid gap-5 md:grid-cols-2">
+                <TextField name="company_name" label={s.companyName} values={values} errors={e} maxLength={160} />
+                <TextField name="legal_name" label={s.legalName} values={values} errors={e} maxLength={200} />
+              </div>
+            </Panel>
+
+            <Panel title={s.presentation}>
               <div className="space-y-6">
-                <LocalizedField name="about" label="Présentation de l'entreprise" values={values} errors={e} multiline rows={6} maxLength={5000} />
-                <LocalizedField name="mission" label="Mission" values={values} errors={e} multiline rows={3} maxLength={2000} />
-                <LocalizedField name="values" label="Valeurs" hint="« - » en début de ligne pour une liste." values={values} errors={e} multiline rows={3} maxLength={2000} />
-                <LocalizedField name="highlights" label="Pourquoi choisir MSLAB" hint="Un point vérifiable par ligne. Section masquée si vide." values={values} errors={e} multiline rows={4} maxLength={2000} />
+                <LocalizedField name="about" label={s.about} values={values} errors={e} multiline rows={6} maxLength={5000} />
+                <LocalizedField name="highlights" label={s.highlights} hint={s.highlightsHint} values={values} errors={e} multiline rows={4} maxLength={2000} />
+                <LocalizedField name="mission" label={s.mission} values={values} errors={e} multiline rows={3} maxLength={2000} />
+                <LocalizedField name="values" label={s.values} hint={s.valuesHint} values={values} errors={e} multiline rows={3} maxLength={2000} />
               </div>
             </Panel>
 
-            <Panel title="Pages légales (Loi 09-08)">
-              <div className="space-y-6">
-                <p className="text-fg-muted text-sm">
-                  Textes rédigés ou validés par MSLAB (idéalement relus par un juriste). Tant qu&apos;un texte est vide, la
-                  page publique affiche « en cours de préparation » et n&apos;est pas indexée. Liste des points à couvrir :
-                  docs/LEGAL_CONTENT_CHECKLIST.md.
-                </p>
-                <LocalizedField name="legal_notice" label="Mentions légales" values={values} errors={e} multiline rows={8} maxLength={20000} />
-                <LocalizedField name="privacy_policy" label="Politique de confidentialité" values={values} errors={e} multiline rows={10} maxLength={20000} />
-              </div>
-            </Panel>
-
-            <Panel title="Réseaux sociaux">
+            <Panel title={s.social}>
               <div className="grid gap-5 md:grid-cols-2">
                 <TextField name="social_facebook" label="Facebook" values={values} errors={e} dir="ltr" />
                 <TextField name="social_instagram" label="Instagram" values={values} errors={e} dir="ltr" />
@@ -72,11 +61,17 @@ export function SettingsForm({ settings }: { settings: Tables<"site_settings"> }
               </div>
             </Panel>
 
-            <Panel title="Langues du site">
+            <Panel title={s.legal} description={s.legalHint}>
+              <div className="space-y-6">
+                <LocalizedField name="legal_notice" label={s.legalNotice} values={values} errors={e} multiline rows={8} maxLength={20000} />
+                <LocalizedField name="privacy_policy" label={s.privacy} values={values} errors={e} multiline rows={10} maxLength={20000} />
+              </div>
+            </Panel>
+
+            <Panel title={s.languages} description={s.languagesHint}>
               <div className="space-y-3">
-                <p className="text-fg-muted text-sm">Le français est toujours actif (langue principale).</p>
-                <CheckboxField name="locale_ar" label="Arabe" checked={settings.enabled_locales.includes("ar")} />
-                <CheckboxField name="locale_en" label="Anglais" checked={settings.enabled_locales.includes("en")} />
+                <CheckboxField name="locale_ar" label={t.locales.ar} checked={settings.enabled_locales.includes("ar")} />
+                <CheckboxField name="locale_en" label={t.locales.en} checked={settings.enabled_locales.includes("en")} />
               </div>
             </Panel>
           </>

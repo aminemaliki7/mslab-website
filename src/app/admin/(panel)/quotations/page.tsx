@@ -1,16 +1,20 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AdminPageHeader, EmptyState, FilterBar, StatusBadge, Table, Td } from "@/components/admin/ui";
+import { AdminPageHeader, EmptyState, FilterBar, Notice, StatusBadge, Table, Td } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
-import { formatDateTime, quotationStatus } from "@/features/admin/labels";
+import { formatAdminDateTime } from "@/features/admin/dictionary";
+import { quotationStatuses } from "@/features/admin/labels";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { safeSearchTerm } from "@/features/admin/search";
 import { createSessionClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Demandes de devis" };
+export const generateMetadata = adminTitle((t) => t.quotations.title);
 
 export default async function QuotationsAdminPage({ searchParams }: PageProps<"/admin/quotations">) {
   await requireAdmin();
+  const { lang, t } = await getAdminT();
+  const tq = t.quotations;
+  const statuses = quotationStatuses(t);
   const params = await searchParams;
   const db = await createSessionClient();
 
@@ -21,7 +25,7 @@ export default async function QuotationsAdminPage({ searchParams }: PageProps<"/
   }
 
   const q = safeSearchTerm(params.q);
-  const status = typeof params.status === "string" && params.status in quotationStatus ? (params.status as keyof typeof quotationStatus) : undefined;
+  const status = typeof params.status === "string" && params.status in statuses ? (params.status as keyof typeof statuses) : undefined;
 
   let query = db
     .from("quotation_requests")
@@ -34,34 +38,44 @@ export default async function QuotationsAdminPage({ searchParams }: PageProps<"/
 
   return (
     <>
-      <AdminPageHeader title="Demandes de devis" description="Demandes reçues depuis le site (100 plus récentes)." />
-      <FilterBar action="/admin/quotations" q={q} status={status} statuses={quotationStatus} placeholder="Référence, nom, entreprise, e-mail…" />
-      {error ? <p className="text-danger text-sm">Impossible de charger les demandes.</p> : null}
+      <AdminPageHeader title={tq.title} description={tq.description} />
+      <FilterBar
+        action="/admin/quotations"
+        q={q}
+        status={status}
+        statuses={statuses}
+        labels={{ search: t.common.search, placeholder: tq.searchPlaceholder, status: t.common.status, allStatuses: t.common.allStatuses, submit: t.common.filter }}
+      />
+      {error ? <Notice tone="danger">{t.common.loadError}</Notice> : null}
       {data && data.length > 0 ? (
-        <Table head={["Référence", "Client", "Articles", "Statut", "Reçue le"]}>
+        <Table head={[tq.colCustomer, tq.colReference, tq.colItems, t.common.status, tq.colReceived]}>
           {data.map((r) => (
-            <tr key={r.id} className={r.status === "new" ? "bg-accent-soft/40" : undefined}>
+            <tr key={r.id} className={r.status === "new" ? "md:bg-accent-soft/40 max-md:!border-accent" : undefined}>
               <Td>
-                <Link href={`/admin/quotations/${r.id}`} className="hover:text-accent font-[family-name:var(--font-geist-mono)] font-medium">
-                  {r.reference}
+                <Link href={`/admin/quotations/${r.id}`} className="hover:text-accent text-base font-semibold underline-offset-4 hover:underline md:text-sm">
+                  {r.full_name}
                 </Link>
-                {r.kind === "custom" ? <p className="text-accent text-xs font-semibold">Impression à la demande</p> : null}
-                {r.notification_error ? <p className="text-warning text-xs">E-mail non envoyé</p> : null}
-              </Td>
-              <Td>
-                <p className="font-medium">{r.full_name}</p>
                 <p className="text-fg-muted text-xs">{r.company_name ?? r.email}</p>
               </Td>
-              <Td>{(r.quotation_items as unknown as Array<{ count: number }>)[0]?.count ?? 0}</Td>
-              <Td>
-                <StatusBadge status={quotationStatus[r.status]} />
+              <Td label={tq.colReference}>
+                <span className="font-[family-name:var(--font-geist-mono)]" dir="ltr">
+                  {r.reference}
+                </span>
+                {r.kind === "custom" ? <p className="text-accent text-xs font-semibold">{tq.custom}</p> : null}
+                {r.notification_error ? <p className="text-warning text-xs">{tq.emailNotSent}</p> : null}
               </Td>
-              <Td className="text-fg-muted whitespace-nowrap">{formatDateTime(r.created_at)}</Td>
+              <Td label={tq.colItems}>{(r.quotation_items as unknown as Array<{ count: number }>)[0]?.count ?? 0}</Td>
+              <Td label={t.common.status}>
+                <StatusBadge status={statuses[r.status]} />
+              </Td>
+              <Td label={tq.colReceived} className="text-fg-muted whitespace-nowrap">
+                {formatAdminDateTime(r.created_at, lang)}
+              </Td>
             </tr>
           ))}
         </Table>
       ) : (
-        <EmptyState>Aucune demande{q || status ? " ne correspond à ces filtres" : " pour le moment"}.</EmptyState>
+        <EmptyState>{q || status ? t.common.noMatch : tq.empty}</EmptyState>
       )}
     </>
   );

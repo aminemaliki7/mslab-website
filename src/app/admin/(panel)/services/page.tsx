@@ -1,17 +1,21 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ActionButton } from "@/components/admin/admin-form";
-import { AdminPageHeader, EmptyState, StatusBadge, Table, Td } from "@/components/admin/ui";
+import { AdminPageHeader, EmptyState, Notice, StatusBadge, Table, Td } from "@/components/admin/ui";
 import { ButtonLink } from "@/components/ui/button";
 import { requireAdmin } from "@/features/admin/auth";
 import { setServiceStatus } from "@/features/admin/content-actions";
-import { contentStatus, formatDateTime } from "@/features/admin/labels";
+import { formatAdminDateTime } from "@/features/admin/dictionary";
+import { contentStatuses } from "@/features/admin/labels";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { createSessionClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Services" };
+export const generateMetadata = adminTitle((t) => t.services.title);
 
 export default async function ServicesAdminPage({ searchParams }: PageProps<"/admin/services">) {
   await requireAdmin();
+  const { lang, t } = await getAdminT();
+  const s = t.services;
+  const statuses = contentStatuses(t);
   const { deleted } = await searchParams;
   const { data: services } = await (await createSessionClient())
     .from("services")
@@ -21,39 +25,36 @@ export default async function ServicesAdminPage({ searchParams }: PageProps<"/ad
 
   return (
     <>
-      <AdminPageHeader
-        title="Services"
-        description="Services présentés sur le site (impression, services aux entreprises…)."
-        actions={<ButtonLink href="/admin/services/new">+ Nouveau service</ButtonLink>}
-      />
-      {deleted ? <p className="text-success mb-4 text-sm">Service supprimé.</p> : null}
+      <AdminPageHeader title={s.title} description={s.description} actions={<ButtonLink href="/admin/services/new">+ {s.add}</ButtonLink>} />
+      {deleted ? <Notice>{s.deleted}</Notice> : null}
       {services && services.length > 0 ? (
-        <Table head={["Service", "Statut", "À la une", "Ordre", "Modifié", "Actions"]}>
-          {services.map((s) => (
-            <tr key={s.id}>
+        <Table head={[s.colService, t.common.status, t.common.featured, t.common.modified, t.common.actions]}>
+          {services.map((service) => (
+            <tr key={service.id}>
               <Td>
-                <Link href={`/admin/services/${s.id}`} className="hover:text-accent font-medium">
-                  {s.name_fr}
+                <Link href={`/admin/services/${service.id}`} className="hover:text-accent text-base font-semibold underline-offset-4 hover:underline md:text-sm">
+                  {service.name_fr}
                 </Link>
               </Td>
-              <Td>
-                <StatusBadge status={contentStatus[s.status]} />
+              <Td label={t.common.status}>
+                <StatusBadge status={statuses[service.status]} />
               </Td>
-              <Td>{s.is_featured ? "★" : "—"}</Td>
-              <Td>{s.sort_order}</Td>
-              <Td className="text-fg-muted whitespace-nowrap">{formatDateTime(s.updated_at)}</Td>
+              <Td label={t.common.featured}>{service.is_featured ? "★" : "—"}</Td>
+              <Td label={t.common.modified} className="text-fg-muted whitespace-nowrap">
+                {formatAdminDateTime(service.updated_at, lang)}
+              </Td>
               <Td>
                 <ActionButton
                   action={setServiceStatus}
-                  label={s.status === "published" ? "Dépublier" : "Publier"}
-                  hidden={{ id: s.id, status: s.status === "published" ? "draft" : "published" }}
+                  label={service.status === "published" ? t.common.unpublish : t.common.publish}
+                  hidden={{ id: service.id, status: service.status === "published" ? "draft" : "published" }}
                 />
               </Td>
             </tr>
           ))}
         </Table>
       ) : (
-        <EmptyState>Aucun service pour le moment.</EmptyState>
+        <EmptyState action={<ButtonLink href="/admin/services/new">+ {s.add}</ButtonLink>}>{s.empty}</EmptyState>
       )}
     </>
   );

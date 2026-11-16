@@ -1,18 +1,16 @@
-import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/form";
+"use client";
 
-const LOCALES = [
-  { code: "fr", label: "Français", dir: "ltr" as const },
-  { code: "ar", label: "Arabe", dir: "rtl" as const },
-  { code: "en", label: "Anglais", dir: "ltr" as const },
-];
+import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/form";
+import { useAdminT } from "./admin-i18n";
 
 type Values = Record<string, string | number | boolean | null | undefined>;
 
 const str = (v: Values[string]) => (v === null || v === undefined ? "" : String(v));
 
 /**
- * One translatable field as three inputs (`<name>_fr/_ar/_en`). French is the source and the
- * only required locale; Arabic inputs are right-to-left (ADR-010/015).
+ * One translatable field (`<name>_fr/_ar/_en`). French is the source and the only required
+ * language, so it comes first at full width; Arabic (right-to-left) and English sit underneath
+ * as optional translations.
  */
 export function LocalizedField({
   name,
@@ -35,50 +33,48 @@ export function LocalizedField({
   requiredFr?: boolean;
   hint?: string;
 }) {
+  const { t } = useAdminT();
+  const control = (code: "fr" | "ar" | "en", p: Record<string, unknown>, translationRows: number) =>
+    multiline ? (
+      <Textarea {...p} name={`${name}_${code}`} lang={code} rows={translationRows} maxLength={maxLength} defaultValue={str(values[`${name}_${code}`])} />
+    ) : (
+      <Input {...p} name={`${name}_${code}`} lang={code} maxLength={maxLength} defaultValue={str(values[`${name}_${code}`])} />
+    );
+
   return (
     <fieldset className="space-y-3">
-      <legend className="text-fg mb-1 text-sm font-semibold">{label}</legend>
-      {hint ? <p className="text-fg-muted -mt-1 text-xs">{hint}</p> : null}
-      <div className={multiline ? "grid gap-3" : "grid gap-3 md:grid-cols-3"}>
-        {LOCALES.map((locale) => {
-          const key = `${name}_${locale.code}`;
-          return (
-            <Field
-              key={key}
-              id={key}
-              label={locale.label}
-              required={requiredFr && locale.code === "fr"}
-              error={errors[key]}
-              dir={locale.dir}
-            >
-              {(p) =>
-                multiline ? (
-                  <Textarea {...p} name={key} lang={locale.code} rows={rows} maxLength={maxLength} defaultValue={str(values[key])} />
-                ) : (
-                  <Input {...p} name={key} lang={locale.code} maxLength={maxLength} defaultValue={str(values[key])} />
-                )
-              }
-            </Field>
-          );
-        })}
+      <legend className="sr-only">{label}</legend>
+      <Field id={`${name}_fr`} label={`${label} (${t.locales.fr})`} hint={hint} required={requiredFr} error={errors[`${name}_fr`]} dir="ltr">
+        {(p) => control("fr", p, rows)}
+      </Field>
+      <div className="bg-surface rounded-[var(--radius-control)] p-3">
+        <p className="text-fg-muted mb-2 text-xs">
+          {t.localized.translations} · {t.localized.translationsHint}
+        </p>
+        <div className={multiline ? "grid gap-3" : "grid gap-3 md:grid-cols-2"}>
+          <Field id={`${name}_ar`} label={t.locales.ar} error={errors[`${name}_ar`]} dir="rtl">
+            {(p) => control("ar", p, Math.min(rows, 3))}
+          </Field>
+          <Field id={`${name}_en`} label={t.locales.en} error={errors[`${name}_en`]} dir="ltr">
+            {(p) => control("en", p, Math.min(rows, 3))}
+          </Field>
+        </div>
       </div>
     </fieldset>
   );
 }
 
 export function SlugFields({ values, errors }: { values: Values; errors: Record<string, string> }) {
+  const { t } = useAdminT();
   return (
     <fieldset className="space-y-3">
-      <legend className="text-fg mb-1 text-sm font-semibold">Adresse (slug)</legend>
-      <p className="text-fg-muted -mt-1 text-xs">
-        Laisser vide pour générer à partir du nom. Lettres minuscules, chiffres et tirets. Pour l&apos;arabe, utilisez des
-        lettres latines ou laissez vide (le slug français sera utilisé).
-      </p>
+      <legend className="text-fg mb-1 text-sm font-semibold">{t.localized.slugLegend}</legend>
+      <p className="text-fg-muted -mt-1 text-xs">{t.localized.slugHint}</p>
       <div className="grid gap-3 md:grid-cols-3">
-        {LOCALES.map((locale) => {
-          const key = `slug_${locale.code}`;
+        {(["fr", "ar", "en"] as const).map((code) => {
+          const key = `slug_${code}`;
           return (
-            <Field key={key} id={key} label={locale.label} error={errors[key]}>
+            <Field key={key} id={key} label={t.locales[code]} error={errors[key]}>
               {(p) => <Input {...p} name={key} dir="ltr" maxLength={120} pattern="[a-z0-9]+(-[a-z0-9]+)*" defaultValue={str(values[key])} />}
             </Field>
           );
@@ -96,9 +92,9 @@ export function TextField({ name, label, values, errors, required, hint, type = 
   );
 }
 
-export function SelectField({ name, label, values, errors, options, emptyLabel }: { name: string; label: string; values: Values; errors: Record<string, string>; options: Array<{ value: string; label: string }>; emptyLabel?: string }) {
+export function SelectField({ name, label, values, errors, options, emptyLabel, hint }: { name: string; label: string; values: Values; errors: Record<string, string>; options: Array<{ value: string; label: string }>; emptyLabel?: string; hint?: string }) {
   return (
-    <Field id={name} label={label} error={errors[name]}>
+    <Field id={name} label={label} hint={hint} error={errors[name]}>
       {(p) => (
         <Select {...p} name={name} defaultValue={str(values[name])}>
           {emptyLabel !== undefined ? <option value="">{emptyLabel}</option> : null}
@@ -113,11 +109,30 @@ export function SelectField({ name, label, values, errors, options, emptyLabel }
   );
 }
 
+/** Draft / published / archived select with self-explanatory option labels. */
+export function StatusField({ values, errors }: { values: Values; errors: Record<string, string> }) {
+  const { t } = useAdminT();
+  return (
+    <SelectField
+      name="status"
+      label={t.common.status}
+      values={values}
+      errors={errors}
+      options={(["draft", "published", "archived"] as const).map((value) => ({ value, label: t.status.contentOption[value] }))}
+    />
+  );
+}
+
+export function SortOrderField({ values, errors }: { values: Values; errors: Record<string, string> }) {
+  const { t } = useAdminT();
+  return <TextField name="sort_order" label={t.common.sortOrder} type="number" values={values} errors={errors} hint={t.common.sortHint} />;
+}
+
 export function CheckboxField({ name, label, checked, hint }: { name: string; label: string; checked: boolean; hint?: string }) {
   return (
     <div className="flex items-start gap-3">
       <Checkbox id={name} name={name} defaultChecked={checked} />
-      <label htmlFor={name} className="text-sm">
+      <label htmlFor={name} className="py-1 text-sm">
         <span className="font-medium">{label}</span>
         {hint ? <span className="text-fg-muted block text-xs">{hint}</span> : null}
       </label>

@@ -12,6 +12,7 @@ import { DIMENSION_UNITS } from "@/features/print-on-demand/schema";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
+import { QuickPicks } from "@/components/forms/quick-picks";
 import { FileUploader } from "./file-uploader";
 
 type Props = {
@@ -29,6 +30,25 @@ type Props = {
 const initial: CustomRequestState = { status: "idle" };
 const subscribeNothing = () => () => {};
 const OTHER = "other";
+
+/** Quick quantities and standard print sizes (ISO A series, business card, roll-up). */
+const QUANTITIES = [1, 10, 50, 100, 250, 500, 1000];
+const FORMATS = [
+  { key: "businessCard", width: "85", height: "55", unit: "mm" },
+  { key: "a6", width: "105", height: "148", unit: "mm" },
+  { key: "a5", width: "148", height: "210", unit: "mm" },
+  { key: "a4", width: "210", height: "297", unit: "mm" },
+  { key: "a3", width: "297", height: "420", unit: "mm" },
+  { key: "a2", width: "420", height: "594", unit: "mm" },
+  { key: "rollup", width: "85", height: "200", unit: "cm" },
+] as const;
+
+/** Local date `days` from today as YYYY-MM-DD (the value of an <input type="date">). */
+function inDays(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
 
 export function CustomRequestForm(props: Props) {
   const [instance, setInstance] = useState(0);
@@ -100,15 +120,19 @@ function CustomRequestFormInner({
 
       <fieldset className="space-y-5">
         <legend className={legend}>{t.pod.projectSection}</legend>
-        <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_9rem]">
+        <div className="space-y-3">
           <Field id="projectType" label={t.pod.projectType} required error={message("projectType")}>
             {(p) => <Input {...p} name="projectType" maxLength={160} placeholder={t.pod.projectTypePlaceholder} defaultValue={values.projectType} />}
           </Field>
-          <Field id="quantity" label={t.pod.quantity} required error={message("quantity")}>
+          <QuickPicks label={`${t.pod.projectType} — ${t.forms.quickPick}`} picks={Object.values(t.pod.studio.products).map((name) => ({ label: name, values: { projectType: name } }))} />
+        </div>
+        <div className="space-y-3">
+          <Field id="quantity" label={t.pod.quantity} required error={message("quantity")} className="max-w-[12rem]">
             {(p) => (
               <Input {...p} name="quantity" type="number" inputMode="numeric" min={1} max={1000000} step={1} dir="ltr" defaultValue={values.quantity ?? "1"} />
             )}
           </Field>
+          <QuickPicks label={`${t.pod.quantity} — ${t.forms.quickPick}`} picks={QUANTITIES.map((n) => ({ label: n.toLocaleString(locale === "ar" ? "ar-MA" : locale, { numberingSystem: "latn" }), values: { quantity: String(n) } }))} />
         </div>
         <Field id="description" label={t.pod.description} required error={message("description")}>
           {(p) => <Textarea {...p} name="description" rows={5} maxLength={5000} placeholder={t.pod.descriptionPlaceholder} defaultValue={values.description} />}
@@ -118,6 +142,12 @@ function CustomRequestFormInner({
           <legend className="text-fg mb-2 text-sm font-medium">
             {t.pod.dimensions} <span className="text-fg-muted font-normal">({t.forms.optional})</span>
           </legend>
+          <p className="text-fg-muted mb-2 text-sm">{t.pod.formatsLabel}</p>
+          <QuickPicks
+            label={t.pod.formatsLabel}
+            className="mb-4"
+            picks={FORMATS.map((f) => ({ label: t.pod.formats[f.key], values: { width: f.width, height: f.height, depth: "", dimensionUnit: f.unit } }))}
+          />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {(["width", "height", "depth"] as const).map((name) => (
               <Field key={name} id={name} label={t.pod[name]} error={message(name)}>
@@ -163,9 +193,15 @@ function CustomRequestFormInner({
               {(p) => <Input {...p} name="materialOther" maxLength={200} placeholder={t.pod.materialOtherPlaceholder} defaultValue={values.materialOther} />}
             </Field>
           ) : null}
-          <Field id="deadline" label={`${t.pod.deadline} (${t.forms.optional})`} error={message("deadline")}>
-            {(p) => <Input {...p} name="deadline" type="date" dir="ltr" defaultValue={values.deadline} />}
-          </Field>
+          <div className="space-y-3">
+            <Field id="deadline" label={`${t.pod.deadline} (${t.forms.optional})`} error={message("deadline")}>
+              {(p) => <Input {...p} name="deadline" type="date" dir="ltr" defaultValue={values.deadline} />}
+            </Field>
+            <QuickPicks
+              label={`${t.pod.deadline} — ${t.forms.quickPick}`}
+              picks={([["week", 7], ["twoWeeks", 14], ["month", 30]] as const).map(([key, days]) => ({ label: t.pod.deadlines[key], values: { deadline: inDays(days) } }))}
+            />
+          </div>
         </div>
 
         {finishings.length > 0 ? (

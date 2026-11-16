@@ -11,7 +11,7 @@ const base =
   "transition-[color,background-color,border-color,transform] duration-150 ease-[var(--ease-out-soft)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-primary text-on-primary hover:bg-primary-hover",
+  primary: "bg-accent text-white hover:bg-accent-hover",
   secondary: "border border-primary text-primary hover:bg-surface",
   accent: "bg-accent text-white hover:bg-accent-hover",
   ghost: "text-fg hover:bg-surface",

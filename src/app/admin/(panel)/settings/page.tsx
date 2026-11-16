@@ -1,20 +1,22 @@
-import type { Metadata } from "next";
 import { SettingsForm } from "@/components/admin/settings-form";
-import { AdminPageHeader } from "@/components/admin/ui";
+import { AdminPageHeader, Notice } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
-import { formatDateTime } from "@/features/admin/labels";
+import { formatAdminDateTime } from "@/features/admin/dictionary";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
+import { format } from "@/i18n/format";
 import { createSessionClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Paramètres" };
+export const generateMetadata = adminTitle((t) => t.settings.title);
 
 export default async function SettingsPage() {
   await requireAdmin();
+  const { lang, t } = await getAdminT();
   const { data: settings } = await (await createSessionClient()).from("site_settings").select("*").eq("id", 1).single();
-  if (!settings) return <p className="text-danger text-sm">Paramètres introuvables.</p>;
+  if (!settings) return <Notice tone="danger">{t.settings.notFound}</Notice>;
 
   return (
     <>
-      <AdminPageHeader title="Paramètres" description={`Informations de l'entreprise affichées sur le site. Dernière modification : ${formatDateTime(settings.updated_at)}.`} />
+      <AdminPageHeader title={t.settings.title} description={format(t.settings.description, { date: formatAdminDateTime(settings.updated_at, lang) })} />
       <SettingsForm settings={settings} />
     </>
   );

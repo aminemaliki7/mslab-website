@@ -11,6 +11,7 @@ import { CATALOG_BUCKET } from "@/lib/supabase/storage";
 import { failure, fromDb, fromZod, success, type AdminActionState } from "./action-state";
 import { requireAdmin } from "./auth";
 import { validateImage } from "./image-upload";
+import { FINISH_PRESETS, MATERIAL_PRESETS } from "./presets";
 
 /**
  * Print on demand back office: production options (materials, finishes) and the portfolio
@@ -70,6 +71,34 @@ export async function saveProductionOption(_prev: AdminActionState, formData: Fo
   updateTag(PRODUCTION_OPTIONS_TAG);
   refresh();
   return success(id ? "Option enregistrée." : "Option ajoutée.");
+}
+
+/**
+ * Add several ready-made materials or finishes at once (ticked from the list). Names come from
+ * features/admin/presets.ts — the browser only sends keys. Already-added names are skipped.
+ */
+export async function addPresetOptions(_prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
+  await requireAdmin();
+  const kind = z.enum(["material", "finishing"]).safeParse(formData.get("kind"));
+  if (!kind.success) return failure("Requête invalide.");
+  const presets = kind.data === "material" ? MATERIAL_PRESETS : FINISH_PRESETS;
+  const keys = new Set(formData.getAll("preset").map(String));
+  const chosen = presets.filter((p) => keys.has(p.key));
+  if (chosen.length === 0) return failure("Cochez au moins un élément.");
+
+  const db = await createSessionClient();
+  const { data: existing } = await db.from("production_options").select("name_fr").eq("kind", kind.data);
+  const taken = new Set((existing ?? []).map((o) => o.name_fr.toLowerCase()));
+  const rows = chosen
+    .filter((p) => !taken.has(p.names.fr.toLowerCase()))
+    .map((p, index) => ({ kind: kind.data, name_fr: p.names.fr, name_ar: p.names.ar, name_en: p.names.en, sort_order: (existing?.length ?? 0) + index, is_active: true }));
+  if (rows.length > 0) {
+    const { error } = await db.from("production_options").insert(rows);
+    if (error) return fromDb(error, "add preset options");
+  }
+  updateTag(PRODUCTION_OPTIONS_TAG);
+  refresh();
+  return success("Options ajoutées.");
 }
 
 export async function toggleProductionOption(_prev: AdminActionState, formData: FormData): Promise<AdminActionState> {

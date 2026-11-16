@@ -10,6 +10,7 @@ import { CloseIcon } from "@/components/ui/icons";
 import { submitQuote, type FormState } from "@/features/inquiries/actions";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { QuickPicks } from "@/components/forms/quick-picks";
 import { format } from "@/i18n/format";
 import { quoteList, useQuoteRows, type QuoteRow } from "./quote-list-store";
 
@@ -170,6 +171,11 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
                     )}
                   </Field>
                 </div>
+                <QuickPicks
+                  label={`${t.page.quantity} — ${t.forms.quickPick}`}
+                  className="mt-3"
+                  picks={[1, 10, 50, 100, 250, 500, 1000].map((n) => ({ label: String(n), values: { [`item-${row.key}-qty`]: String(n) } }))}
+                />
                 <Field id={`item-${row.key}-specs`} label={t.page.specifications} error={rowError(row, "specifications")} className="mt-4">
                   {(p) => (
                     <Textarea

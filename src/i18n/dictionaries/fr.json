@@ -167,6 +167,16 @@
       "invalid_number": "Valeur invalide (nombre positif).",
       "invalid_date": "Date invalide (aujourd'hui ou plus tard).",
       "invalid_option": "Une option choisie n'est plus disponible. Rechargez la page et réessayez."
+    },
+    "quickPick": "Choix rapide",
+    "subjects": {
+      "quote": "Demande de devis",
+      "pod": "Impression à la demande",
+      "printing": "Impression & reprographie",
+      "supplies": "Fournitures de bureau",
+      "books": "Livres & ouvrages",
+      "tracking": "Suivi de commande",
+      "other": "Autre question"
     }
   },
   "contactPage": {
@@ -374,6 +384,21 @@
         "red": "Rouge",
         "green": "Vert"
       }
+    },
+    "formatsLabel": "Formats courants",
+    "formats": {
+      "businessCard": "Carte de visite (85 × 55 mm)",
+      "a6": "A6 (105 × 148 mm)",
+      "a5": "A5 (148 × 210 mm)",
+      "a4": "A4 (210 × 297 mm)",
+      "a3": "A3 (297 × 420 mm)",
+      "a2": "A2 (420 × 594 mm)",
+      "rollup": "Roll-up (85 × 200 cm)"
+    },
+    "deadlines": {
+      "week": "Dans 1 semaine",
+      "twoWeeks": "Dans 2 semaines",
+      "month": "Dans 1 mois"
     }
   },
   "tracking": {

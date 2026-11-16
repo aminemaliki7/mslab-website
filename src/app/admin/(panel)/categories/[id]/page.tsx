@@ -1,19 +1,22 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActionButton } from "@/components/admin/admin-form";
 import { CategoryForm } from "@/components/admin/category-form";
-import { AdminPageHeader, Panel, StatusBadge } from "@/components/admin/ui";
+import { AdminPageHeader, Notice, Panel, StatusBadge } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
 import { deleteCategory } from "@/features/admin/content-actions";
-import { contentStatus } from "@/features/admin/labels";
+import { contentStatuses } from "@/features/admin/labels";
+import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { categoryOptions } from "@/features/admin/queries";
+import { format } from "@/i18n/format";
 import { createSessionClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Modifier la catégorie" };
+export const generateMetadata = adminTitle((t) => t.categories.editTitle);
 
 export default async function EditCategoryPage({ params, searchParams }: PageProps<"/admin/categories/[id]">) {
   await requireAdmin();
+  const { t } = await getAdminT();
+  const c = t.categories;
   const { id } = await params;
   const { created } = await searchParams;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
@@ -26,42 +29,41 @@ export default async function EditCategoryPage({ params, searchParams }: PagePro
     categoryOptions(id),
   ]);
   if (!category) notFound();
+  const statuses = contentStatuses(t);
 
   return (
     <>
-      <AdminPageHeader title={category.name_fr} back={{ href: "/admin/categories", label: "Catégories" }} />
-      {created ? <p className="text-success mb-4 text-sm">Catégorie créée.</p> : null}
+      <AdminPageHeader title={category.name_fr} back={{ href: "/admin/categories", label: c.title }} />
+      {created ? <Notice>{c.created}</Notice> : null}
       <div className="space-y-6">
-        <Panel title="Informations">
+        <Panel title={c.infoPanel}>
           {/* A category with sub-categories stays top-level (two levels maximum). */}
           <CategoryForm category={category} parents={children ? [] : parents.filter((p) => !p.parentId)} />
         </Panel>
 
-        <Panel title={`Produits de cette catégorie (${products?.length ?? 0})`}>
+        <Panel title={format(c.productsPanel, { count: products?.length ?? 0 })}>
           {products && products.length > 0 ? (
             <ul className="divide-line divide-y">
               {products.map((p) => (
-                <li key={p.id} className="flex items-center justify-between py-2 text-sm">
-                  <Link href={`/admin/products/${p.id}`} className="hover:text-accent">
+                <li key={p.id} className="flex min-h-11 items-center justify-between gap-3 py-2 text-sm">
+                  <Link href={`/admin/products/${p.id}`} className="hover:text-accent font-medium">
                     {p.name_fr}
                   </Link>
-                  <StatusBadge status={contentStatus[p.status]} />
+                  <StatusBadge status={statuses[p.status]} />
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-fg-muted text-sm">Aucun produit. Assignez des produits depuis leur fiche (champ « Catégorie »).</p>
+            <p className="text-fg-muted text-sm">{c.noProducts}</p>
           )}
         </Panel>
 
-        <Panel title="Zone de danger">
+        <Panel title={t.common.dangerZone}>
           <p className="text-fg-muted mb-4 text-sm">
-            {children
-              ? "Cette catégorie contient des sous-catégories : supprimez-les ou déplacez-les d'abord."
-              : `La suppression est définitive. ${products?.length ? `Ses ${products.length} produit(s) resteront dans le catalogue, sans catégorie.` : ""}`}
+            {children ? c.hasChildren : `${c.dangerText} ${products?.length ? format(c.productsKept, { count: products.length }) : ""}`}
           </p>
           {!children ? (
-            <ActionButton action={deleteCategory} label="Supprimer la catégorie" variant="secondary" confirm={`Supprimer « ${category.name_fr} » ?`} hidden={{ id: category.id }} />
+            <ActionButton action={deleteCategory} label={c.deleteButton} variant="secondary" confirm={format(c.deleteConfirm, { name: category.name_fr })} hidden={{ id: category.id }} />
           ) : null}
         </Panel>
       </div>

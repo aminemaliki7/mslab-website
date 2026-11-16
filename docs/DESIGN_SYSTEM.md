@@ -15,12 +15,12 @@ _Status: Milestone 1. The palette is **provisional** (ADR-018) until MSLAB suppl
 | `surface` | paper-50 `#F7F6F2` | Section bands, page headers |
 | `surface-strong` | paper-100 `#EFEDE6` | Skeletons, neutral badges |
 | `line` / `line-strong` | `#E3E1DA` / `#C9C6BC` | Dividers / form control borders |
-| `primary` / `primary-hover` / `on-primary` | ink-900 / ink-700 / white | Primary buttons, dark footer |
-| `accent` / `accent-hover` / `accent-soft` | cyan-700 `#0B6E8A` / `#085870` / `#E7F2F5` | Links, active nav, eyebrow, focus |
+| `primary` / `primary-hover` / `on-primary` | ink-900 / ink-700 / white | Dark footer and ink surfaces |
+| `accent` / `accent-hover` / `accent-soft` | cyan-700 `#0B6E8A` / `#085870` / `#E7F2F5` | Links, active nav, eyebrow, focus, primary and accent buttons |
 | `focus` | cyan-700 | `:focus-visible` outline (2px, offset 2px) |
 | `danger`, `success`, `warning` (+ `-soft`) | `#B42318`, `#1E7A46`, `#8A5A00` | Status only — never decorative |
 
-Rules: one primary button per view region; accent is for interaction cues, not large fills; status colors only for status.
+Rules: one primary button per view region; use brand cyan for filled primary actions; status colors only for status.
 
 ## 3. Typography
 | Role | Font | Notes |

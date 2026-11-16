@@ -1,45 +1,41 @@
 import type { Database } from "@/lib/supabase/database.types";
+import { formatAdminDateTime, type AdminDict, type AdminLang } from "./dictionary";
 
 type Enums = Database["public"]["Enums"];
 export type Tone = "neutral" | "accent" | "success" | "warning" | "danger";
+export type StatusLabel = { label: string; tone: Tone };
 
-/** French labels for the back office (ADR-015). */
-export const contentStatus: Record<Enums["content_status"], { label: string; tone: Tone }> = {
-  draft: { label: "Brouillon", tone: "warning" },
-  published: { label: "Publié", tone: "success" },
-  archived: { label: "Archivé", tone: "neutral" },
+/** Badge colors per status. Text comes from the admin dictionary (features/admin/dictionary.ts). */
+const CONTENT_TONES: Record<Enums["content_status"], Tone> = { draft: "warning", published: "success", archived: "neutral" };
+
+const QUOTATION_TONES: Record<Enums["quotation_status"], Tone> = {
+  new: "accent",
+  in_review: "warning",
+  contacted: "warning",
+  quoted: "accent",
+  accepted: "success",
+  in_production: "warning",
+  ready: "success",
+  delivered: "success",
+  rejected: "danger",
+  closed: "neutral",
 };
 
-export const quotationStatus: Record<Enums["quotation_status"], { label: string; tone: Tone }> = {
-  new: { label: "Nouvelle", tone: "accent" },
-  in_review: { label: "En cours d'étude", tone: "warning" },
-  contacted: { label: "Client contacté", tone: "warning" },
-  quoted: { label: "Devis envoyé", tone: "accent" },
-  accepted: { label: "Acceptée", tone: "success" },
-  in_production: { label: "En production", tone: "warning" },
-  ready: { label: "Prête", tone: "success" },
-  delivered: { label: "Livrée / remise", tone: "success" },
-  rejected: { label: "Refusée", tone: "danger" },
-  closed: { label: "Clôturée", tone: "neutral" },
-};
+const INQUIRY_TONES: Record<Enums["inquiry_status"], Tone> = { new: "accent", read: "neutral", replied: "success", closed: "neutral", spam: "danger" };
 
-export const inquiryStatus: Record<Enums["inquiry_status"], { label: string; tone: Tone }> = {
-  new: { label: "Nouveau", tone: "accent" },
-  read: { label: "Lu", tone: "neutral" },
-  replied: { label: "Répondu", tone: "success" },
-  closed: { label: "Clôturé", tone: "neutral" },
-  spam: { label: "Spam", tone: "danger" },
-};
+function withLabels<K extends string>(tones: Record<K, Tone>, labels: Record<K, string>): Record<K, StatusLabel> {
+  return Object.fromEntries(Object.entries(tones).map(([key, tone]) => [key, { label: labels[key as K], tone }])) as Record<K, StatusLabel>;
+}
 
-export const contactMethod: Record<Enums["contact_method"], string> = {
-  email: "E-mail",
-  phone: "Téléphone",
-  whatsapp: "WhatsApp",
-};
+export const contentStatuses = (t: AdminDict) => withLabels(CONTENT_TONES, t.status.content);
+export const quotationStatuses = (t: AdminDict) => withLabels(QUOTATION_TONES, t.status.quotation);
+export const inquiryStatuses = (t: AdminDict) => withLabels(INQUIRY_TONES, t.status.inquiry);
 
-export const localeLabel: Record<string, string> = { fr: "Français", ar: "Arabe", en: "Anglais" };
+export const CONTENT_STATUS_KEYS = Object.keys(CONTENT_TONES) as Array<Enums["content_status"]>;
+export const QUOTATION_STATUS_KEYS = Object.keys(QUOTATION_TONES) as Array<Enums["quotation_status"]>;
+export const INQUIRY_STATUS_KEYS = Object.keys(INQUIRY_TONES) as Array<Enums["inquiry_status"]>;
 
-const dateTime = new Intl.DateTimeFormat("fr-MA", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Casablanca" });
-export function formatDateTime(value: string | null | undefined): string {
-  return value ? dateTime.format(new Date(value)) : "—";
+/** French date formatting kept for server code that has no interface language (emails, logs). */
+export function formatDateTime(value: string | null | undefined, lang: AdminLang = "fr"): string {
+  return formatAdminDateTime(value, lang);
 }

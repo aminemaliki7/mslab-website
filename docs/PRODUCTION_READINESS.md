@@ -88,6 +88,6 @@ Options for the project slot:
 
 ## 5. Known limitations (accepted)
 - CSP allows `'unsafe-inline'` scripts/styles (trade-off to keep static pre-rendering; see `SECURITY_STRATEGY.md` §7a).
-- Admin UI is French only (ADR-015); Arabic content fields are RTL.
+- Admin UI in French, English or Arabic (RTL), chosen by each admin (ADR-015, revised 2026-11-16); Arabic content fields are RTL.
 - Service images cannot be uploaded yet (services render without images).
 - If a product in a visitor's saved quote list is unpublished, the error does not name which product.

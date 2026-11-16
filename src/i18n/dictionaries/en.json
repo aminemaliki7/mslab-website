@@ -167,6 +167,16 @@
       "invalid_number": "Invalid value (positive number).",
       "invalid_date": "Invalid date (today or later).",
       "invalid_option": "A selected option is no longer available. Reload the page and try again."
+    },
+    "quickPick": "Quick pick",
+    "subjects": {
+      "quote": "Quote request",
+      "pod": "Print on demand",
+      "printing": "Printing & reprographics",
+      "supplies": "Office supplies",
+      "books": "Books & publications",
+      "tracking": "Order tracking",
+      "other": "Other question"
     }
   },
   "contactPage": {
@@ -374,6 +384,21 @@
         "red": "Red",
         "green": "Green"
       }
+    },
+    "formatsLabel": "Common sizes",
+    "formats": {
+      "businessCard": "Business card (85 × 55 mm)",
+      "a6": "A6 (105 × 148 mm)",
+      "a5": "A5 (148 × 210 mm)",
+      "a4": "A4 (210 × 297 mm)",
+      "a3": "A3 (297 × 420 mm)",
+      "a2": "A2 (420 × 594 mm)",
+      "rollup": "Roll-up (85 × 200 cm)"
+    },
+    "deadlines": {
+      "week": "In 1 week",
+      "twoWeeks": "In 2 weeks",
+      "month": "In 1 month"
     }
   },
   "tracking": {
