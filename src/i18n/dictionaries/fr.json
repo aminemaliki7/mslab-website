@@ -399,6 +399,61 @@
       "week": "Dans 1 semaine",
       "twoWeeks": "Dans 2 semaines",
       "month": "Dans 1 mois"
+    },
+    "guide": {
+      "title": "Votre projet en quelques choix",
+      "hint": "Touchez ce qui correspond. Plusieurs choix possibles.",
+      "notes": "Autres précisions (facultatif)",
+      "notesPlaceholder": "Texte à imprimer, emplacement du logo, références…",
+      "chooseOrWrite": "Choisissez au moins une option ou écrivez quelques précisions.",
+      "groups": {
+        "productColor": {
+          "label": "Couleur du produit",
+          "options": {
+            "white": "Blanc",
+            "black": "Noir",
+            "navy": "Bleu marine",
+            "grey": "Gris",
+            "red": "Rouge",
+            "natural": "Naturel / beige",
+            "other": "Autre couleur"
+          }
+        },
+        "printColors": {
+          "label": "Couleurs d'impression",
+          "options": {
+            "one": "1 couleur",
+            "two": "2 couleurs",
+            "full": "Toutes couleurs (quadrichromie)",
+            "bw": "Noir et blanc"
+          }
+        },
+        "sides": {
+          "label": "Faces imprimées",
+          "options": {
+            "front": "Recto",
+            "both": "Recto-verso",
+            "frontBack": "Devant + dos"
+          }
+        },
+        "usage": {
+          "label": "Pour quel usage ?",
+          "options": {
+            "business": "Entreprise",
+            "event": "Événement",
+            "gift": "Cadeau",
+            "resale": "Revente",
+            "school": "École / association"
+          }
+        },
+        "design": {
+          "label": "Votre design",
+          "options": {
+            "ready": "J'ai déjà mon design",
+            "help": "J'ai besoin d'aide pour le créer"
+          }
+        }
+      }
     }
   },
   "tracking": {

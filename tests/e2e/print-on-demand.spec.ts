@@ -54,7 +54,8 @@ test.describe("submission", () => {
     await page.goto("/fr/services/impression-a-la-demande");
     await page.getByLabel("Type de produit").fill("Boîtes personnalisées");
     await page.getByLabel("Quantité").first().fill("250");
-    await page.getByLabel("Description du projet").fill("Boîtes kraft avec un logo imprimé en une couleur sur le dessus.");
+    await page.getByRole("button", { name: "1 couleur" }).click();
+    await page.getByLabel("Autres précisions (facultatif)").fill("Boîtes kraft avec un logo imprimé sur le dessus.");
     await page.getByLabel("Largeur").fill("20");
     await page.getByLabel("Hauteur").fill("12,5");
     await page.locator('input[type="file"]').setInputFiles({

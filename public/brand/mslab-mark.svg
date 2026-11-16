@@ -1,9 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="256" height="256" role="img" aria-labelledby="t">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 54 380 168" role="img" aria-labelledby="t">
   <title id="t">MSLAB</title>
-  <!-- Sheet of paper with a folded top-right corner (print trade) -->
-  <path fill="#0E1A2B" d="M6 0H24L32 8V26A6 6 0 0 1 26 32H6A6 6 0 0 1 0 26V6A6 6 0 0 1 6 0Z"/>
-  <!-- Folded corner in brand cyan -->
-  <path fill="#0B6E8A" d="M24 0V6A2 2 0 0 0 26 8H32Z"/>
-  <!-- "M" monogram -->
-  <path fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" d="M8.5 23.5V10.5L16 18L23.5 10.5V23.5"/>
+  <path fill="#0B6E8A" d="M 44 218 L 44 114 A 56 56 0 0 1 156 114 L 156 154 A 13 13 0 0 0 182 154 L 182 114 A 56 56 0 0 1 294 114 L 294 218 L 246 218 L 246 114 A 8 8 0 0 0 230 114 L 230 156 A 61 61 0 0 1 108 156 L 108 114 A 8 8 0 0 0 92 114 L 92 218 Z" />
+  <path fill="#0B6E8A" fill-rule="evenodd" d="M 304 114 A 56 56 0 0 1 416 114 L 416 162 A 56 56 0 0 1 304 162 Z M 416 110 L 362 110 A 8 8 0 0 0 362 126 L 416 126 Z M 304 150 L 358 150 A 8 8 0 0 1 358 166 L 304 166 Z" />
 </svg>

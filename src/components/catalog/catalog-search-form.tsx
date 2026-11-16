@@ -16,9 +16,9 @@ type Props = {
 export function CatalogSearchForm({ action, dict, q, categories }: Props) {
   const hasFilter = Boolean(q || categories?.selected);
   return (
-    <form action={action} method="get" role="search" className="flex flex-col gap-3 sm:flex-row sm:items-end">
-      <div className="flex flex-1 flex-col gap-1.5">
-        <label htmlFor="catalog-q" className="text-fg text-sm font-medium">
+    <form action={action} method="get" role="search" className="flex flex-wrap items-end gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <label htmlFor="catalog-q" className="sr-only">
           {dict.catalog.searchLabel}
         </label>
         <Input id="catalog-q" type="search" name="q" defaultValue={q} placeholder={dict.catalog.searchPlaceholder} maxLength={100} />

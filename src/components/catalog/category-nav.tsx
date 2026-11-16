@@ -5,7 +5,10 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { localizedPath } from "@/i18n/routes";
 import { cn } from "@/lib/utils";
 
-/** Category tree (2 levels) linking to canonical category pages. */
+/**
+ * Categories as one row of buttons above the products (scrolls sideways on phones): one tap
+ * to filter, no sidebar, no duplicate dropdown. Sub-categories of the open category follow.
+ */
 export function CategoryNav({
   locale,
   dict,
@@ -18,54 +21,37 @@ export function CategoryNav({
   activeId?: string;
 }) {
   if (categories.length === 0) return null;
+  const active = categories.find((c) => c.id === activeId);
+  const openRootId = active?.parentId ?? active?.id;
   const roots = categories.filter((c) => !c.parentId || !categories.some((p) => p.id === c.parentId));
-  const childrenOf = (id: string) => categories.filter((c) => c.parentId === id);
-  const itemClass = (active: boolean) =>
+  const items = roots.flatMap((root) => [root, ...(root.id === openRootId ? categories.filter((c) => c.parentId === root.id) : [])]);
+
+  const chip = (isActive: boolean, isChild = false) =>
     cn(
-      "flex min-h-11 items-center rounded-[var(--radius-control)] px-3 py-2 text-[0.9375rem] transition-colors",
-      active ? "bg-surface-strong text-fg font-semibold" : "text-fg-muted hover:bg-surface hover:text-fg",
+      "inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 text-[0.9375rem] whitespace-nowrap transition-colors active:scale-[0.97]",
+      isActive ? "border-fg bg-fg text-bg font-semibold" : "border-line-strong bg-bg text-fg hover:border-fg",
+      isChild && !isActive && "border-dashed",
     );
 
   return (
-    <nav aria-labelledby="category-nav-heading">
-      <h2 id="category-nav-heading" className="text-fg-muted mb-3 px-3 text-sm font-semibold">
-        {dict.catalog.categoriesTitle}
-      </h2>
-      <ul className="space-y-0.5">
+    <nav aria-label={dict.catalog.categoriesTitle} className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+      <ul className="flex gap-2 pb-1 sm:flex-wrap">
         <li>
-          <Link href={localizedPath(locale, { route: "catalog" })} className={itemClass(!activeId)} aria-current={!activeId ? "page" : undefined}>
+          <Link href={localizedPath(locale, { route: "catalog" })} className={chip(!activeId)} aria-current={!activeId ? "page" : undefined}>
             {dict.catalog.allCategories}
           </Link>
         </li>
-        {roots.map((root) => {
-          const children = childrenOf(root.id);
-          return (
-            <li key={root.id}>
-              <Link
-                href={localizedPath(locale, { route: "category", slug: root.slug })}
-                className={itemClass(activeId === root.id)}
-                aria-current={activeId === root.id ? "page" : undefined}
-              >
-                {root.name}
-              </Link>
-              {children.length > 0 ? (
-                <ul className="border-line ms-3 mt-0.5 space-y-0.5 border-s ps-2">
-                  {children.map((child) => (
-                    <li key={child.id}>
-                      <Link
-                        href={localizedPath(locale, { route: "category", slug: child.slug })}
-                        className={itemClass(activeId === child.id)}
-                        aria-current={activeId === child.id ? "page" : undefined}
-                      >
-                        {child.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </li>
-          );
-        })}
+        {items.map((category) => (
+          <li key={category.id}>
+            <Link
+              href={localizedPath(locale, { route: "category", slug: category.slug })}
+              className={chip(activeId === category.id, Boolean(category.parentId))}
+              aria-current={activeId === category.id ? "page" : undefined}
+            >
+              {category.name}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

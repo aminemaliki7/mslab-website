@@ -18,11 +18,11 @@ export function AddToQuoteButton({ product, quoteHref, labels }: Props) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Button variant="secondary" size="lg" disabled={added} onClick={() => quoteList.addProduct(product)} aria-live="polite">
+      <Button variant="secondary" size="lg" className="w-full sm:w-auto" disabled={added} onClick={() => quoteList.addProduct(product)} aria-live="polite">
         {added ? labels.added : labels.add}
       </Button>
       {rows.length > 0 ? (
-        <Link href={quoteHref} className="text-accent hover:text-accent-hover text-sm font-medium underline-offset-4 hover:underline">
+        <Link href={quoteHref} className="text-accent hover:text-accent-hover inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline">
           {format(labels.view, { count: rows.length })}
         </Link>
       ) : null}

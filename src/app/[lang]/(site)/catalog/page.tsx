@@ -5,7 +5,7 @@ import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductListing, ProductListingSkeleton } from "@/components/catalog/product-listing";
 import { CtaBand } from "@/components/layout/cta-band";
 import { PageHeader } from "@/components/layout/page-header";
-import { Container, Section } from "@/components/ui/layout";
+import { Container } from "@/components/ui/layout";
 import { listCategories } from "@/features/catalog/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath } from "@/i18n/routes";
@@ -30,12 +30,10 @@ export default async function CatalogPage({ searchParams }: PageProps<"/[lang]/c
   return (
     <>
       <PageHeader title={dict.pages.catalog.title} lead={dict.pages.catalog.description} illustration={<StationeryIllustration />} />
-      <Section className="py-10 lg:py-14">
-        <Container className="grid gap-10 lg:grid-cols-12">
-          <aside className="lg:col-span-3">
-            <CategoryNav locale={locale} dict={dict} categories={categories} />
-          </aside>
-          <div className="lg:col-span-9">
+      <section className="py-6 lg:py-10">
+        <Container className="space-y-6">
+          <CategoryNav locale={locale} dict={dict} categories={categories} />
+          <div>
             <Suspense fallback={<ProductListingSkeleton />}>
               <ProductListing
                 locale={locale}
@@ -47,7 +45,7 @@ export default async function CatalogPage({ searchParams }: PageProps<"/[lang]/c
             </Suspense>
           </div>
         </Container>
-      </Section>
+      </section>
       <CtaBand />
     </>
   );

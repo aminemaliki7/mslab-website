@@ -25,14 +25,14 @@ export function ProductCard({ product, href, labels }: { product: ProductSummary
           />
         ) : (
           // No photo yet: a drawing of the kind of object, so the card still shows what it is.
-          <span className="absolute inset-0 grid place-items-center px-6 pt-4 pb-2">
+          <span className="absolute inset-0 grid place-items-center px-3 pt-3 pb-1 sm:px-6 sm:pt-4 sm:pb-2">
             <ProductArt kind={visual.key} className="w-full max-w-[13rem] transition-transform duration-300 group-hover:-translate-y-1" />
             <span className="sr-only">{labels.noImage}</span>
           </span>
         )}
       </div>
-      <div className="border-line flex flex-1 flex-col border-t p-4">
-        <h3 className="text-fg font-semibold leading-snug">{product.name}</h3>
+      <div className="border-line flex flex-1 flex-col border-t p-3 sm:p-4">
+        <h3 className="text-fg text-[0.9375rem] font-semibold leading-snug sm:text-base">{product.name}</h3>
         {product.shortDescription ? (
           <p className="text-fg-muted mt-1.5 line-clamp-2 text-sm leading-relaxed">{product.shortDescription}</p>
         ) : null}

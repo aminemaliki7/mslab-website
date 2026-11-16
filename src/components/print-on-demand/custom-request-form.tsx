@@ -5,7 +5,7 @@ import { useActionState, useRef, useState, useSyncExternalStore } from "react";
 import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "@/components/forms/form-parts";
 import { useEnhancedForm, useFocusFirstError } from "@/components/forms/use-enhanced-form";
 import { Button } from "@/components/ui/button";
-import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/form";
+import { Checkbox, Field, Input, Select } from "@/components/ui/form";
 import { submitCustomRequest, type CustomRequestState } from "@/features/print-on-demand/actions";
 import type { ProductionOption } from "@/features/print-on-demand/queries";
 import { DIMENSION_UNITS } from "@/features/print-on-demand/schema";
@@ -14,6 +14,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
 import { QuickPicks } from "@/components/forms/quick-picks";
 import { FileUploader } from "./file-uploader";
+import { ProjectOptions } from "./project-options";
 
 type Props = {
   locale: Locale;
@@ -134,9 +135,12 @@ function CustomRequestFormInner({
           </Field>
           <QuickPicks label={`${t.pod.quantity} — ${t.forms.quickPick}`} picks={QUANTITIES.map((n) => ({ label: n.toLocaleString(locale === "ar" ? "ar-MA" : locale, { numberingSystem: "latn" }), values: { quantity: String(n) } }))} />
         </div>
-        <Field id="description" label={t.pod.description} required error={message("description")}>
-          {(p) => <Textarea {...p} name="description" rows={5} maxLength={5000} placeholder={t.pod.descriptionPlaceholder} defaultValue={values.description} />}
-        </Field>
+        <ProjectOptions
+          guide={t.pod.guide}
+          hydrated={hydrated}
+          defaultNotes={values.description}
+          error={errors.description ? t.pod.guide.chooseOrWrite : undefined}
+        />
 
         <fieldset>
           <legend className="text-fg mb-2 text-sm font-medium">

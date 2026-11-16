@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { ArrowIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLORS, MOCKUPS, type Design, type MockupKey } from "./mockups";
@@ -18,26 +17,30 @@ const PLACEHOLDER: Design = { imageUrl: null, text: "", scale: 0.7, dx: 0, dy: 0
 const TINTS = ["#E7F2F5", "#EFEDE6", "#F4ECDD", "#E8ECF1", "#FBF1D6", "#EAF1EC"] as const;
 const tint = (index: number) => TINTS[index % TINTS.length];
 
-/** Hero: a row of tinted tiles, each with a gently floating product. */
-export function HeroMockups({ products, className }: { products: MockupKey[]; className?: string }) {
+/** Hero: a row of product tiles; tapping one opens that product in the studio below. */
+export function HeroMockups({ products, names, studioId, className }: { products: MockupKey[]; names: Record<MockupKey, string>; studioId: string; className?: string }) {
   const shown = products.slice(0, 5);
   return (
-    <ul className={cn("grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-5", className)} aria-hidden="true">
+    <ul className={cn("grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-5", className)}>
       {shown.map((key, index) => {
         const Mockup = MOCKUPS[key];
         return (
-          <li
-            key={key}
-            // Only three tiles fit a phone row; the rest appear from lg up.
-            className={cn("aspect-[4/5] overflow-hidden rounded-2xl", index >= 3 && "hidden lg:block")}
-            style={{ backgroundColor: tint(index) }}
-          >
-            <div
-              className="anim-float flex h-full items-center justify-center p-3 sm:p-5"
-              style={{ animationDelay: `${index * 0.7}s` } as CSSProperties}
+          // Only three tiles fit a phone row; the rest appear from lg up.
+          <li key={key} className={cn(index >= 3 && "hidden lg:block")}>
+            <button
+              type="button"
+              onClick={() => {
+                studioSelect.send(key);
+                document.getElementById(studioId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="group focus-visible:ring-accent block w-full overflow-hidden rounded-2xl text-start focus-visible:ring-2 focus-visible:outline-none"
+              style={{ backgroundColor: tint(index) }}
             >
-              <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[key]} label="" className="w-full" />
-            </div>
+              <span className="flex aspect-[4/5] items-center justify-center p-2 transition-transform duration-300 group-hover:scale-[1.03] sm:p-4">
+                <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[key]} label="" className="w-full" />
+              </span>
+              <span className="text-fg block px-3 pb-3 text-sm font-semibold">{names[key]}</span>
+            </button>
           </li>
         );
       })}

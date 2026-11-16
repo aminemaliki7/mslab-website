@@ -1,6 +1,6 @@
 import { CustomRequestForm } from "@/components/print-on-demand/custom-request-form";
 import { MockupStudio } from "@/components/print-on-demand/mockup-studio";
-import { HeroMockups, ProductPicker } from "@/components/print-on-demand/pod-showcase";
+import { HeroMockups } from "@/components/print-on-demand/pod-showcase";
 import { PortfolioGallery } from "@/components/print-on-demand/portfolio-gallery";
 import { ButtonLink, buttonClasses } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -73,21 +73,9 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
               </ButtonLink>
             </div>
           </div>
-          {hasStudio ? <HeroMockups products={mockups} className="mt-12 lg:mt-16" /> : null}
+          {hasStudio ? <HeroMockups products={mockups} names={t.studio.products} studioId={STUDIO_ID} className="mt-12 lg:mt-16" /> : null}
         </Container>
       </div>
-
-      {/* ─── Products ─────────────────────────────────────────────────────── */}
-      {hasStudio ? (
-        <Section aria-labelledby="pod-products-heading">
-          <Container>
-            <SectionIntro id="pod-products-heading" title={t.productsTitle} lead={t.productsLead} />
-            <div className="mt-10">
-              <ProductPicker products={mockups} names={t.studio.products} customizeLabel={t.customize} studioId={STUDIO_ID} />
-            </div>
-          </Container>
-        </Section>
-      ) : null}
 
       {/* ─── How it works ─────────────────────────────────────────────────── */}
       <section aria-labelledby="pod-steps-heading" className="bg-ink-900 text-white">

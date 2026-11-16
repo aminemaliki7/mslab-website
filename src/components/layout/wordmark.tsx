@@ -1,39 +1,37 @@
 import { cn } from "@/lib/utils";
 
 /**
- * MSLAB logo (original SVG, ADR-019): a sheet of paper with a folded corner (print trade)
- * carrying an "M" monogram, followed by the MSLAB wordmark in Geist.
- * Source files: public/brand/mslab-mark.svg, public/brand/mslab-logo.svg; favicon: app/icon.svg.
+ * MSLAB logo (2026-11-16): a wavy ribbon "ms" with a bold condensed "Lab" and a signature dot.
+ * Source: public/brand/mslab-logo.svg ("Lab" is Anton, SIL Open Font License, as outlines).
+ * Inline here so it stays sharp and loads with no extra request. Always LTR.
  */
-export function LogoMark({ inverted = false, intro = false, className }: { inverted?: boolean; intro?: boolean; className?: string }) {
-  const sheet = inverted ? "#FFFFFF" : "#0E1A2B";
-  const monogram = inverted ? "#0E1A2B" : "#FFFFFF";
+const M_PATH =
+  "M 44 218 L 44 114 A 56 56 0 0 1 156 114 L 156 154 A 13 13 0 0 0 182 154 L 182 114 A 56 56 0 0 1 294 114 L 294 218 L 246 218 L 246 114 A 8 8 0 0 0 230 114 L 230 156 A 61 61 0 0 1 108 156 L 108 114 A 8 8 0 0 0 92 114 L 92 218 Z";
+/** The S: a rounded pill minus one slot from the right (top) and one from the left (bottom). */
+const S_PATH =
+  "M 304 114 A 56 56 0 0 1 416 114 L 416 162 A 56 56 0 0 1 304 162 Z M 416 110 L 362 110 A 8 8 0 0 0 362 126 L 416 126 Z M 304 150 L 358 150 A 8 8 0 0 1 358 166 L 304 166 Z";
+const LAB_PATH = "M66.5 293.5L44 293.5L44 238L55.1 238L55.1 284.0L66.5 284.0L66.5 293.5ZM78.1 294L78.1 294Q74.1 294 72.1 292.2Q70.0 290.3 69.3 287.2Q68.5 284.0 68.5 279.9L68.5 279.9Q68.5 275.6 69.4 272.9Q70.2 270.1 72.3 268.3Q74.3 266.6 78.0 265.3L78.0 265.3L85.0 262.9L85.0 258.1Q85.0 254.3 82.5 254.3L82.5 254.3Q80.2 254.3 80.2 257.4L80.2 257.4L80.2 260.2L69.2 260.2Q69.2 259.9 69.2 259.6Q69.2 259.2 69.2 258.7L69.2 258.7Q69.2 251.6 72.5 248.6Q75.8 245.7 83.1 245.7L83.1 245.7Q86.9 245.7 89.8 247.0Q92.8 248.4 94.6 251.0Q96.3 253.6 96.3 257.5L96.3 257.5L96.3 293.5L85.1 293.5L85.1 287.9Q84.3 290.8 82.4 292.4Q80.5 294 78.1 294ZM82.5 285.2L82.5 285.2Q83.9 285.2 84.4 284.1Q84.9 282.9 84.9 281.5L84.9 281.5L84.9 268.4Q82.6 269.3 81.3 270.7Q80.0 272.2 80.0 275.0L80.0 275.0L80.0 281.0Q80.0 285.2 82.5 285.2ZM119.6 294L119.6 294Q116.8 294 115.1 292.6Q113.3 291.3 112.3 288.5L112.3 288.5L112.3 293.5L100.8 293.5L100.8 238L112.3 238L112.3 251.2Q113.3 248.6 115.2 247.2Q117.0 245.7 120.5 245.7L120.5 245.7Q125.1 245.7 127.0 249.1Q128.9 252.4 128.9 257.9L128.9 257.9L128.9 281.2Q128.9 284.8 127.9 287.7Q126.9 290.6 124.9 292.3Q122.8 294 119.6 294ZM114.9 285.2L114.9 285.2Q116.7 285.2 117.1 283.4Q117.5 281.7 117.5 279.1L117.5 279.1L117.5 260.6Q117.5 258.0 117.1 256.2Q116.7 254.5 114.9 254.5L114.9 254.5Q113.1 254.5 112.7 256.3Q112.3 258.1 112.3 260.6L112.3 260.6L112.3 279.1Q112.3 281.6 112.7 283.4Q113.1 285.2 114.9 285.2Z";
+
+export function Wordmark({ className, inverted = false }: { className?: string; inverted?: boolean; intro?: boolean }) {
+  const accent = inverted ? "#5BA7BC" : "#0B6E8A";
+  const ink = inverted ? "#FFFFFF" : "#0E1A2B";
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" className={cn("logo-mark size-8 shrink-0", className)}>
-      <path fill={sheet} d="M6 0H24L32 8V26A6 6 0 0 1 26 32H6A6 6 0 0 1 0 26V6A6 6 0 0 1 6 0Z" />
-      {/* Intro (first page of a visit, see globals.css): the sheet starts whole, then its corner folds back. */}
-      {intro ? <path className="logo-corner-front" fill={sheet} d="M23 0H32V9Z" /> : null}
-      <g className="logo-corner-flap">
-        <path className="logo-corner-flap-front" fill="#0B6E8A" d="M24 0V6A2 2 0 0 0 26 8H32Z" />
-        <path className="logo-corner-flap-back" fill={sheet} d="M24 0V6A2 2 0 0 0 26 8H32Z" />
-      </g>
-      <path
-        fill="none"
-        stroke={monogram}
-        strokeWidth={3.2}
-        strokeLinecap="square"
-        d="M8.5 23.5V10.5L16 18L23.5 10.5V23.5"
-      />
+    <svg viewBox="40 54 380 244" role="img" aria-label="MSLAB" className={cn("h-8 w-auto", className)}>
+      <path fill={accent} d={M_PATH} />
+      <path fill={accent} fillRule="evenodd" d={S_PATH} />
+      <path fill={ink} d={LAB_PATH} />
+      <circle cx="386" cy="264" r="30" fill={accent} />
     </svg>
   );
 }
 
-/** Logo lockup. Always LTR — it is a Latin brand name. */
-export function Wordmark({ className, inverted = false, intro = false }: { className?: string; inverted?: boolean; intro?: boolean }) {
+/** Square mark (ms only) for small spaces. */
+export function LogoMark({ className, inverted = false }: { className?: string; inverted?: boolean; intro?: boolean }) {
+  const accent = inverted ? "#5BA7BC" : "#0B6E8A";
   return (
-    <span dir="ltr" className={cn("logo-lockup inline-flex items-center gap-2.5 font-[family-name:var(--font-geist)]", className)}>
-      <LogoMark inverted={inverted} intro={intro} />
-      <span className={cn("text-xl leading-none font-bold tracking-tight", inverted ? "text-white" : "text-fg")}>MSLAB</span>
-    </span>
+    <svg viewBox="40 54 380 168" aria-hidden="true" focusable="false" className={cn("h-8 w-auto", className)}>
+      <path fill={accent} d={M_PATH} />
+      <path fill={accent} fillRule="evenodd" d={S_PATH} />
+    </svg>
   );
 }

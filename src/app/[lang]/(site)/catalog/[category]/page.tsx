@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
 import { Suspense } from "react";
@@ -7,7 +6,7 @@ import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductListing, ProductListingSkeleton } from "@/components/catalog/product-listing";
 import { CtaBand } from "@/components/layout/cta-band";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-import { Container, Heading, Lead, Section } from "@/components/ui/layout";
+import { Container, Heading, Lead } from "@/components/ui/layout";
 import { getCategoryBySlug, listCategories, type CategorySummary } from "@/features/catalog/queries";
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
@@ -56,7 +55,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
   const { locale, category } = await load(params);
   const [dict, categories] = await Promise.all([getDictionary(locale), listCategories(locale)]);
   const parent = category.parentId ? categories.find((c) => c.id === category.parentId) : undefined;
-  const children = categories.filter((c) => c.parentId === category.id);
 
   return (
     <>
@@ -75,32 +73,13 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
             {category.name}
           </Heading>
           {category.description ? <Lead className="mt-4 max-w-2xl">{category.description}</Lead> : null}
-          {children.length > 0 ? (
-            <div className="mt-6">
-              <h2 className="sr-only">{dict.catalog.subcategories}</h2>
-              <ul className="flex flex-wrap gap-2">
-                {children.map((child) => (
-                  <li key={child.id}>
-                    <Link
-                      href={localizedPath(locale, { route: "category", slug: child.slug })}
-                      className="border-line bg-bg hover:border-accent hover:text-accent inline-flex rounded-full border px-3.5 py-1.5 text-sm transition-colors"
-                    >
-                      {child.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
         </Container>
       </div>
 
-      <Section className="py-10 lg:py-14">
-        <Container className="grid gap-10 lg:grid-cols-12">
-          <aside className="lg:col-span-3">
-            <CategoryNav locale={locale} dict={dict} categories={categories} activeId={category.id} />
-          </aside>
-          <div className="lg:col-span-9">
+      <section className="py-6 lg:py-10">
+        <Container className="space-y-6">
+          <CategoryNav locale={locale} dict={dict} categories={categories} activeId={category.id} />
+          <div>
             <Suspense fallback={<ProductListingSkeleton />}>
               <ProductListing
                 locale={locale}
@@ -113,7 +92,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
             </Suspense>
           </div>
         </Container>
-      </Section>
+      </section>
       <CtaBand />
     </>
   );

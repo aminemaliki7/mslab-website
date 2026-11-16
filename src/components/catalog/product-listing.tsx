@@ -42,12 +42,11 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
       {/* Filtered/paginated variants are not separate pages for search engines. */}
       {query.q || (!fixedCategory && filterCategory) ? <meta name="robots" content="noindex, follow" /> : null}
 
-      <div className="bg-surface border-line rounded-[var(--radius-card)] border p-4 sm:p-5">
+      <div>
         <CatalogSearchForm
           action={basePath}
           dict={dict}
           q={query.q}
-          categories={fixedCategory ? undefined : { options: categories, selected: filterCategory?.slug }}
         />
       </div>
 
@@ -61,7 +60,7 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
       </div>
 
       {result.items.length > 0 ? (
-        <ul className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <ul className="mt-5 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
           {result.items.map((product) => (
             <li key={product.id} className="reveal">
               <ProductCard

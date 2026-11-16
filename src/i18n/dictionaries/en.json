@@ -399,6 +399,61 @@
       "week": "In 1 week",
       "twoWeeks": "In 2 weeks",
       "month": "In 1 month"
+    },
+    "guide": {
+      "title": "Your project in a few choices",
+      "hint": "Tap what applies. Several choices allowed.",
+      "notes": "Other details (optional)",
+      "notesPlaceholder": "Text to print, logo placement, references…",
+      "chooseOrWrite": "Choose at least one option or write a few details.",
+      "groups": {
+        "productColor": {
+          "label": "Product colour",
+          "options": {
+            "white": "White",
+            "black": "Black",
+            "navy": "Navy blue",
+            "grey": "Grey",
+            "red": "Red",
+            "natural": "Natural / beige",
+            "other": "Other colour"
+          }
+        },
+        "printColors": {
+          "label": "Print colours",
+          "options": {
+            "one": "1 colour",
+            "two": "2 colours",
+            "full": "Full colour",
+            "bw": "Black and white"
+          }
+        },
+        "sides": {
+          "label": "Printed sides",
+          "options": {
+            "front": "Front only",
+            "both": "Both sides",
+            "frontBack": "Front + back"
+          }
+        },
+        "usage": {
+          "label": "What is it for?",
+          "options": {
+            "business": "Business",
+            "event": "Event",
+            "gift": "Gift",
+            "resale": "Resale",
+            "school": "School / association"
+          }
+        },
+        "design": {
+          "label": "Your design",
+          "options": {
+            "ready": "I already have my design",
+            "help": "I need help creating it"
+          }
+        }
+      }
     }
   },
   "tracking": {

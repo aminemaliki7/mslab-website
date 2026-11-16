@@ -73,15 +73,11 @@ Button variants also include `inverse` and `inverseGhost` for dark backgrounds.
 ## 8. Accessibility baseline
 Skip link → `#main`; landmarks (`header`, `nav` with labels, `main`, `footer`); `aria-current` on active nav and language; visible focus everywhere; touch targets ≥ 40px in navigation; color contrast AA for all text tokens (fg-subtle darkened in M8 after axe flagged it).
 
-## 9. Logo (ADR-019)
-Original SVG created for the project (no prior MSLAB logo existed):
-- **Mark:** a sheet of paper in ink `#0E1A2B` with its top-right corner folded (accent cyan `#0B6E8A`), carrying a white "M" monogram — a direct reference to printing, paper and documents.
-- **Lockup:** mark + "MSLAB" in Geist Bold, tight tracking. Always LTR, also on Arabic pages.
-- **Inverted** (dark backgrounds, e.g. footer): white sheet, ink monogram, same cyan fold.
-- **Clear space:** at least half the mark's width around the lockup. **Minimum size:** 16 px (favicon) for the mark, 24 px height for the lockup.
-- **Files:** `public/brand/mslab-mark.svg` (mark), `public/brand/mslab-logo.svg` (lockup, wordmark as text — outline the text in a vector editor before print use), `src/app/icon.svg` (favicon). In React: `LogoMark` / `Wordmark` in `components/layout/wordmark.tsx`.
-
-The palette (§2) is built from the same ink/cyan pair, so no color change was needed.
+## 9. Logo (revised 2026-11-16)
+- **Mark:** a wavy ribbon "ms" (rounded arches with narrow slots; the S is a rounded block cut by one slot from the right and one from the left) in cyan `#0B6E8A`, "Lab" below in Anton (SIL Open Font License, converted to outlines) in ink `#0E1A2B`, and a cyan signature dot.
+- **Inverted** (dark backgrounds, e.g. footer): light cyan `#5BA7BC` shapes and dot, white "Lab".
+- **Files:** `public/brand/mslab-logo.svg` (full logo), `public/brand/mslab-mark.svg` ("ms" only), `public/brand/mslab-logo-512.png`, `public/brand/og-default.png` (share image), `src/app/icon.svg` + `src/app/apple-icon.png` (icons). In React: `Wordmark` / `LogoMark` in `components/layout/wordmark.tsx`.
+- **Trademark:** the shapes follow a reference logo supplied by the owner; check for conflicts with that brand before print or signage use.
 
 ## 10. Open brand items
 Trademark check of the logo before print/signage use (logo approved 2026-11-14), whether to keep Geist, photography direction, OG share image (M8).

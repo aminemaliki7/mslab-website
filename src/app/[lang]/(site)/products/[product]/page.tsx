@@ -136,7 +136,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
               {product.shortDescription ? <Lead className="mt-5">{product.shortDescription}</Lead> : null}
 
               <div className="border-line mt-8 space-y-4 border-t pt-6">
-                <ButtonLink href={quoteHref} size="lg">
+                <ButtonLink href={quoteHref} size="lg" className="w-full sm:w-auto">
                   {dict.product.requestQuote}
                 </ButtonLink>
                 {/* Multi-product requests: collect several products, then send one quote (ADR-017). */}
