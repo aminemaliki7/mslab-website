@@ -319,7 +319,7 @@ function Letterhead({ design, color, label, className }: MockupProps) {
   );
 }
 
-export const MOCKUPS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
+const DRAWINGS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
   tshirt: TShirt,
   hoodie: Hoodie,
   tote: Tote,
@@ -332,6 +332,47 @@ export const MOCKUPS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
   poster: Poster,
   letterhead: Letterhead,
 };
+
+// ─── Photo mockups ──────────────────────────────────────────────────────────
+// Real product photos (Unsplash license, see public/mockups/CREDITS.md). The design is placed
+// in the print area and blended with "multiply": the fabric's folds and shadows show through
+// it, like real ink. Coordinates are in the photo's own pixels.
+
+type Photo = { src: string; w: number; h: number; area: [x: number, y: number, w: number, h: number] };
+
+const PHOTOS: Partial<Record<MockupKey, Photo>> = {
+  hoodie: { src: "/mockups/hoodie.webp", w: 1200, h: 902, area: [470, 445, 275, 90] },
+  tshirt: { src: "/mockups/tshirt.webp", w: 1200, h: 800, area: [465, 230, 270, 230] },
+  mug: { src: "/mockups/mug.webp", w: 1200, h: 800, area: [520, 250, 230, 280] },
+  tote: { src: "/mockups/tote.webp", w: 1200, h: 800, area: [450, 340, 310, 290] },
+  notebook: { src: "/mockups/notebook.webp", w: 1200, h: 800, area: [340, 270, 540, 260] },
+  flyer: { src: "/mockups/flyer.webp", w: 1200, h: 800, area: [430, 200, 300, 430] },
+  poster: { src: "/mockups/poster.webp", w: 1200, h: 800, area: [405, 195, 400, 425] },
+};
+
+/** True when the product is shown on a real photo (its color cannot be changed). */
+export const hasPhoto = (key: MockupKey) => Boolean(PHOTOS[key]);
+
+function photoMockup(photo: Photo) {
+  return function PhotoMockup({ design, label, className }: MockupProps) {
+    const [x, y, w, h] = photo.area;
+    return (
+      <svg viewBox={`0 0 ${photo.w} ${photo.h}`} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className={className}>
+        <image href={photo.src} width={photo.w} height={photo.h} preserveAspectRatio="xMidYMid slice" />
+        <g style={{ mixBlendMode: "multiply" }} opacity={0.94}>
+          <PrintArea x={x} y={y} w={w} h={h} design={design} background={PAPER} />
+        </g>
+      </svg>
+    );
+  };
+}
+
+export const MOCKUPS: Record<MockupKey, (props: MockupProps) => ReactNode> = Object.fromEntries(
+  (Object.keys(DRAWINGS) as MockupKey[]).map((key) => {
+    const photo = PHOTOS[key];
+    return [key, photo ? photoMockup(photo) : DRAWINGS[key]];
+  }),
+) as Record<MockupKey, (props: MockupProps) => ReactNode>;
 
 /** Products whose material color the visitor can change (paper products: printed background). */
 export const DEFAULT_COLORS: Record<MockupKey, string> = {

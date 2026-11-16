@@ -9,7 +9,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
 import { cn } from "@/lib/utils";
 import { mockupHandoff } from "./mockup-handoff";
-import { DEFAULT_COLORS, MOCKUPS, type Design, type MockupKey } from "./mockups";
+import { DEFAULT_COLORS, MOCKUPS, hasPhoto, type Design, type MockupKey } from "./mockups";
 import { proofText } from "./proof-text";
 import { studioSelect } from "./studio-select";
 
@@ -142,6 +142,7 @@ export function MockupStudio({ products, t, formId }: { products: MockupKey[]; t
         <Slider id={`${uid}-x`} label={t.horizontalLabel} min={-30} max={30} value={Math.round(dx * 100)} onChange={(v) => setDx(v / 100)} />
         <Slider id={`${uid}-y`} label={t.verticalLabel} min={-30} max={30} value={Math.round(dy * 100)} onChange={(v) => setDy(v / 100)} />
 
+        {hasPhoto(selected) ? null : (
         <fieldset>
           <legend className="text-fg text-sm font-medium">{t.colorLabel}</legend>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -164,6 +165,7 @@ export function MockupStudio({ products, t, formId }: { products: MockupKey[]; t
             })}
           </div>
         </fieldset>
+        )}
       </div>
 
       {/* Preview */}
