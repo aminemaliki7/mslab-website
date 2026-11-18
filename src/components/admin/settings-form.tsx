@@ -6,8 +6,9 @@ import { Panel } from "@/components/admin/ui";
 import { saveSettings } from "@/features/admin/settings-actions";
 import type { Tables } from "@/lib/supabase/database.types";
 import { useAdminT } from "./admin-i18n";
+import { LegalFactsFields, type LegalFactGroupView } from "./legal-facts-fields";
 
-export function SettingsForm({ settings }: { settings: Tables<"site_settings"> }) {
+export function SettingsForm({ settings, legalFacts }: { settings: Tables<"site_settings">; legalFacts: LegalFactGroupView[] }) {
   const { t } = useAdminT();
   const s = t.settings;
   const values = {
@@ -60,6 +61,8 @@ export function SettingsForm({ settings }: { settings: Tables<"site_settings"> }
                 <TextField name="social_youtube" label="YouTube" values={values} errors={e} dir="ltr" />
               </div>
             </Panel>
+
+            <LegalFactsFields groups={legalFacts} errors={e} />
 
             <Panel title={s.legal} description={s.legalHint}>
               <div className="space-y-6">

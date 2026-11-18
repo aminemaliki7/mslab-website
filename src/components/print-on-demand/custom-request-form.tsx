@@ -15,6 +15,7 @@ import { format } from "@/i18n/format";
 import { QuickPicks } from "@/components/forms/quick-picks";
 import { FileUploader } from "./file-uploader";
 import { ProjectOptions } from "./project-options";
+import { StudioDesignField } from "./studio-design-field";
 
 type Props = {
   locale: Locale;
@@ -232,6 +233,7 @@ function CustomRequestFormInner({
         <legend className={legend}>
           {t.pod.filesSection} <span className="text-fg-muted text-base font-normal">({t.forms.optional})</span>
         </legend>
+        {hydrated ? <StudioDesignField t={t.pod.studio.editor} /> : null}
         {hydrated ? (
           <FileUploader storageEndpoint={storageEndpoint} publishableKey={publishableKey} t={t.pod} onBusyChange={setUploading} />
         ) : (

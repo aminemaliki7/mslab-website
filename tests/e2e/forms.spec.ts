@@ -29,17 +29,17 @@ test("multi-product quote: add from product pages, custom item, submit, list cle
 
   const rows = page.locator("form ol > li");
   await expect(rows).toHaveCount(2);
-  await rows.nth(0).getByLabel("Quantité").fill("25");
+  await rows.nth(0).getByRole("spinbutton", { name: "Quantité" }).fill("25");
 
   await page.getByRole("button", { name: /Ajouter un besoin sur mesure/ }).click();
   await expect(rows).toHaveCount(3);
   await rows.nth(2).getByLabel("Description du besoin").fill("Impression de flyers A5 (test E2E)");
-  await rows.nth(2).getByLabel("Quantité").fill("500");
+  await rows.nth(2).getByRole("spinbutton", { name: "Quantité" }).fill("500");
 
   // The list survives a reload (localStorage).
   await page.reload();
   await expect(rows).toHaveCount(3);
-  await expect(rows.nth(0).getByLabel("Quantité")).toHaveValue("25");
+  await expect(rows.nth(0).getByRole("spinbutton", { name: "Quantité" })).toHaveValue("25");
 
   await page.getByLabel("Nom complet").fill("E2E Buyer");
   await page.getByLabel("E-mail").fill("buyer@example.com");
@@ -68,7 +68,7 @@ test("contact: errors keep the typed values, then success in Arabic", async ({ p
   await page.goto("/ar/contact");
   await page.getByLabel("الاسم الكامل").fill("E2E Visitor");
   await page.getByLabel("البريد الإلكتروني").fill("not-an-email");
-  await page.getByLabel("الموضوع").fill("اختبار");
+  await page.getByRole("textbox", { name: "الموضوع", exact: true }).fill("اختبار");
   await page.getByLabel("الرسالة").fill("رسالة اختبار آلية طويلة بما يكفي.");
   await page.getByLabel(/أوافق/).check();
   await humanPause(page);

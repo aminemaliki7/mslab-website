@@ -116,6 +116,7 @@ export type Database = {
           deadline: string | null
           depth: number | null
           description: string
+          design: Json | null
           dimension_unit: string
           finishings: string[]
           height: number | null
@@ -130,6 +131,7 @@ export type Database = {
           deadline?: string | null
           depth?: number | null
           description: string
+          design?: Json | null
           dimension_unit?: string
           finishings?: string[]
           height?: number | null
@@ -144,6 +146,7 @@ export type Database = {
           deadline?: string | null
           depth?: number | null
           description?: string
+          design?: Json | null
           dimension_unit?: string
           finishings?: string[]
           height?: number | null
@@ -481,6 +484,7 @@ export type Database = {
           mime_type: string | null
           original_name: string
           quotation_request_id: string
+          role: string
           size_bytes: number | null
           storage_path: string
         }
@@ -490,6 +494,7 @@ export type Database = {
           mime_type?: string | null
           original_name: string
           quotation_request_id: string
+          role?: string
           size_bytes?: number | null
           storage_path: string
         }
@@ -499,6 +504,7 @@ export type Database = {
           mime_type?: string | null
           original_name?: string
           quotation_request_id?: string
+          role?: string
           size_bytes?: number | null
           storage_path?: string
         }
@@ -762,6 +768,7 @@ export type Database = {
           privacy_policy_en: string | null
           privacy_policy_fr: string | null
           id: number
+          legal_facts: Json
           legal_name: string | null
           maps_url: string | null
           mission_ar: string | null
@@ -802,6 +809,7 @@ export type Database = {
           privacy_policy_en?: string | null
           privacy_policy_fr?: string | null
           id?: number
+          legal_facts?: Json
           legal_name?: string | null
           maps_url?: string | null
           mission_ar?: string | null
@@ -842,6 +850,7 @@ export type Database = {
           privacy_policy_en?: string | null
           privacy_policy_fr?: string | null
           id?: number
+          legal_facts?: Json
           legal_name?: string | null
           maps_url?: string | null
           mission_ar?: string | null
@@ -869,6 +878,139 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "admin_profiles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      studio_options: {
+        Row: {
+          hex: string | null
+          id: string
+          is_active: boolean
+          kind: string
+          name_ar: string | null
+          name_en: string | null
+          name_fr: string
+          product_key: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          hex?: string | null
+          id?: string
+          is_active?: boolean
+          kind: string
+          name_ar?: string | null
+          name_en?: string | null
+          name_fr: string
+          product_key: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          hex?: string | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name_ar?: string | null
+          name_en?: string | null
+          name_fr?: string
+          product_key?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_options_product_key_fkey"
+            columns: ["product_key"]
+            isOneToOne: false
+            referencedRelation: "studio_products"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      studio_products: {
+        Row: {
+          key: string
+          min_dpi: number | null
+          updated_at: string
+        }
+        Insert: {
+          key: string
+          min_dpi?: number | null
+          updated_at?: string
+        }
+        Update: {
+          key?: string
+          min_dpi?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      studio_views: {
+        Row: {
+          area_h: number
+          area_w: number
+          area_x: number
+          area_y: number
+          displacement_path: string | null
+          id: string
+          image_height: number
+          image_path: string
+          image_width: number
+          is_active: boolean
+          mask_path: string | null
+          print_height_mm: number | null
+          print_width_mm: number | null
+          product_key: string
+          sort_order: number
+          updated_at: string
+          view: string
+        }
+        Insert: {
+          area_h: number
+          area_w: number
+          area_x: number
+          area_y: number
+          displacement_path?: string | null
+          id?: string
+          image_height: number
+          image_path: string
+          image_width: number
+          is_active?: boolean
+          mask_path?: string | null
+          print_height_mm?: number | null
+          print_width_mm?: number | null
+          product_key: string
+          sort_order?: number
+          updated_at?: string
+          view: string
+        }
+        Update: {
+          area_h?: number
+          area_w?: number
+          area_x?: number
+          area_y?: number
+          displacement_path?: string | null
+          id?: string
+          image_height?: number
+          image_path?: string
+          image_width?: number
+          is_active?: boolean
+          mask_path?: string | null
+          print_height_mm?: number | null
+          print_width_mm?: number | null
+          product_key?: string
+          sort_order?: number
+          updated_at?: string
+          view?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_views_product_key_fkey"
+            columns: ["product_key"]
+            isOneToOne: false
+            referencedRelation: "studio_products"
+            referencedColumns: ["key"]
           },
         ]
       }

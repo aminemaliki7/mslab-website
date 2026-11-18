@@ -1,15 +1,8 @@
-# Studio mockup photos
+# Studio mockups
 
-Free photos from Unsplash, used under the Unsplash License (free commercial use, no attribution required). Resized to 1200 px and converted to WebP; the tote bag photo had a small maker's mark removed.
+Every product preview uses MSLAB's own vector templates in `svg/` (no third-party photos):
 
-| File | Unsplash photo | Photographer |
-|---|---|---|
-| hoodie.webp | https://unsplash.com/photos/kJXGTOY1wLQ | Mediamodifier |
-| tshirt.webp | https://unsplash.com/photos/4rUYuwJ2vGw | mockupbee |
-| mug.webp | https://unsplash.com/photos/xf38DdLyBvI | Mediamodifier |
-| tote.webp | https://unsplash.com/photos/smTDI-z1rlY | Brando Makes Branding |
-| notebook.webp | https://unsplash.com/photos/hDn3V_DPka4 | mockupbee |
-| flyer.webp | https://unsplash.com/photos/0Mlqt7NuUBE | ichwar |
-| poster.webp | https://unsplash.com/photos/gx6NxtpgHqY | In The Making Studio |
+- `svg/tshirt.svg`: built by `scripts/build-tshirt-mockup.mjs` (docs/TSHIRT_SVG_MOCKUP.md).
+- `svg/<product>.svg` (hoodie, tote, mug, box, notebook, business-card, flyer, poster): built by `scripts/build-product-mockups.mjs`.
 
-Print areas (where the customer's design is placed) are set in `src/components/print-on-demand/mockups.tsx` → `PHOTOS`.
+Print areas are defined in those scripts. They reach the site through `src/features/print-on-demand/placeholder-views.ts`.

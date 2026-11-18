@@ -30,10 +30,10 @@
     "activities": "Activités",
     "navigation": "Navigation",
     "contact": "Contact",
-    "legal": "Mentions légales",
-    "privacy": "Confidentialité",
     "rights": "Tous droits réservés.",
-    "tracking": "Suivi de commande"
+    "tracking": "Suivi de commande",
+    "legalInfo": "Informations légales",
+    "cookieSettings": "Gérer les cookies"
   },
   "whatsapp": {
     "label": "Contacter MSLAB sur WhatsApp",
@@ -213,11 +213,6 @@
     "addedToQuote": "Ajouté à votre demande",
     "viewQuote": "Voir ma demande ({count})"
   },
-  "legalPages": {
-    "pending": "Ce contenu sera publié prochainement.",
-    "contact": "Pour toute question concernant l’entreprise ou vos données personnelles, contactez-nous.",
-    "publisherTitle": "Éditeur du site"
-  },
   "pages": {
     "home": {
       "title": "Impression, fournitures de bureau, papeterie et livres",
@@ -242,14 +237,6 @@
     "quote": {
       "title": "Demande de devis",
       "description": "Sélectionnez des produits du catalogue ou décrivez votre besoin d'impression : MSLAB étudie votre demande et vous recontacte."
-    },
-    "legal": {
-      "title": "Mentions légales",
-      "description": "Mentions légales du site MSLAB."
-    },
-    "privacy": {
-      "title": "Politique de confidentialité",
-      "description": "Comment MSLAB traite les données personnelles transmises via ce site."
     },
     "tracking": {
       "title": "Suivi de commande",
@@ -346,19 +333,8 @@
     "studio": {
       "title": "Visualisez votre design",
       "lead": "Ajoutez votre logo ou un texte et voyez-le sur nos produits. Rien n'est envoyé tant que vous n'avez pas validé votre demande.",
-      "uploadLabel": "Votre logo ou visuel",
-      "uploadButton": "Choisir une image",
-      "uploadHint": "PNG à fond transparent idéal. JPG, WebP ou SVG acceptés.",
-      "removeImage": "Retirer l'image",
-      "imageError": "{name} : format non pris en charge pour l'aperçu (PNG, JPG, WebP ou SVG, 15 Mo maximum).",
-      "textLabel": "Ou un texte",
-      "textPlaceholder": "Le nom de votre entreprise",
-      "sizeLabel": "Taille",
-      "horizontalLabel": "Position horizontale",
-      "verticalLabel": "Position verticale",
       "colorLabel": "Couleur du support",
       "productsLabel": "Choisir un produit",
-      "useProduct": "Utiliser ce produit pour ma demande",
       "previewLabel": "Aperçu : {product}",
       "disclaimer": "Aperçu indicatif : formats, couleurs et rendu final sont confirmés avec votre devis.",
       "products": {
@@ -383,6 +359,61 @@
         "yellow": "Jaune",
         "red": "Rouge",
         "green": "Vert"
+      },
+      "editor": {
+        "addImage": "Ajouter une image",
+        "addImageHint": "PNG, JPG, WebP, SVG ou PDF, 15 Mo maximum. PNG à fond transparent idéal.",
+        "addText": "Ajouter un texte",
+        "textDefault": "Votre texte",
+        "fileRejected": "{name} : format non reconnu (PNG, JPG, WebP, SVG ou PDF, 15 Mo maximum).",
+        "pdfNote": "Les PDF ne sont pas affichés dans l'aperçu : ils sont placés dans un cadre et transmis tels quels.",
+        "layers": "Calques",
+        "noLayers": "Ajoutez une image ou un texte pour commencer.",
+        "layerImage": "Image",
+        "layerText": "Texte",
+        "moveUp": "Monter le calque",
+        "moveDown": "Descendre le calque",
+        "deleteLayer": "Supprimer le calque",
+        "text": "Texte",
+        "font": "Police",
+        "textColor": "Couleur du texte",
+        "size": "Taille",
+        "rotation": "Rotation",
+        "positionX": "Position horizontale",
+        "positionY": "Position verticale",
+        "center": "Centrer",
+        "undo": "Annuler",
+        "redo": "Rétablir",
+        "views": "Face à personnaliser",
+        "viewNames": {
+          "front": "Devant",
+          "back": "Dos",
+          "left_sleeve": "Manche gauche",
+          "right_sleeve": "Manche droite",
+          "wrap": "Pourtour"
+        },
+        "options": {
+          "color": "Couleur du produit",
+          "size": "Taille",
+          "material": "Matière",
+          "technique": "Technique d'impression"
+        },
+        "choose": "Choisir…",
+        "outside": "Une partie du visuel dépasse la zone imprimable : elle ne sera pas imprimée.",
+        "dpi": "Résolution à cette taille : {dpi} DPI.",
+        "lowDpi": "Résolution insuffisante à cette taille ({dpi} DPI, minimum {min} DPI) : réduisez le visuel ou fournissez un fichier plus grand.",
+        "printSize": "Taille imprimée : {w} × {h} mm",
+        "placeholderNote": "Visuel d'illustration : les couleurs, tailles et techniques de ce produit sont confirmées avec votre devis.",
+        "stageLabel": "Zone d'édition : {product}, {view}. Flèches pour déplacer le calque sélectionné, Suppr pour l'effacer.",
+        "use": "Utiliser ce design dans ma demande",
+        "preparing": "Préparation de l'aperçu…",
+        "handedOver": "Design ajouté à votre demande ci-dessous.",
+        "exportError": "L'aperçu n'a pas pu être généré. Votre design et vos fichiers sont tout de même joints.",
+        "attachedTitle": "Design du Studio",
+        "attachedSummary": "{product} · {layers} élément(s)",
+        "removeDesign": "Retirer le design",
+        "mockupFile": "Aperçu Studio",
+        "gestureHint": "Glissez pour déplacer. Poignée ronde : taille. Poignée du haut : rotation."
       }
     },
     "formatsLabel": "Formats courants",
@@ -487,5 +518,56 @@
       "rejected": "Non retenue",
       "closed": "Clôturée"
     }
+  },
+  "legalCenter": {
+    "eyebrow": "Informations légales",
+    "lastUpdated": "Dernière mise à jour : {date}",
+    "toc": "Sur cette page",
+    "tocToggle": "Sommaire du document",
+    "documents": "Documents légaux",
+    "placeholders": {
+      "rc": "numéro et tribunal d'immatriculation au registre du commerce",
+      "ice": "numéro ICE",
+      "address": "adresse",
+      "phone": "numéro de téléphone",
+      "email": "adresse e-mail",
+      "cndpReference": "référence CNDP",
+      "retentionInquiries": "durée de conservation des messages",
+      "retentionQuotes": "durée de conservation des demandes de devis",
+      "retentionFiles": "durée de conservation des fichiers",
+      "retentionCustomers": "durée de conservation des données clients",
+      "emailProvider": "prestataire d'envoi d'e-mails",
+      "quoteValidity": "durée de validité des devis",
+      "paymentMethods": "moyens de paiement acceptés",
+      "paymentTerms": "conditions et échéances de paiement",
+      "proofProcess": "modalités du bon à tirer",
+      "productionLeadTimes": "délais de réalisation",
+      "deliveryZones": "zones de livraison",
+      "deliveryLeadTimes": "délais de livraison",
+      "deliveryFees": "frais de livraison",
+      "carriers": "transporteurs",
+      "pickup": "modalités de retrait",
+      "claimDeadline": "délai de réclamation",
+      "refundMethod": "mode de remboursement",
+      "courts": "tribunal compétent"
+    }
+  },
+  "consent": {
+    "bannerLabel": "Gestion des cookies",
+    "bannerTitle": "Cookies et mesure d'audience",
+    "bannerBody": "Ce site utilise des traceurs indispensables à son fonctionnement. Avec votre accord, il utilise aussi des outils de mesure d'audience fournis par Google. Vous pouvez modifier votre choix à tout moment.",
+    "accept": "Tout accepter",
+    "reject": "Tout refuser",
+    "customize": "Personnaliser",
+    "policyLink": "Politique relative aux cookies",
+    "dialogTitle": "Préférences de cookies",
+    "dialogIntro": "Choisissez les catégories que vous acceptez. Votre choix est conservé 6 mois.",
+    "essentialTitle": "Essentiels",
+    "essentialBody": "Langue, liste de devis, mémorisation de vos choix. Le site ne peut pas fonctionner sans eux.",
+    "alwaysOn": "Toujours actifs",
+    "analyticsTitle": "Mesure d'audience",
+    "analyticsBody": "Statistiques de fréquentation via Google Tag Manager et Google Analytics. Désactivée par défaut.",
+    "save": "Enregistrer mes choix",
+    "close": "Fermer"
   }
 }

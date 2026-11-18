@@ -1,12 +1,12 @@
 import { CustomRequestForm } from "@/components/print-on-demand/custom-request-form";
-import { MockupStudio } from "@/components/print-on-demand/mockup-studio";
+import { StudioEditor } from "@/components/print-on-demand/studio/studio-editor";
 import { HeroMockups } from "@/components/print-on-demand/pod-showcase";
 import { PortfolioGallery } from "@/components/print-on-demand/portfolio-gallery";
 import { ButtonLink, buttonClasses } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ChevronIcon } from "@/components/ui/icons";
 import { Container, Eyebrow, Heading, Lead, Section } from "@/components/ui/layout";
-import { listMockupProducts, listPortfolio, listProductionOptions } from "@/features/print-on-demand/queries";
+import { getStudioConfig, listMockupProducts, listPortfolio, listProductionOptions } from "@/features/print-on-demand/queries";
 import type { ServiceDetail } from "@/features/services/queries";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -25,7 +25,7 @@ const STUDIO_ID = "studio";
  * statistics, reviews or delivery promises (CLAUDE.md §1).
  */
 export async function PrintOnDemandPage({ locale, dict, service }: { locale: Locale; dict: Dictionary; service: ServiceDetail }) {
-  const [options, portfolio, mockups] = await Promise.all([listProductionOptions(locale), listPortfolio(locale), listMockupProducts()]);
+  const [options, portfolio, mockups, studioConfig] = await Promise.all([listProductionOptions(locale), listPortfolio(locale), listMockupProducts(), getStudioConfig(locale)]);
   const t = dict.printOnDemand;
   const trackingHref = localizedPath(locale, { route: "track" });
   const pagePath = localizedPath(locale, { route: "service", slug: service.slug });
@@ -103,7 +103,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
           <Container>
             <SectionIntro id="pod-studio-heading" title={t.studio.title} lead={t.studio.lead} />
             <div className="bg-surface border-line mt-10 rounded-2xl border p-4 sm:p-6 lg:p-8">
-              <MockupStudio products={mockups} t={t.studio} formId={FORM_ID} />
+              <StudioEditor products={mockups} config={studioConfig} t={t.studio} formId={FORM_ID} />
             </div>
           </Container>
         </Section>

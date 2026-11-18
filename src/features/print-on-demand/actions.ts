@@ -6,6 +6,8 @@ import { notifyCustomRequest } from "@/features/inquiries/notifications";
 import { toFieldErrors, type FieldErrors } from "@/features/inquiries/schema";
 import { getServerEnv } from "@/lib/server-env";
 import { createPublicClient } from "@/lib/supabase/public";
+import { parseDesignField } from "./design";
+import { resolveDesign } from "./resolve-design";
 import { customRequestSchema, trackingSchema } from "./schema";
 
 /**
@@ -71,6 +73,9 @@ export async function submitCustomRequest(_prev: CustomRequestState, formData: F
   });
   if (!parsed.success) return { status: "error", fieldErrors: toFieldErrors(parsed.error), values };
   const input = parsed.data;
+  // Studio design (optional): re-validated here, options resolved from the database.
+  const designInput = parseDesignField(formData.get("studioDesign"));
+  const design = designInput ? await resolveDesign(designInput) : null;
 
   const { data: reference, error } = await createPublicClient().rpc("submit_custom_request", {
     submission_key: getServerEnv().FORM_SUBMISSION_KEY,
@@ -87,12 +92,14 @@ export async function submitCustomRequest(_prev: CustomRequestState, formData: F
       material_other: input.materialOptionId ? null : input.materialOther,
       finishing_option_ids: input.finishingOptionIds,
       deadline: input.deadline,
+      design,
       upload_ticket: input.uploadTicket ?? null,
       // Only files still listed in the form are attached (a visitor can remove an upload).
       files: formData
         .getAll("uploadedFiles")
         .filter((v): v is string => typeof v === "string" && v.startsWith(`${input.uploadTicket}/`))
-        .slice(0, 5),
+        // Up to 5 artwork files + up to 5 Studio mockups (the uploader enforces both limits).
+        .slice(0, 10),
       full_name: input.fullName,
       email: input.email,
       phone: input.phone,

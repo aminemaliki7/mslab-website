@@ -53,10 +53,12 @@ Nothing below may be invented. Each item is needed from MSLAB:
 | Pricing policy (show prices or not) | Catalog | Medium |
 | Social media profile URLs | Footer, `sameAs` | Low |
 | Real client references/testimonials (with permission) | Optional trust section | Low |
-| Privacy policy / legal notice text (Loi 09-08 / CNDP) | Legal pages, form consent | High (before launch) |
+| Legal documents: company identifiers (RC, ICE, registered office), CNDP reference, retention periods, payment/quote/BAT/delivery/claim/refund terms, email provider, competent court — full list in `LEGAL_CONTENT_CHECKLIST.md` | 8 legal pages (drafts, shown as « à compléter » markers) | High (before launch) |
+| Legal review of the 8 legal documents by a Moroccan lawyer, then status → `validated` | Legal pages indexing | High (before launch) |
 | Arabic register preference (MSA vs Darija) and numerals (Latin vs Arabic-Indic) | Arabic content | Medium |
 | Admin users (who manages the catalog and inquiries) | Admin accounts | Medium |
 | Data retention period for inquiries | Security/privacy | Medium |
+| Studio: photos of MSLAB products per printable side, print areas (px + mm), colours, sizes, materials, printing techniques, minimum DPI (docs/STUDIO.md §4) | Studio editor (placeholder visuals until then) | High |
 
 ## 7. Success criteria
 - Visitors can reach a contact or quote action from any page in ≤ 1 click.

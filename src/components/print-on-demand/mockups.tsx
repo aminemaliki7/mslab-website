@@ -2,6 +2,8 @@
 
 import { useId, type ReactNode } from "react";
 import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
+import { PLACEHOLDERS, type PlaceholderPhoto, type PlaceholderTemplate } from "@/features/print-on-demand/placeholder-views";
+import { garmentImages } from "./garment/garment-template";
 
 /**
  * Product mockups for the print-on-demand studio (original drawings, docs/DESIGN_SYSTEM.md §11).
@@ -20,6 +22,8 @@ export type Design = {
   /** -0.5 – 0.5: offset as a share of the print area. */
   dx: number;
   dy: number;
+  /** Draw the product only (the Studio editor overlays its own layers). */
+  bare?: boolean;
 };
 
 type MockupProps = { design: Design; color: string; label: string; className?: string };
@@ -73,6 +77,7 @@ function PrintArea({
   const cy = y + h / 2 + design.dy * h;
   const fg = textOn(background);
   const text = design.text.trim();
+  if (design.bare) return null;
 
   return (
     <g transform={transform}>
@@ -319,7 +324,7 @@ function Letterhead({ design, color, label, className }: MockupProps) {
   );
 }
 
-const DRAWINGS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
+export const DRAWINGS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
   tshirt: TShirt,
   hoodie: Hoodie,
   tote: Tote,
@@ -334,28 +339,16 @@ const DRAWINGS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
 };
 
 // ─── Photo mockups ──────────────────────────────────────────────────────────
-// Real product photos (Unsplash license, see public/mockups/CREDITS.md). The design is placed
-// in the print area and blended with "multiply": the fabric's folds and shadows show through
-// it, like real ink. Coordinates are in the photo's own pixels.
+// Placeholder photos (Unsplash, see public/mockups/CREDITS.md and placeholder-views.ts) until
+// MSLAB configures its own product photos for the Studio. The design is blended with
+// "multiply": folds and shadows show through it, like real ink.
 
-type Photo = { src: string; w: number; h: number; area: [x: number, y: number, w: number, h: number] };
+/** True when the product is drawn or a garment template (its color can be changed); photos keep their own color. */
+export const canRecolor = (key: MockupKey) => PLACEHOLDERS[key].kind !== "photo";
 
-const PHOTOS: Partial<Record<MockupKey, Photo>> = {
-  hoodie: { src: "/mockups/hoodie.webp", w: 1200, h: 902, area: [470, 445, 275, 90] },
-  tshirt: { src: "/mockups/tshirt.webp", w: 1200, h: 800, area: [465, 230, 270, 230] },
-  mug: { src: "/mockups/mug.webp", w: 1200, h: 800, area: [520, 250, 230, 280] },
-  tote: { src: "/mockups/tote.webp", w: 1200, h: 800, area: [450, 340, 310, 290] },
-  notebook: { src: "/mockups/notebook.webp", w: 1200, h: 800, area: [340, 270, 540, 260] },
-  flyer: { src: "/mockups/flyer.webp", w: 1200, h: 800, area: [430, 200, 300, 430] },
-  poster: { src: "/mockups/poster.webp", w: 1200, h: 800, area: [405, 195, 400, 425] },
-};
-
-/** True when the product is shown on a real photo (its color cannot be changed). */
-export const hasPhoto = (key: MockupKey) => Boolean(PHOTOS[key]);
-
-function photoMockup(photo: Photo) {
+function photoMockup(photo: PlaceholderPhoto) {
   return function PhotoMockup({ design, label, className }: MockupProps) {
-    const [x, y, w, h] = photo.area;
+    const { x, y, w, h } = photo.area;
     return (
       <svg viewBox={`0 0 ${photo.w} ${photo.h}`} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className={className}>
         <image href={photo.src} width={photo.w} height={photo.h} preserveAspectRatio="xMidYMid slice" />
@@ -367,10 +360,27 @@ function photoMockup(photo: Photo) {
   };
 }
 
+/** MSLAB's vector product template (first side), in its 4:3 card frame. */
+function templateMockup(template: PlaceholderTemplate) {
+  return function TemplateMockup({ design, color, label, className }: MockupProps) {
+    const side = template.sides[0]!;
+    const images = garmentImages(template.template, side.scene, color);
+    const { x, y, w, h } = side.area;
+    return (
+      <svg viewBox={`${template.thumb.x} ${template.thumb.y} ${template.thumb.w} ${template.thumb.h}`} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className={className}>
+        <image href={images.under} width={template.w} height={template.h} />
+        <PrintArea x={x} y={y} w={w} h={h} design={design} background={color} />
+        <image href={images.over} width={template.w} height={template.h} />
+      </svg>
+    );
+  };
+}
+
 export const MOCKUPS: Record<MockupKey, (props: MockupProps) => ReactNode> = Object.fromEntries(
   (Object.keys(DRAWINGS) as MockupKey[]).map((key) => {
-    const photo = PHOTOS[key];
-    return [key, photo ? photoMockup(photo) : DRAWINGS[key]];
+    const placeholder = PLACEHOLDERS[key];
+    const mockup = placeholder.kind === "photo" ? photoMockup(placeholder) : placeholder.kind === "template" ? templateMockup(placeholder) : DRAWINGS[key];
+    return [key, mockup];
   }),
 ) as Record<MockupKey, (props: MockupProps) => ReactNode>;
 

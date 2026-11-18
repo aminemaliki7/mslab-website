@@ -9,6 +9,7 @@ import { contentStatuses } from "@/features/admin/labels";
 import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { deleteProductionOption, toggleMockupProduct, toggleProductionOption } from "@/features/admin/pod-actions";
 import { isMockupKey } from "@/features/print-on-demand/mockup-keys";
+import { STUDIO_PRODUCTS } from "@/features/print-on-demand/studio";
 import { format } from "@/i18n/format";
 import { localizedPath } from "@/i18n/routes";
 import type { Tables } from "@/lib/supabase/database.types";
@@ -27,6 +28,12 @@ export default async function PrintOnDemandAdminPage() {
     db.from("portfolio_items").select("*").order("sort_order").order("created_at", { ascending: false }),
     db.from("mockup_products").select("*").order("sort_order"),
   ]);
+  const [studioViews, studioOptions] = await Promise.all([
+    db.from("studio_views").select("product_key, is_active"),
+    db.from("studio_options").select("product_key, is_active"),
+  ]);
+  const studioReady = !studioViews.error && !studioOptions.error;
+  const countFor = (rows: unknown, key: string) => ((rows ?? []) as Array<{ product_key: string; is_active: boolean }>).filter((r) => r.product_key === key && r.is_active).length;
   const materials = (options ?? []).filter((o) => o.kind === "material");
   const finishings = (options ?? []).filter((o) => o.kind === "finishing");
   const statuses = contentStatuses(t);
@@ -80,6 +87,31 @@ export default async function PrintOnDemandAdminPage() {
           <OptionsPanel t={t} title={format(p.materials, { count: materials.length })} description={p.materialsHint} kind="material" options={materials} empty={p.noMaterials} />
           <OptionsPanel t={t} title={format(p.finishings, { count: finishings.length })} description={p.finishingsHint} kind="finishing" options={finishings} empty={p.noFinishings} />
         </div>
+
+        <Panel title={p.studio.title} description={p.studio.hint}>
+          {studioReady ? (
+            <ul className="divide-line divide-y text-sm">
+              {STUDIO_PRODUCTS.map((key) => {
+                const views = countFor(studioViews.data, key);
+                return (
+                  <li key={key} className="flex min-h-12 flex-wrap items-center justify-between gap-3 py-2">
+                    <span>
+                      <span className="font-medium">{p.mockups[key]}</span>
+                      <span className="text-fg-muted block text-xs">
+                        {views > 0 ? p.studio.configured : p.studio.placeholder} · {format(p.studio.counts, { views, options: countFor(studioOptions.data, key) })}
+                      </span>
+                    </span>
+                    <Link href={`/admin/print-on-demand/studio/${key}`} className="text-accent inline-flex min-h-11 items-center font-medium">
+                      {p.studio.configure} →
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className="text-warning text-sm">{p.studio.unavailable}</p>
+          )}
+        </Panel>
 
         <Panel title={p.mockupsTitle} description={p.mockupsHint}>
           <ul className="divide-line divide-y text-sm">

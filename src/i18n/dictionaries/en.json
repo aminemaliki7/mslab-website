@@ -30,10 +30,10 @@
     "activities": "Activities",
     "navigation": "Navigation",
     "contact": "Contact",
-    "legal": "Legal notice",
-    "privacy": "Privacy",
     "rights": "All rights reserved.",
-    "tracking": "Order tracking"
+    "tracking": "Order tracking",
+    "legalInfo": "Legal & information",
+    "cookieSettings": "Manage cookies"
   },
   "whatsapp": {
     "label": "Contact MSLAB on WhatsApp",
@@ -213,11 +213,6 @@
     "addedToQuote": "Added to your request",
     "viewQuote": "View my request ({count})"
   },
-  "legalPages": {
-    "pending": "This content will be published soon.",
-    "contact": "For any question about the company or your personal data, contact us.",
-    "publisherTitle": "Website publisher"
-  },
   "pages": {
     "home": {
       "title": "Printing, office supplies, stationery and books",
@@ -242,14 +237,6 @@
     "quote": {
       "title": "Quotation request",
       "description": "Select products from the catalog or describe your printing needs: MSLAB reviews your request and gets back to you."
-    },
-    "legal": {
-      "title": "Legal notice",
-      "description": "Legal notice for the MSLAB website."
-    },
-    "privacy": {
-      "title": "Privacy policy",
-      "description": "How MSLAB processes personal data submitted through this website."
     },
     "tracking": {
       "title": "Order tracking",
@@ -346,19 +333,8 @@
     "studio": {
       "title": "See your design",
       "lead": "Add your logo or some text and see it on our products. Nothing is sent until you submit your request.",
-      "uploadLabel": "Your logo or artwork",
-      "uploadButton": "Choose an image",
-      "uploadHint": "A PNG with a transparent background works best. JPG, WebP or SVG accepted.",
-      "removeImage": "Remove image",
-      "imageError": "{name}: format not supported for the preview (PNG, JPG, WebP or SVG, 15 MB maximum).",
-      "textLabel": "Or some text",
-      "textPlaceholder": "Your company name",
-      "sizeLabel": "Size",
-      "horizontalLabel": "Horizontal position",
-      "verticalLabel": "Vertical position",
       "colorLabel": "Product color",
       "productsLabel": "Choose a product",
-      "useProduct": "Use this product for my request",
       "previewLabel": "Preview: {product}",
       "disclaimer": "Indicative preview: sizes, colors and the final result are confirmed with your quote.",
       "products": {
@@ -383,6 +359,61 @@
         "yellow": "Yellow",
         "red": "Red",
         "green": "Green"
+      },
+      "editor": {
+        "addImage": "Add an image",
+        "addImageHint": "PNG, JPG, WebP, SVG or PDF, 15 MB max. A transparent PNG works best.",
+        "addText": "Add text",
+        "textDefault": "Your text",
+        "fileRejected": "{name}: format not recognised (PNG, JPG, WebP, SVG or PDF, 15 MB max).",
+        "pdfNote": "PDFs are not drawn in the preview: they are placed in a frame and sent as they are.",
+        "layers": "Layers",
+        "noLayers": "Add an image or some text to start.",
+        "layerImage": "Image",
+        "layerText": "Text",
+        "moveUp": "Move layer up",
+        "moveDown": "Move layer down",
+        "deleteLayer": "Delete layer",
+        "text": "Text",
+        "font": "Font",
+        "textColor": "Text colour",
+        "size": "Size",
+        "rotation": "Rotation",
+        "positionX": "Horizontal position",
+        "positionY": "Vertical position",
+        "center": "Centre",
+        "undo": "Undo",
+        "redo": "Redo",
+        "views": "Side to customise",
+        "viewNames": {
+          "front": "Front",
+          "back": "Back",
+          "left_sleeve": "Left sleeve",
+          "right_sleeve": "Right sleeve",
+          "wrap": "Wrap-around"
+        },
+        "options": {
+          "color": "Product colour",
+          "size": "Size",
+          "material": "Material",
+          "technique": "Printing technique"
+        },
+        "choose": "Choose…",
+        "outside": "Part of the artwork is outside the printable area: it will not be printed.",
+        "dpi": "Resolution at this size: {dpi} DPI.",
+        "lowDpi": "Resolution too low at this size ({dpi} DPI, minimum {min} DPI): make the artwork smaller or provide a larger file.",
+        "printSize": "Printed size: {w} × {h} mm",
+        "placeholderNote": "Illustration only: this product's colours, sizes and techniques are confirmed with your quotation.",
+        "stageLabel": "Editing area: {product}, {view}. Arrow keys move the selected layer, Delete removes it.",
+        "use": "Use this design in my request",
+        "preparing": "Preparing the preview…",
+        "handedOver": "Design added to your request below.",
+        "exportError": "The preview could not be generated. Your design and files are still attached.",
+        "attachedTitle": "Studio design",
+        "attachedSummary": "{product} · {layers} item(s)",
+        "removeDesign": "Remove design",
+        "mockupFile": "Studio preview",
+        "gestureHint": "Drag to move. Round handle: size. Top handle: rotation."
       }
     },
     "formatsLabel": "Common sizes",
@@ -487,5 +518,56 @@
       "rejected": "Not accepted",
       "closed": "Closed"
     }
+  },
+  "legalCenter": {
+    "eyebrow": "Legal information",
+    "lastUpdated": "Last updated: {date}",
+    "toc": "On this page",
+    "tocToggle": "Contents",
+    "documents": "Legal documents",
+    "placeholders": {
+      "rc": "trade register number and court",
+      "ice": "ICE number",
+      "address": "address",
+      "phone": "telephone number",
+      "email": "email address",
+      "cndpReference": "CNDP reference",
+      "retentionInquiries": "retention period for messages",
+      "retentionQuotes": "retention period for quotation requests",
+      "retentionFiles": "file retention period",
+      "retentionCustomers": "customer data retention period",
+      "emailProvider": "email service provider",
+      "quoteValidity": "quotation validity period",
+      "paymentMethods": "accepted payment methods",
+      "paymentTerms": "payment terms and schedule",
+      "proofProcess": "proof arrangements",
+      "productionLeadTimes": "production lead times",
+      "deliveryZones": "delivery areas",
+      "deliveryLeadTimes": "delivery times",
+      "deliveryFees": "delivery charges",
+      "carriers": "carriers",
+      "pickup": "collection arrangements",
+      "claimDeadline": "claim period",
+      "refundMethod": "refund method",
+      "courts": "competent court"
+    }
+  },
+  "consent": {
+    "bannerLabel": "Cookie preferences",
+    "bannerTitle": "Cookies and audience measurement",
+    "bannerBody": "This website uses trackers that are essential for it to work. With your agreement, it also uses audience-measurement tools provided by Google. You can change your choice at any time.",
+    "accept": "Accept all",
+    "reject": "Reject all",
+    "customize": "Customise",
+    "policyLink": "Cookie Policy",
+    "dialogTitle": "Cookie preferences",
+    "dialogIntro": "Choose the categories you accept. Your choice is kept for 6 months.",
+    "essentialTitle": "Essential",
+    "essentialBody": "Language, quotation list and remembering your choices. The website cannot work without them.",
+    "alwaysOn": "Always on",
+    "analyticsTitle": "Audience measurement",
+    "analyticsBody": "Visitor statistics through Google Tag Manager and Google Analytics. Off by default.",
+    "save": "Save my choices",
+    "close": "Close"
   }
 }

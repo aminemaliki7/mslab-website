@@ -95,7 +95,7 @@ _Implemented in M5_ (`features/inquiries/actions.ts`): honeypot field `website` 
 
 ## 7a. Implemented in M8
 - Headers set in `next.config.ts` on every route: CSP (without nonces — see below), `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`; HSTS on Vercel production only; `X-Powered-By` removed; `X-Robots-Tag: noindex` on every non-production deployment.
-- **CSP trade-off:** nonce-based CSP forces dynamic rendering of every page (bundled Next docs), which would discard the Cache Components static shells. We use the documented "without nonces" policy: `script-src 'self' 'unsafe-inline'`, everything else locked to `'self'` (+ the Supabase Storage origin for images). Production additionally allows the Google Tag Manager loader and Google Analytics collection endpoints required by container `GTM-MDTX63Q6`; development and preview deployments do not. `frame-ancestors 'none'`, `form-action 'self'`, and `object-src 'none'` remain enforced. Revisit with SRI/nonces if a stricter policy becomes a requirement.
+- **CSP trade-off:** nonce-based CSP forces dynamic rendering of every page (bundled Next docs), which would discard the Cache Components static shells. We use the documented "without nonces" policy: `script-src 'self' 'unsafe-inline'`, everything else locked to `'self'` (+ the Supabase Storage origin for images). Production additionally allows the Google Tag Manager loader and Google Analytics collection endpoints required by container `GTM-NZGP5ZDF`; development and preview deployments do not. `frame-ancestors 'none'`, `form-action 'self'`, and `object-src 'none'` remain enforced. Revisit with SRI/nonces if a stricter policy becomes a requirement.
 - Secret scan of `.next/static` (browser bundles): no secret values or names (`FORM_SUBMISSION_KEY`, `IP_HASH_SALT`, secret-key names).
 - `npm audit --omit=dev`: 0 vulnerabilities. Dev-only: 7 moderate in ESLint tooling (`minimatch`), not shipped.
 - Playwright verifies headers and the absence of CSP violations on 30 pages × 3 viewports.
@@ -120,7 +120,7 @@ _Implemented in M5_ (`features/inquiries/actions.ts`): honeypot field `website` 
 - Data minimization: only fields needed to answer the inquiry.
 - Retention: define with MSLAB (e.g. closed inquiries purged after N months, spam after 30 days) → scheduled purge.
 - CNDP declaration/authorization for processing customer data is an **MSLAB legal responsibility** — flagged, not handled in code.
-- No third-party trackers at launch; any analytics must be consent-aware.
+- The only third-party tracker is Google Tag Manager (production only), loaded after explicit analytics consent (ADR-024, `components/consent/`). Any new tag or storage key must be added to the Cookie Policy inventory (`src/content/legal/cookies.ts`).
 
 ## 10. Operational security
 - GitHub: branch protection on `main`, required checks, 2FA for maintainers.

@@ -44,7 +44,7 @@ Any new public route, metadata change, slug change, sitemap/robots, structured d
 ### Performance (Core Web Vitals)
 - Static shell via Cache Components; catalog data `'use cache'`.
 - `next/image` with `sizes`, `priority` only for the LCP image; `next/font`.
-- Keep client JS minimal; the approved Google Tag Manager container (`GTM-MDTX63Q6`) loads on production only. Ensure analytics tags and privacy disclosures match the published container configuration.
+- Keep client JS minimal; the approved Google Tag Manager container (`GTM-NZGP5ZDF`) loads on production only. Ensure analytics tags and privacy disclosures match the published container configuration.
 
 ## Workflow
 1. Define route key and localized segments (`mslab-multilingual`).

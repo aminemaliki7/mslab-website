@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { isLegalDocumentIndexable, orderedLegalDocuments } from "@/content/legal";
 import { listSitemapEntities } from "@/features/catalog/queries";
 import { getSiteSettings } from "@/features/settings/queries";
 import { defaultLocale, type Locale } from "@/i18n/config";
@@ -7,7 +8,7 @@ import { siteUrl } from "@/lib/env";
 
 /**
  * sitemap.xml: every indexable public page in every ENABLED locale, with hreflang alternates.
- * Excluded on purpose: search/filter URLs, legal pages until their text exists, admin.
+ * Excluded on purpose: search/filter URLs, legal documents until validated, admin.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, entities] = await Promise.all([getSiteSettings(), listSitemapEntities()]);
@@ -37,8 +38,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: "quote" },
     { route: "track" },
   ];
-  if (settings.legalNotice.fr) staticKeys.push({ route: "legal" });
-  if (settings.privacyPolicy.fr) staticKeys.push({ route: "privacy" });
+  // Legal documents stay out of the sitemap while they are drafts (noindex until validated).
+  for (const doc of orderedLegalDocuments) {
+    if (isLegalDocumentIndexable(doc, settings, defaultLocale)) staticKeys.push({ route: doc.key });
+  }
 
   const routeName = { category: "category", product: "product", service: "service" } as const;
 

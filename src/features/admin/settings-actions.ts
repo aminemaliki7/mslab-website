@@ -5,7 +5,9 @@ import { z } from "zod";
 import { normalizePhone } from "@/features/inquiries/schema";
 import { SETTINGS_TAG } from "@/features/settings/queries";
 import { createSessionClient } from "@/lib/supabase/server";
-import { fromDb, fromZod, success, type AdminActionState } from "./action-state";
+import { LEGAL_FACT_FIELDS, legalFactFieldName, type LegalFactValues } from "@/content/legal/types";
+import { locales, type Locale } from "@/i18n/config";
+import { failure, fromDb, fromZod, success, type AdminActionState } from "./action-state";
 import { requireAdmin } from "./auth";
 import { formToObject } from "./content-schemas";
 
@@ -78,17 +80,47 @@ const settingsSchema = z.object({
   social_youtube: httpsUrl,
 });
 
+const LEGAL_FACT_MAX = 500;
+
+/** legal_fact_* form fields → site_settings.legal_facts (empty values are dropped = hidden). */
+function parseLegalFactsForm(formData: FormData): { ok: true; value: LegalFactValues } | { ok: false; fieldErrors: Record<string, string> } {
+  const value: LegalFactValues = {};
+  const fieldErrors: Record<string, string> = {};
+  for (const { key, localized } of LEGAL_FACT_FIELDS) {
+    const entry: Partial<Record<Locale | "all", string>> = {};
+    for (const lang of localized ? locales : (["all"] as const)) {
+      const name = legalFactFieldName(key, lang);
+      const raw = formData.get(name);
+      const text = typeof raw === "string" ? raw.replace(/\r\n/g, "\n").trim() : "";
+      if (!text) continue;
+      if (text.length > LEGAL_FACT_MAX) fieldErrors[name] = `${LEGAL_FACT_MAX} caractères maximum.`;
+      // The legal texts use {…}, [[…]] and [..](..) as markup: refuse them in values.
+      else if (/[{}]|\[\[|\]\]|\]\(/.test(text)) fieldErrors[name] = "Caractères { } [[ ]] non autorisés.";
+      else entry[lang] = text;
+    }
+    if (Object.keys(entry).length) value[key] = entry;
+  }
+  return Object.keys(fieldErrors).length ? { ok: false, fieldErrors } : { ok: true, value };
+}
+
 export async function saveSettings(_prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
   const admin = await requireAdmin();
   const parsed = settingsSchema.safeParse(formToObject(formData));
   if (!parsed.success) return fromZod(parsed.error);
+  const legalFacts = parseLegalFactsForm(formData);
+  if (!legalFacts.ok) return failure("Le formulaire contient des erreurs.", legalFacts.fieldErrors);
 
   // French is always enabled (default locale); ar/en can be hidden from the language switcher later.
   const enabled = ["fr", ...["ar", "en"].filter((l) => formData.get(`locale_${l}`) === "on")];
 
   const { error } = await (await createSessionClient())
     .from("site_settings")
-    .update({ ...(parsed.data as Record<string, string | null>), enabled_locales: enabled, updated_by: admin.id })
+    .update({
+      ...(parsed.data as Record<string, string | null>),
+      legal_facts: legalFacts.value,
+      enabled_locales: enabled,
+      updated_by: admin.id,
+    })
     .eq("id", 1);
   if (error) return fromDb(error, "update settings");
   updateTag(SETTINGS_TAG);

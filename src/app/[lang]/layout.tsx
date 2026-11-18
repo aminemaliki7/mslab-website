@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import "../globals.css";
 import { redirect } from "next/navigation";
+import { ConsentManager } from "@/components/consent/consent-manager";
 import { getSiteSettings } from "@/features/settings/queries";
 import { defaultLocale, getDirection, localeMeta, locales } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
+import { localizedPath } from "@/i18n/routes";
 import { siteUrl } from "@/lib/env";
 import { fontVariables } from "@/lib/fonts";
 
@@ -25,8 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const LOGO_INTRO_SCRIPT =
   "try{if(!sessionStorage.getItem('mslab-intro')){sessionStorage.setItem('mslab-intro','1');document.documentElement.classList.add('logo-intro')}}catch(e){}";
-const GTM_ID = "GTM-MDTX63Q6";
-const GTM_BOOTSTRAP = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!=='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`;
+const GTM_ID = "GTM-NZGP5ZDF";
 
 export const viewport: Viewport = {
   themeColor: "#0e1a2b",
@@ -39,7 +39,7 @@ export const viewport: Viewport = {
 export default async function LocaleLayout({ children }: LayoutProps<"/[lang]">) {
   const locale = await getLocale();
   // A language switched off in /admin/settings sends visitors to the French site.
-  const { enabledLocales } = await getSiteSettings();
+  const [{ enabledLocales }, dict] = await Promise.all([getSiteSettings(), getDictionary(locale)]);
   if (!enabledLocales.includes(locale)) redirect(`/${defaultLocale}`);
   return (
     // suppressHydrationWarning: the intro script below adds a class to <html> before React hydrates.
@@ -50,11 +50,12 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[lang]">)
       </head>
       <body className="flex min-h-dvh flex-col antialiased">
         {children}
-        {process.env.VERCEL_ENV === "production" ? (
-          <Script id="google-tag-manager" strategy="afterInteractive">
-            {GTM_BOOTSTRAP}
-          </Script>
-        ) : null}
+        {/* GTM loads only after the visitor accepts audience measurement (ADR-024). */}
+        <ConsentManager
+          t={dict.consent}
+          cookiePolicyHref={localizedPath(locale, { route: "cookies" })}
+          gtmId={process.env.VERCEL_ENV === "production" ? GTM_ID : null}
+        />
       </body>
     </html>
   );

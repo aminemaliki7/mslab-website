@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { CookieSettingsButton } from "@/components/consent/cookie-settings-button";
 import { Container } from "@/components/ui/layout";
+import { orderedLegalDocuments } from "@/content/legal";
 import { MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/icons";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
@@ -22,6 +24,11 @@ export async function Footer() {
     { href: localizedPath(locale, { route: "track" }), label: dict.footer.tracking },
   ];
 
+  const legalLinks = orderedLegalDocuments.map((doc) => ({
+    href: localizedPath(locale, { route: doc.key }),
+    label: doc.text[locale].shortTitle,
+  }));
+
   const headingClass = "text-sm font-semibold text-white";
   // Rows are 44 px tall on touch screens (padding, not font size).
   const linkClass = "inline-flex min-h-11 items-center text-white/85 underline-offset-4 hover:text-white hover:underline md:min-h-8";
@@ -29,12 +36,12 @@ export async function Footer() {
   return (
     <footer className="bg-ink-900 mt-auto text-white">
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-        <div className="lg:col-span-4">
+        <div className="sm:col-span-2 lg:col-span-3">
           <Wordmark inverted />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">{dict.footer.about}</p>
         </div>
 
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-2">
           <h2 className={headingClass}>{dict.footer.activities}</h2>
           <ul className="mt-4 space-y-2.5 text-sm text-white/85">
             {Object.values(dict.businessAreas).map((area) => (
@@ -56,8 +63,26 @@ export async function Footer() {
           </ul>
         </div>
 
+        <nav aria-labelledby="footer-legal" className="lg:col-span-3">
+          <h2 id="footer-legal" className={headingClass}>
+            {dict.footer.legalInfo}
+          </h2>
+          <ul className="mt-2 text-sm">
+            {legalLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={linkClass}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <CookieSettingsButton className={`${linkClass} cursor-pointer text-start`}>{dict.footer.cookieSettings}</CookieSettingsButton>
+            </li>
+          </ul>
+        </nav>
+
         {hasContact ? (
-          <div className="lg:col-span-3">
+          <div className="min-w-0 lg:col-span-2">
             <h2 className={headingClass}>{dict.footer.contact}</h2>
             <ul className="mt-4 space-y-3 text-sm">
               {settings.phone ? (
@@ -92,18 +117,6 @@ export async function Footer() {
           <p>
             © MSLAB. {dict.footer.rights}
           </p>
-          <ul className="flex gap-6">
-            <li>
-              <Link href={localizedPath(locale, { route: "legal" })} className="inline-flex min-h-11 items-center hover:text-white">
-                {dict.footer.legal}
-              </Link>
-            </li>
-            <li>
-              <Link href={localizedPath(locale, { route: "privacy" })} className="inline-flex min-h-11 items-center hover:text-white">
-                {dict.footer.privacy}
-              </Link>
-            </li>
-          </ul>
         </Container>
       </div>
     </footer>

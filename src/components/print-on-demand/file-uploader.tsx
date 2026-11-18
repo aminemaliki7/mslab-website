@@ -6,10 +6,16 @@ import { requestUploadTicket } from "@/features/print-on-demand/actions";
 import { ACCEPT_ATTRIBUTE, ACCEPTED_FILE_TYPES, MAX_FILE_BYTES, MAX_FILES } from "@/features/print-on-demand/schema";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
-import { mockupHandoff } from "./mockup-handoff";
+import { SNIFF_BYTES, sniffFile } from "@/features/print-on-demand/file-sniff";
+import { mockupHandoff, type StudioHandoff } from "./mockup-handoff";
 
 type T = Dictionary["printOnDemand"];
-type Upload = { key: string; name: string; size: number; path: string | null; state: "uploading" | "done" | "error" };
+type Role = "artwork" | "mockup";
+type Upload = { key: string; name: string; size: number; path: string | null; state: "uploading" | "done" | "error"; role: Role; fingerprint: string };
+
+/** Studio mockups ride along with the artwork without using the visitor's file slots. */
+const MAX_MOCKUPS = 5;
+const fingerprint = (file: File) => `${file.name}|${file.size}|${file.lastModified}`;
 
 /** Browsers often send no MIME type for design files: infer it from the extension. */
 const BY_EXTENSION: Record<string, string> = {
@@ -24,6 +30,7 @@ const BY_EXTENSION: Record<string, string> = {
   jpeg: "image/jpeg",
   png: "image/png",
   webp: "image/webp",
+  svg: "image/svg+xml",
 };
 
 function mimeOf(file: File): string | null {
@@ -74,18 +81,21 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
     return result.ticket;
   }
 
-  async function onFiles(list: FileList | File[] | null) {
+  async function onFiles(list: FileList | File[] | null, role: Role = "artwork") {
     if (!list?.length) return;
     const files = [...list];
     if (inputRef.current) inputRef.current.value = "";
     const problems: string[] = [];
-    const active = uploads.filter((u) => u.state !== "error").length;
-    const room = MAX_FILES - active;
-    if (files.length > room) problems.push(format(t.fileTooMany, { max: MAX_FILES }));
+    const active = uploads.filter((u) => u.state !== "error" && u.role === role).length;
+    const room = (role === "artwork" ? MAX_FILES : MAX_MOCKUPS) - active;
+    if (files.length > room && role === "artwork") problems.push(format(t.fileTooMany, { max: MAX_FILES }));
 
     const accepted: { file: File; type: string }[] = [];
     for (const file of files.slice(0, Math.max(room, 0))) {
-      const type = mimeOf(file);
+      // The real format is read from the file's first bytes. The declared type / extension is
+      // only used when the content does not identify itself (e.g. some EPS variants).
+      const sniffed = sniffFile(new Uint8Array(await file.slice(0, SNIFF_BYTES).arrayBuffer())).mime;
+      const type = sniffed ? ((ACCEPTED_FILE_TYPES as readonly string[]).includes(sniffed) ? sniffed : null) : mimeOf(file);
       if (!type) problems.push(format(t.fileType, { name: file.name }));
       else if (file.size > MAX_FILE_BYTES) problems.push(format(t.fileTooLarge, { name: file.name }));
       else accepted.push({ file, type });
@@ -101,7 +111,7 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
     });
     setUploads((prev) => [
       ...prev,
-      ...queued.map((q) => ({ key: q.key, name: q.file.name, size: q.file.size, path: q.path, state: q.path ? ("uploading" as const) : ("error" as const) })),
+      ...queued.map((q) => ({ key: q.key, name: q.file.name, size: q.file.size, path: q.path, role, fingerprint: fingerprint(q.file), state: q.path ? ("uploading" as const) : ("error" as const) })),
     ]);
 
     await Promise.all(
@@ -126,12 +136,16 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
     onBusyChange(false);
   }
 
-  // A design chosen in the mockup studio ("use this product") is attached like a picked file.
-  const onFilesRef = useRef(onFiles);
+  // Studio hand-off: the original artwork (once per file) and fresh mockups (replacing earlier ones).
+  const onHandoffRef = useRef<(h: StudioHandoff) => void>(() => undefined);
   useEffect(() => {
-    onFilesRef.current = onFiles;
+    onHandoffRef.current = (h) => {
+      const attached = new Set(uploads.filter((u) => u.role === "artwork" && u.state !== "error").map((u) => u.fingerprint));
+      setUploads((prev) => prev.filter((u) => u.role !== "mockup"));
+      void onFiles(h.artwork.filter((f) => !attached.has(fingerprint(f))), "artwork").then(() => onFiles(h.mockups, "mockup"));
+    };
   });
-  useEffect(() => mockupHandoff.subscribe((file) => void onFilesRef.current([file])), []);
+  useEffect(() => mockupHandoff.subscribe((h) => onHandoffRef.current(h)), []);
 
   const done = uploads.filter((u) => u.state === "done" && u.path);
   const uploading = uploads.some((u) => u.state === "uploading");
@@ -191,6 +205,7 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
                     <span aria-hidden="true" className="text-success shrink-0">✓</span>
                   )}
                   <bdi className="truncate">{u.name}</bdi>
+                  {u.role === "mockup" ? <span className="bg-accent-soft text-accent-hover shrink-0 rounded-full px-2 text-xs">{t.studio.editor.mockupFile}</span> : null}
                   <span className="text-fg-subtle shrink-0 text-xs" dir="ltr">
                     {formatSize(u.size)}
                   </span>

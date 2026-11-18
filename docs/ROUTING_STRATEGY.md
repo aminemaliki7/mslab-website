@@ -27,6 +27,7 @@ src/app/
       quote/thank-you/page.tsx  # noindex (or inline success state)
       legal/page.tsx            # legal notice
       privacy/page.tsx          # privacy policy (Loi 09-08)
+      cookies/ terms/ sales/ delivery/ returns/ custom-orders/   # other legal documents (ADR-024)
   admin/                        # root layout #2 — French UI, noindex
     layout.tsx
     login/page.tsx
@@ -58,6 +59,12 @@ Two root layouts (`[lang]` and `admin`) are intentional: the admin has different
 | quote | `/quote` | `/fr/devis` | `/en/quote` | `/ar/devis` |
 | legal | `/legal` | `/fr/mentions-legales` | `/en/legal-notice` | `/ar/mentions-legales` |
 | privacy | `/privacy` | `/fr/confidentialite` | `/en/privacy` | `/ar/confidentialite` |
+| cookies | `/cookies` | `/fr/politique-cookies` | `/en/cookie-policy` | `/ar/politique-cookies` |
+| terms | `/terms` | `/fr/conditions-utilisation` | `/en/terms-of-use` | `/ar/conditions-utilisation` |
+| sales | `/sales` | `/fr/conditions-vente` | `/en/terms-of-sale` | `/ar/conditions-vente` |
+| delivery | `/delivery` | `/fr/livraison` | `/en/delivery` | `/ar/livraison` |
+| returns | `/returns` | `/fr/retours-remboursements` | `/en/returns-refunds` | `/ar/retours-remboursements` |
+| custom-orders | `/custom-orders` | `/fr/commandes-personnalisees` | `/en/custom-orders` | `/ar/commandes-personnalisees` |
 
 ¹ Example slugs only — real service/category names come from MSLAB.
 

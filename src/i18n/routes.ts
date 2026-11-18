@@ -15,6 +15,12 @@ const sections = {
   quote: { fr: "devis", ar: "devis", en: "quote" },
   legal: { fr: "mentions-legales", ar: "mentions-legales", en: "legal-notice" },
   privacy: { fr: "confidentialite", ar: "confidentialite", en: "privacy" },
+  cookies: { fr: "politique-cookies", ar: "politique-cookies", en: "cookie-policy" },
+  terms: { fr: "conditions-utilisation", ar: "conditions-utilisation", en: "terms-of-use" },
+  sales: { fr: "conditions-vente", ar: "conditions-vente", en: "terms-of-sale" },
+  delivery: { fr: "livraison", ar: "livraison", en: "delivery" },
+  returns: { fr: "retours-remboursements", ar: "retours-remboursements", en: "returns-refunds" },
+  "custom-orders": { fr: "commandes-personnalisees", ar: "commandes-personnalisees", en: "custom-orders" },
   track: { fr: "suivi-commande", ar: "suivi-commande", en: "order-tracking" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
@@ -31,6 +37,11 @@ const internalSections = Object.keys(sections) as Section[];
 
 function isSection(value: string): value is Section {
   return (internalSections as string[]).includes(value);
+}
+
+/** Section routes that take no slug (used to validate links written in content files). */
+export function isStaticSection(value: string): value is Exclude<Section, "products"> {
+  return isSection(value) && value !== "products";
 }
 
 /** Build the public, localized path for a route. Only way to build public hrefs. */

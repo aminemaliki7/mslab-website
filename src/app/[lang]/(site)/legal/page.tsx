@@ -1,7 +1,6 @@
-import { legalPage } from "@/components/layout/legal-page";
+import { legalDocumentPage } from "@/components/legal/legal-document-page";
 
-// Text managed in /admin/settings (validated by MSLAB); never written by developers.
-const page = legalPage("legal");
+const page = legalDocumentPage("legal");
 
 export const generateMetadata = page.generateMetadata;
 export default page.Page;

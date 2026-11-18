@@ -2,6 +2,7 @@ import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import { locales, type Locale } from "@/i18n/config";
 import { createPublicClient } from "@/lib/supabase/public";
+import { LEGAL_FACT_FIELDS, type LegalFactValues } from "@/content/legal/types";
 
 export const SETTINGS_TAG = "settings";
 
@@ -34,6 +35,8 @@ export type SiteSettings = {
   /** Legal pages text, written/validated by MSLAB (Loi 09-08). Empty → "being prepared" notice. */
   legalNotice: PerLocale;
   privacyPolicy: PerLocale;
+  /** Values for the legal documents (/admin/settings → Informations légales); missing = hidden. */
+  legalFacts: LegalFactValues;
   social: {
     facebook: string | null;
     instagram: string | null;
@@ -58,6 +61,7 @@ const EMPTY_SETTINGS: SiteSettings = {
   highlights: {},
   legalNotice: {},
   privacyPolicy: {},
+  legalFacts: {},
   social: { facebook: null, instagram: null, linkedin: null, youtube: null },
   enabledLocales: [...locales],
 };
@@ -67,6 +71,24 @@ function perLocale(row: Record<string, unknown>, field: string): PerLocale {
   for (const locale of locales) {
     const value = row[`${field}_${locale}`];
     if (typeof value === "string" && value.trim()) result[locale] = value;
+  }
+  return result;
+}
+
+/** site_settings.legal_facts (jsonb) → only known keys and non-empty strings are kept. */
+export function parseLegalFacts(raw: unknown): LegalFactValues {
+  const result: LegalFactValues = {};
+  if (!raw || typeof raw !== "object") return result;
+  const source = raw as Record<string, unknown>;
+  for (const { key } of LEGAL_FACT_FIELDS) {
+    const entry = source[key];
+    if (!entry || typeof entry !== "object") continue;
+    const values: Partial<Record<Locale | "all", string>> = {};
+    for (const lang of ["all", ...locales] as const) {
+      const value = (entry as Record<string, unknown>)[lang];
+      if (typeof value === "string" && value.trim()) values[lang] = value.trim();
+    }
+    if (Object.keys(values).length) result[key] = values;
   }
   return result;
 }
@@ -107,6 +129,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     highlights: perLocale(row, "highlights"),
     legalNotice: perLocale(row, "legal_notice"),
     privacyPolicy: perLocale(row, "privacy_policy"),
+    legalFacts: parseLegalFacts(row.legal_facts),
     social: {
       facebook: data.social_facebook,
       instagram: data.social_instagram,

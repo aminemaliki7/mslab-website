@@ -7,6 +7,10 @@ import { formatAdminDate, formatAdminDateTime, formatAdminNumber } from "@/featu
 import { quotationStatuses } from "@/features/admin/labels";
 import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { format } from "@/i18n/format";
+import { StudioDesignPanel, readStoredDesign } from "@/components/admin/studio-design-panel";
+import type { AdminDict } from "@/features/admin/dictionary";
+import { checkUploads } from "@/features/admin/file-check";
+import { sameFormat, type SniffedFile } from "@/features/print-on-demand/file-sniff";
 import { createSessionClient } from "@/lib/supabase/server";
 
 export const generateMetadata = adminTitle((t) => t.quotations.pageTitle);
@@ -33,7 +37,26 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
   const signed = files?.length
     ? (await db.storage.from("custom-uploads").createSignedUrls(files.map((f) => f.storage_path), 60 * 10, { download: true })).data ?? []
     : [];
-  const fileLinks = (files ?? []).map((file) => ({ ...file, url: signed.find((s) => s.path === file.storage_path)?.signedUrl ?? null }));
+  // Same objects without forced download: used server-side to check the real content (first
+  // 64 KB) and to show verified PNG mockups inline. Never used to render other formats inline.
+  const viewable = files?.length
+    ? (await db.storage.from("custom-uploads").createSignedUrls(files.map((f) => f.storage_path), 60 * 10)).data ?? []
+    : [];
+  const viewUrl = (path: string) => viewable.find((s) => s.path === path)?.signedUrl ?? null;
+  const checks = await checkUploads((files ?? []).map((f) => ({ path: f.storage_path, url: viewUrl(f.storage_path) })));
+  const fileLinks = (files ?? []).map((file) => ({
+    ...file,
+    role: (file.role === "mockup" ? "mockup" : "artwork") as "mockup" | "artwork",
+    url: signed.find((s) => s.path === file.storage_path)?.signedUrl ?? null,
+    check: checks.get(file.storage_path) ?? null,
+  }));
+  const design = readStoredDesign(details?.design);
+  const mockups = fileLinks
+    .filter((f) => f.role === "mockup" && f.check?.mime === "image/png")
+    .flatMap((f) => {
+      const url = viewUrl(f.storage_path);
+      return url ? [{ name: f.original_name, url }] : [];
+    });
   const dims = details ? [details.width, details.height, details.depth].filter((v) => v !== null) : [];
   const whatsappDigits = request.phone.replace(/\D/g, "");
   const notification = request.notified_at
@@ -114,6 +137,8 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
             </Panel>
           ) : null}
 
+          {design ? <StudioDesignPanel design={design} mockups={mockups} t={t} /> : null}
+
           {details ? (
             <Panel title={format(q.files, { count: fileLinks.length })}>
               {fileLinks.length > 0 ? (
@@ -123,9 +148,12 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
                       <span className="min-w-0">
                         <bdi className="block truncate font-medium">{file.original_name}</bdi>
                         <span className="text-fg-muted text-xs" dir="ltr">
+                          {file.role === "mockup" ? `${q.studio.mockup} · ` : ""}
                           {file.mime_type ?? q.unknownType}
                           {file.size_bytes ? ` · ${format(q.megabytes, { size: (file.size_bytes / (1024 * 1024)).toFixed(1) })}` : ""}
+                          {file.check?.width && file.check.height ? ` · ${format(q.studio.pixels, { w: file.check.width, h: file.check.height })}` : ""}
                         </span>
+                        <FileCheck check={file.check} declared={file.mime_type} t={q.studio} />
                       </span>
                       {file.url ? (
                         <a href={file.url} className="text-accent inline-flex min-h-11 shrink-0 items-center font-medium" rel="noopener noreferrer">
@@ -192,4 +220,11 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
       </div>
     </>
   );
+}
+
+/** Real content of an upload compared with the type the browser declared. */
+function FileCheck({ check, declared, t }: { check: SniffedFile | null; declared: string | null; t: AdminDict["quotations"]["studio"] }) {
+  if (!check?.mime) return <span className="text-danger block text-xs">{t.unrecognized}</span>;
+  if (declared && !sameFormat(declared, check.mime)) return <span className="text-danger block text-xs">{format(t.mismatch, { type: check.mime })}</span>;
+  return <span className="text-success block text-xs">{format(t.verified, { type: check.mime })}</span>;
 }

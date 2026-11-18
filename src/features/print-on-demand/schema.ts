@@ -16,6 +16,7 @@ export const ACCEPTED_FILE_TYPES = [
   "image/webp",
   "image/tiff",
   "image/heic",
+  "image/svg+xml",
   "application/pdf",
   "application/postscript",
   "application/illustrator",
@@ -23,7 +24,7 @@ export const ACCEPTED_FILE_TYPES = [
   "application/x-photoshop",
 ] as const;
 /** For the file picker (`accept`): extensions help where browsers don't know a MIME type. */
-export const ACCEPT_ATTRIBUTE = ".jpg,.jpeg,.png,.webp,.tif,.tiff,.heic,.pdf,.ai,.eps,.psd";
+export const ACCEPT_ATTRIBUTE = ".jpg,.jpeg,.png,.webp,.tif,.tiff,.heic,.svg,.pdf,.ai,.eps,.psd";
 
 const optionalNumber = z
   .string()
