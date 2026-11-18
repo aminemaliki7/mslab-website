@@ -7,11 +7,14 @@ import { createSessionClient } from "@/lib/supabase/server";
 /**
  * Data Access Layer for the back office (docs/SECURITY_STRATEGY.md §2).
  * Admin = authenticated Supabase user (JWT verified with getUser) with an ACTIVE row in
- * admin_profiles. Never derived from user metadata or anything the client sends.
+ * admin_profiles AND a session verified with MFA (aal2). Never derived from user metadata or
+ * anything the client sends. RLS applies the same rule (private.is_admin requires aal2).
  */
 export type AdminUser = { id: string; email: string | null; profile: Tables<"admin_profiles"> };
 
-export const getAdmin = cache(async (): Promise<AdminUser | null> => {
+type AdminSession = { admin: AdminUser; mfaVerified: boolean };
+
+const getAdminSession = cache(async (): Promise<AdminSession | null> => {
   const supabase = await createSessionClient();
   const {
     data: { user },
@@ -26,18 +29,36 @@ export const getAdmin = cache(async (): Promise<AdminUser | null> => {
     .eq("is_active", true)
     .maybeSingle();
   if (!profile) return null;
-  return { id: user.id, email: user.email ?? null, profile };
+
+  // The token was verified by getUser() above; its aal claim says whether MFA was completed.
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  return { admin: { id: user.id, email: user.email ?? null, profile }, mfaVerified: aal?.currentLevel === "aal2" };
 });
+
+/** The signed-in admin, or null (also null until the MFA step is completed). */
+export async function getAdmin(): Promise<AdminUser | null> {
+  const session = await getAdminSession();
+  return session?.mfaVerified ? session.admin : null;
+}
 
 /** Use at the top of every admin page and server action. */
 export async function requireAdmin(): Promise<AdminUser> {
-  const admin = await getAdmin();
-  if (!admin) redirect("/admin/login");
-  return admin;
+  const session = await getAdminSession();
+  if (!session) redirect("/admin/login");
+  if (!session.mfaVerified) redirect("/admin/mfa");
+  return session.admin;
 }
 
 export async function requireOwner(): Promise<AdminUser> {
   const admin = await requireAdmin();
   if (admin.profile.role !== "owner") redirect("/admin");
   return admin;
+}
+
+/** MFA step only: signed in with a password, MFA not completed yet. */
+export async function requirePendingMfa(): Promise<AdminUser> {
+  const session = await getAdminSession();
+  if (!session) redirect("/admin/login");
+  if (session.mfaVerified) redirect("/admin");
+  return session.admin;
 }

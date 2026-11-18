@@ -48,6 +48,11 @@ Every arrow into Supabase is subject to RLS or a hardened definer function; noth
 - Uploads: real type detected from file bytes (JPEG/PNG/WebP/AVIF), 5 MB max, server-generated paths, Storage RLS enforces admin + folder.
 - Admin search terms are sanitized before PostgREST `or()` filters (`features/admin/search.ts`).
 - Verified without credentials: all 15 admin URLs redirect to `/admin/login` with no data in the HTML; DB role checks for settings, quotation notes/status, image rows, immutable quote items.
+### Hardening (security review 2026-11-19, migration `20261119100000_admin_auth_hardening.sql`)
+- **MFA required for every admin** (stricter than "owner only"): after the password, `/admin/mfa` links an authenticator app (TOTP) the first time, then asks for its 6-digit code. `requireAdmin()` accepts only `aal2` sessions (`requirePendingMfa()` guards the MFA page), and `private.is_admin()` / `is_owner()` also require the JWT claim `aal = 'aal2'`, so a password-only session cannot read customer data through the API. Lost device: an owner removes the user's MFA factor in the Supabase dashboard (Authentication → Users).
+- **Per-IP attempt limit** on admin sign-in and MFA codes: 8 failures in 15 minutes from one hashed IP → "Trop de tentatives" (`public.admin_auth_guard`, key-gated like the form RPCs, `features/admin/auth-guard.ts`). Needed because Supabase Auth only sees the server's IP. Fails open (logged) if the function is missing.
+- **httpOnly session cookies**: `lib/supabase/session-cookie.ts` forces `httpOnly`, `secure` (production) and `SameSite=Lax` on the Supabase auth cookies (server client and proxy refresh). Nothing in the browser reads the session.
+- Dashboard (owner action, per project): enable *Leaked password protection* (Authentication → Passwords) and keep *Allow new users to sign up* off.
 - Not yet verified: signed-in flows (needs an admin account — see DATABASE_SCHEMA §7). Password reset is done from the Supabase dashboard for now.
 
 ## 3. Row Level Security

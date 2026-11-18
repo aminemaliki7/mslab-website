@@ -1019,6 +1019,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_auth_guard: {
+        Args: { ip_hash: string | null; record_failure: boolean; submission_key: string }
+        Returns: undefined
+      }
       create_upload_ticket: {
         Args: { ip_hash: string | null; submission_key: string }
         Returns: string

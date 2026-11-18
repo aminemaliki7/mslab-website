@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "./database.types";
+import { SESSION_COOKIE_FLAGS } from "./session-cookie";
 
 /**
  * Refresh the Supabase auth cookies for /admin requests (called from proxy.ts).
@@ -20,7 +21,7 @@ export async function refreshAdminSession(request: NextRequest): Promise<NextRes
       setAll(cookiesToSet) {
         for (const { name, value } of cookiesToSet) request.cookies.set(name, value);
         response = NextResponse.next({ request });
-        for (const { name, value, options } of cookiesToSet) response.cookies.set(name, value, options);
+        for (const { name, value, options } of cookiesToSet) response.cookies.set(name, value, { ...options, ...SESSION_COOKIE_FLAGS });
       },
     },
   });
