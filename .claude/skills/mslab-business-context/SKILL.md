@@ -14,6 +14,12 @@ Keep every piece of the website faithful to what MSLAB actually is and does, and
 - Writing JSON-LD, Open Graph, or meta descriptions.
 - Deciding page priorities, CTAs, or conversion paths.
 
+## Positioning (owner, 2026-11-19) — read docs/POSITIONING.md first
+- Bulk custom production only: never single items, gifts or retail; every journey ends in a quote.
+- Production lines available now: apparel & textile, promotional/corporate merchandise, printing & stationery, packaging, private label & creator collections.
+- Two journeys: For businesses (B2B) and For brands & creators (project owners, not individual shoppers).
+- MOQ: optional `products.min_order_quantity`; never invent a value.
+
 ## What is known (verified, from the project brief)
 - MSLAB is a **Moroccan company**.
 - Business areas:

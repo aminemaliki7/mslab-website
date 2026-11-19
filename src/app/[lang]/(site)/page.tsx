@@ -1,29 +1,24 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ProductCard } from "@/components/catalog/product-card";
-import { ServiceIndex, type ServiceIndexRow } from "@/components/catalog/service-index";
+import Image, { type StaticImageData } from "next/image";
+import { ProductionIndex } from "@/components/catalog/production-index";
 import { ClientLogos } from "@/components/content/client-logos";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
-import { ControlStrip } from "@/components/home/control-strip";
-import { LiveProof } from "@/components/home/live-proof";
-import { SuppliesArt } from "@/components/illustrations/product-art";
+import { ProofCollage, ProofField } from "@/components/home/live-proof";
 import { HeroScene } from "@/components/illustrations/scenes";
-import { CORE_SERVICE_SLUGS, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
-import { CtaBand } from "@/components/layout/cta-band";
+import { PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { ArrowLink } from "@/components/ui/arrow-link";
 import { ButtonLink } from "@/components/ui/button";
-import { ArrowIcon } from "@/components/ui/icons";
-import { Container, Heading, Lead, Section } from "@/components/ui/layout";
+import { Container, Heading, Section } from "@/components/ui/layout";
 import { CLIENT_LOGOS } from "@/config/client-logos";
-import { listCategories, listFeaturedProducts } from "@/features/catalog/queries";
+import { PHOTOS } from "@/config/photos";
 import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
 import { listMockupProducts } from "@/features/print-on-demand/queries";
 import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
-import type { Locale } from "@/i18n/config";
 import { getDictionary, getLocale, type Dictionary } from "@/i18n/dictionaries";
 import { localizedPath } from "@/i18n/routes";
+import { cn } from "@/lib/utils";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,144 +35,112 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const CAPABILITIES_ID = "capacites";
+
 /**
- * Homepage (docs/ART_DIRECTION.md). Narrative: what MSLAB does (tagline + live proof) →
- * what it produces (services index) → how an order works (three steps) → the catalogue →
- * who MSLAB is → organizations → contact. Only verified content: services, products,
- * presentation and "why" points come from the database; a section is omitted while its data
- * is empty.
+ * Homepage (docs/POSITIONING.md §5). Narrative: custom production in quantity (promise, bulk-only
+ * note, live proof) → two journeys (businesses / brands & creators) → production capabilities →
+ * how a production project works → what MSLAB simplifies → who MSLAB is → organizations → contact.
+ * Database-driven sections are omitted while
+ * their data is empty; no prices, quantities or figures are invented.
  */
 export default async function HomePage() {
   const locale = await getLocale();
-  const [dict, settings, services, products, categories, mockups] = await Promise.all([
+  const [dict, settings, services, mockups] = await Promise.all([
     getDictionary(locale),
     getSiteSettings(),
     listServices(locale),
-    listFeaturedProducts(locale, 4),
-    listCategories(locale),
     listMockupProducts(),
   ]);
 
   const about = forLocale(settings.about, locale);
   const highlights = toLines(forLocale(settings.highlights, locale));
-  const printOnDemand = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
-  const podHref = printOnDemand ? localizedPath(locale, { route: "service", slug: printOnDemand.slug }) : null;
+  const production = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
+  const productionHref = production ? localizedPath(locale, { route: "service", slug: production.slug }) : null;
+  const quoteHref = localizedPath(locale, { route: "quote" });
+  // Production request form when the production page exists, otherwise the general quote.
+  const productionRequestHref = productionHref ? `${productionHref}#demande` : quoteHref;
   const servicesHref = localizedPath(locale, { route: "services" });
-
-  // Services index: print on demand first, then the four core activities, then other featured services.
-  const coreLabels: Record<string, string> = {
-    "impression-reprographie": dict.businessAreas.printing,
-    "fournitures-de-bureau": dict.businessAreas.office,
-    "papeterie-fournitures-scolaires": dict.businessAreas.school,
-    "livres-ouvrages": dict.businessAreas.books,
-  };
-  const indexed = new Set([PRINT_ON_DEMAND_SLUG, ...CORE_SERVICE_SLUGS]);
-  const rows: ServiceIndexRow[] = [
-    ...(printOnDemand ? [{ slugFr: PRINT_ON_DEMAND_SLUG, name: printOnDemand.name, summary: dict.printOnDemand.heroLead, href: podHref ?? servicesHref }] : []),
-    ...CORE_SERVICE_SLUGS.map((slugFr) => {
-      const service = services.find((s) => s.slugs.fr === slugFr);
-      return {
-        slugFr,
-        name: service?.name ?? coreLabels[slugFr] ?? slugFr,
-        summary: service?.summary ?? null,
-        href: service ? localizedPath(locale, { route: "service", slug: service.slug }) : servicesHref,
-      };
-    }),
-    ...services
-      .filter((s) => s.isFeatured && !indexed.has(s.slugs.fr))
-      .map((s) => ({ slugFr: s.slugs.fr, name: s.name, summary: s.summary, href: localizedPath(locale, { route: "service", slug: s.slug }) })),
-  ];
-
   const steps = [
     { title: dict.printOnDemand.step1Title, body: dict.printOnDemand.step1Body },
     { title: dict.printOnDemand.step2Title, body: dict.printOnDemand.step2Body },
     { title: dict.printOnDemand.step3Title, body: dict.printOnDemand.step3Body },
   ];
-  const topCategories = categories.filter((c) => !c.parentId);
 
   return (
     <>
       <OrganizationJsonLd locale={locale} />
-      <Hero locale={locale} dict={dict} mockups={mockups} studioHref={podHref ? `${podHref}#studio` : null} />
+      <Hero
+        dict={dict}
+        mockups={mockups}
+        studioHref={productionHref ? `${productionHref}#studio` : null}
+        requestHref={productionRequestHref}
+      />
 
-      {/* ─── What we produce: an index, not cards ─────────────────────────── */}
-      <Section aria-labelledby="services-heading">
+      {/* ─── Two journeys: businesses / brands & creators ─────────────────── */}
+      <Section aria-labelledby="journeys-heading">
         <Container>
-          <SectionHeader id="services-heading" title={dict.sections.servicesTitle} link={{ href: servicesHref, label: dict.sections.allServices }} />
-          <ServiceIndex rows={rows} className="mt-8 lg:mt-10" />
+          <Heading as="h2" size="xl" id="journeys-heading" className="type-display">
+            {dict.journeys.title}
+          </Heading>
+          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:mt-10">
+            <Journey journey={dict.journeys.business} href={quoteHref} photo={{ src: PHOTOS.corporateKit, alt: dict.photos.corporateKit, focus: "50% 48%" }} />
+            <Journey journey={dict.journeys.brands} href={productionRequestHref} photo={{ src: PHOTOS.shoppingBag, alt: dict.photos.shoppingBag }} dark />
+          </div>
         </Container>
       </Section>
 
-      {/* ─── How an order works (a real sequence, so it is numbered) ──────── */}
-      {podHref ? (
-        <section aria-labelledby="process-heading" className="bg-ink-900 text-white">
-          <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
-            <div className="lg:col-span-4">
-              <h2 id="process-heading" className="type-display text-3xl text-balance sm:text-4xl">
-                {dict.printOnDemand.stepsTitle}
-              </h2>
-              <ButtonLink href={`${podHref}#studio`} variant="accent" size="lg" className="mt-8">
-                {dict.sections.processCta}
-              </ButtonLink>
-            </div>
-            <ol className="grid gap-8 sm:grid-cols-3 lg:col-span-8">
-              {steps.map((step, index) => (
-                <li key={step.title} className="border-t border-white/25 pt-5">
-                  <span className="type-display text-cyan-300 block text-5xl" dir="ltr">
-                    {index + 1}
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
-                  <p className="mt-2 leading-relaxed text-white/75">{step.body}</p>
-                </li>
-              ))}
-            </ol>
-          </Container>
-        </section>
-      ) : null}
+      {/* ─── Production capabilities ──────────────────────────────────────── */}
+      <Section id={CAPABILITIES_ID} aria-labelledby="services-heading" className="scroll-mt-20">
+        <Container>
+          <SectionHeader id="services-heading" title={dict.sections.servicesTitle} link={{ href: servicesHref, label: dict.sections.allServices }} />
+          <p className="text-fg-muted mt-4 max-w-2xl text-base leading-relaxed text-pretty">{dict.sections.capabilitiesLead}</p>
+          <ProductionIndex dict={dict} href={productionRequestHref} className="mt-8 lg:mt-10" />
+        </Container>
+      </Section>
 
-      {/* ─── Catalogue (product cards unchanged) ──────────────────────────── */}
-      {products.length > 0 ? (
-        <Section aria-labelledby="products-heading" tone="surface">
-          <Container>
-            <SectionHeader
-              id="products-heading"
-              title={dict.sections.catalogTitle}
-              link={{ href: localizedPath(locale, { route: "catalog" }), label: dict.sections.allProducts }}
-            />
-            {topCategories.length > 0 ? (
-              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-1">
-                {topCategories.map((category) => (
-                  <li key={category.id}>
-                    <Link
-                      href={localizedPath(locale, { route: "category", slug: category.slug })}
-                      className="text-fg-muted hover:text-fg decoration-line-strong hover:decoration-fg inline-flex min-h-11 items-center underline underline-offset-4"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {products.map((product) => (
-                <li key={product.id} className="reveal">
-                  <ProductCard
-                    product={product}
-                    href={localizedPath(locale, { route: "product", slug: product.slug })}
-                    labels={{ sku: dict.product.sku, noImage: dict.product.noImage }}
-                  />
-                </li>
-              ))}
-              {/* Fills the row with a catalogue card (not a product) while fewer than 4 are featured. */}
-              {products.length < 4 ? (
-                <li className="reveal">
-                  <CatalogCard href={localizedPath(locale, { route: "catalog" })} title={dict.sections.allProducts} body={dict.pages.catalog.description} />
-                </li>
-              ) : null}
-            </ul>
-          </Container>
-        </Section>
-      ) : null}
+      {/* ─── How a production project works (a real sequence, so it is numbered) ─── */}
+      <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: "#0E1A2B" }}>
+        <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
+          <div className="lg:col-span-4">
+            <h2 id="process-heading" className="type-display text-2xl text-balance sm:text-3xl">
+              {dict.printOnDemand.stepsTitle}
+            </h2>
+            <ButtonLink href={productionRequestHref} variant="accent" size="lg" className="mt-8">
+              {dict.sections.processCta}
+            </ButtonLink>
+          </div>
+          <ol className="grid gap-8 sm:grid-cols-3 lg:col-span-8">
+            {steps.map((step, index) => (
+              <li key={step.title} className="border-t border-white/25 pt-5">
+                <span className="type-poster text-cyan-300 block text-5xl" dir="ltr">
+                  {index + 1}
+                </span>
+                <h3 className="mt-3 text-base font-semibold">{step.title}</h3>
+                <p className="mt-2 leading-relaxed text-white/75">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </Container>
+      </section>
+
+      {/* ─── What MSLAB simplifies (not a sequence: no numbers) ───────────── */}
+      <Section aria-labelledby="pain-heading">
+        <Container>
+          <Heading as="h2" size="xl" id="pain-heading" className="type-display">
+            {dict.sections.painTitle}
+          </Heading>
+          <ul className="mt-8 grid gap-8 md:grid-cols-3 lg:mt-10">
+            {dict.sections.painPoints.map((point) => (
+              <li key={point.title} className="border-fg border-t-2 pt-5">
+                <h3 className="text-fg text-base font-semibold leading-snug">{point.title}</h3>
+                <p className="text-fg-muted mt-2 leading-relaxed">{point.body}</p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
 
       {/* ─── Who we are + why (owner-managed text; hidden while empty) ────── */}
       {about || highlights.length > 0 ? (
@@ -214,87 +177,147 @@ export default async function HomePage() {
 
       <ClientLogos locale={locale} title={dict.sections.clientsTitle} subtitle={dict.sections.clientsSubtitle} logos={CLIENT_LOGOS} />
 
-      <CtaBand />
     </>
   );
 }
 
 /**
- * Hero: the tagline set large, one sentence per line, beside the live proof (type a name,
- * see it on products). Falls back to the activities scene when no mockup product is active.
+ * Hero (docs/DESIGN_SYSTEM.md §0): the promise in light capitals, the production lead, the
+ * brand-name field, the bulk-only note and one call to action — beside an object collage that
+ * shows the typed brand on MSLAB products. On phones the collage comes right after the call to
+ * action and the field follows it, so typing and seeing stay on one screen. Falls back to the
+ * activities scene when no mockup product is active.
  */
-function Hero({ locale, dict, mockups, studioHref }: { locale: Locale; dict: Dictionary; mockups: MockupKey[]; studioHref: string | null }) {
+function Hero({
+  dict,
+  mockups,
+  studioHref,
+  requestHref,
+}: {
+  dict: Dictionary;
+  mockups: MockupKey[];
+  studioHref: string | null;
+  requestHref: string;
+}) {
   // "Votre idée. Votre design. Notre production." → one sentence per line.
   const lines = dict.printOnDemand.heroTitle.split(/(?<=\.)\s+/);
   const t = dict.printOnDemand.studio;
+  // The three tiles stand for the three sentences: idea (tech pack), design (live), production.
+  const stages = lines.map((line) => (line.endsWith(".") ? line.slice(0, -1) : line));
+  const proof = mockups.length > 0 && studioHref;
 
   return (
-    <section className="bg-surface border-line overflow-hidden border-b">
-      <Container className="grid items-center gap-10 pt-10 pb-8 sm:pt-14 lg:grid-cols-12 lg:gap-10 lg:pt-20 lg:pb-12">
-        <div className="lg:col-span-6">
-          <h1 className="type-display text-fg text-[clamp(2rem,8.2vw,3.5rem)] lg:text-[clamp(2.75rem,4vw,3.75rem)]">
+    <section className="overflow-hidden">
+      <Container className="grid grid-cols-[minmax(0,1fr)] gap-x-12 gap-y-10 pt-10 pb-16 sm:pt-14 lg:grid-cols-12 lg:gap-y-12 lg:pt-16 lg:pb-24">
+        <div className="order-1 lg:col-span-6 lg:row-start-1">
+          <p className="text-accent text-sm tracking-wide">{dict.sections.tagline}</p>
+          <h1 className="type-poster text-fg mt-4 text-[clamp(2.5rem,12vw,4rem)] [overflow-wrap:normal] lg:text-[clamp(3rem,4.4vw,4.25rem)]">
             {lines.map((line) => (
               <span key={line} className="block">
                 {line}
               </span>
             ))}
           </h1>
-          <Lead className="mt-6 max-w-xl">{dict.sections.heroLead}</Lead>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={localizedPath(locale, { route: "quote" })} size="lg">
-              {dict.common.requestQuote}
+          <p className="text-fg-muted mt-7 max-w-lg text-base leading-relaxed text-pretty sm:text-[1.0625rem]">{dict.sections.heroLead}</p>
+        </div>
+
+        {proof ? (
+          <ProofField
+            studioHref={studioHref}
+            className="order-4 max-w-xl lg:order-none lg:col-span-6 lg:row-start-2"
+            labels={{
+              field: dict.sections.proofLabel,
+              placeholder: dict.sections.proofPlaceholder,
+              cta: dict.sections.proofCta,
+              note: dict.sections.proofNote,
+            }}
+          />
+        ) : null}
+
+        <div className="order-2 lg:order-none lg:col-span-6 lg:row-start-3">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <ButtonLink href={requestHref} size="lg">
+              {dict.common.requestProductionQuote}
             </ButtonLink>
-            <ButtonLink href={localizedPath(locale, { route: "contact" })} variant="secondary" size="lg">
-              {dict.common.contactUs}
-            </ButtonLink>
+            <a href={`#${CAPABILITIES_ID}`} className="text-fg inline-flex min-h-11 items-center text-sm font-medium underline decoration-1 underline-offset-4">
+              {dict.sections.capabilitiesCta}
+            </a>
           </div>
         </div>
-        <div className="lg:col-span-6">
-          {mockups.length > 0 && studioHref ? (
-            <LiveProof
+
+        <div className="order-3 lg:order-none lg:col-span-6 lg:col-start-7 lg:row-span-3 lg:row-start-1 lg:ms-auto lg:w-full lg:max-w-[32rem] lg:self-center">
+          {proof ? (
+            <ProofCollage
               products={mockups}
               names={t.products}
-              studioHref={studioHref}
               labels={{
-                field: dict.sections.proofLabel,
                 placeholder: dict.sections.proofPlaceholder,
-                cta: dict.sections.proofCta,
-                note: dict.sections.proofNote,
                 preview: t.previewLabel,
+                previous: dict.sections.proofPrev,
+                next: dict.sections.proofNext,
+                stage: stages[1],
               }}
+              photos={[
+                { src: PHOTOS.tshirt, alt: dict.photos.tshirt, caption: stages[0], contain: true },
+                { src: PHOTOS.heatPressArt, alt: dict.photos.heatPressArt, caption: stages[2], tint: "#9c0d29" },
+              ]}
             />
           ) : (
             <HeroScene className="mx-auto w-full max-w-[19rem] sm:max-w-md lg:max-w-xl" />
           )}
         </div>
       </Container>
-      <Container className="pb-6">
-        <ControlStrip />
-      </Container>
     </section>
   );
 }
 
-/** Dark "browse the catalogue" card, same footprint as a product card. */
-function CatalogCard({ href, title, body }: { href: string; title: string; body: string }) {
+/** One customer journey: who it is for, what MSLAB produces for them, one quote CTA. */
+function Journey({
+  journey,
+  href,
+  photo,
+  dark = false,
+}: {
+  journey: Dictionary["journeys"]["business"];
+  href: string;
+  photo: { src: StaticImageData; alt: string; focus?: string };
+  dark?: boolean;
+}) {
   return (
-    <Link
-      href={href}
-      className="group bg-ink-900 flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] text-white transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-18px_rgb(14_26_43/0.6)]"
+    <article
+      className={cn(
+        "flex flex-col rounded-[var(--radius-card)] p-3 pb-6 sm:pb-7",
+        dark ? "bg-ink-900 text-white" : "bg-paper-100",
+      )}
     >
-      <span className="relative block aspect-[4/3] bg-white/[0.06]">
-        <span className="absolute inset-0 grid place-items-center px-6 pt-4 pb-2">
-          <SuppliesArt className="w-full max-w-[13rem] transition-transform duration-300 group-hover:-translate-y-1" />
-        </span>
-      </span>
-      <span className="flex flex-1 flex-col p-4">
-        <span className="font-semibold leading-snug">{title}</span>
-        <span className="mt-1.5 text-sm leading-relaxed text-white/75">{body}</span>
-        <span className="mt-auto inline-flex pt-3" aria-hidden="true">
-          <ArrowIcon width={18} height={18} className="transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
-        </span>
-      </span>
-    </Link>
+      <div className="bg-paper-100 relative aspect-[21/9] overflow-hidden rounded-[calc(var(--radius-card)-0.5rem)]">
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          fill
+          sizes="(min-width: 768px) 36rem, 100vw"
+          className="object-cover"
+          style={photo.focus ? { objectPosition: photo.focus } : undefined}
+        />
+      </div>
+      <div className="flex flex-1 flex-col px-3 pt-5 sm:px-4">
+        <p className={cn("text-sm font-semibold", dark ? "text-cyan-300" : "text-accent")}>{journey.eyebrow}</p>
+        <h3 className="mt-3 text-xl font-semibold text-balance sm:text-2xl">{journey.title}</h3>
+        <p className={cn("mt-4 leading-relaxed", dark ? "text-white/75" : "text-fg-muted")}>{journey.body}</p>
+        <ul className={cn("mt-6 border-t", dark ? "border-white/25" : "border-fg/20")}>
+          {journey.points.map((point) => (
+            <li key={point} className={cn("border-b py-3 font-medium", dark ? "border-white/15" : "border-fg/10")}>
+              {point}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-auto pt-8">
+          <ButtonLink href={href} variant={dark ? "accent" : "primary"} size="lg" className="w-full sm:w-auto">
+            {journey.cta}
+          </ButtonLink>
+        </div>
+      </div>
+    </article>
   );
 }
 

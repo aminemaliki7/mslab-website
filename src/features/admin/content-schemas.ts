@@ -29,6 +29,20 @@ const uuidOrNull = z
   .transform((v) => (v ? v : null));
 
 const sortOrder = z.coerce.number({ error: "Nombre entier attendu." }).int().min(-100000).max(100000).catch(0);
+/** Optional minimum order quantity: empty → null (not defined); otherwise 1 – 1 000 000. */
+const minOrderQuantity = z
+  .string()
+  .trim()
+  .optional()
+  .transform((value, ctx) => {
+    if (!value) return null;
+    const n = Number(value);
+    if (!Number.isInteger(n) || n < 1 || n > 1000000) {
+      ctx.addIssue({ code: "custom", message: "Nombre entier entre 1 et 1 000 000, ou vide." });
+      return z.NEVER;
+    }
+    return n;
+  });
 const checkbox = z.preprocess((v) => v === "on" || v === "true", z.boolean());
 
 /** Localized text fields: <name>_fr (required or optional), <name>_ar, <name>_en. */
@@ -88,6 +102,7 @@ export const productSchema = z
     ...localized("description", 10000, false),
     category_id: uuidOrNull,
     sku: opt(64),
+    min_order_quantity: minOrderQuantity,
     status: z.enum(["draft", "published", "archived"]).catch("draft"),
     is_featured: checkbox,
     sort_order: sortOrder,

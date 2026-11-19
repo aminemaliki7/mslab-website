@@ -4,7 +4,6 @@ import { lang } from "next/root-params";
 import { Suspense } from "react";
 import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductListing, ProductListingSkeleton } from "@/components/catalog/product-listing";
-import { CtaBand } from "@/components/layout/cta-band";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Container, Heading, Lead } from "@/components/ui/layout";
 import { getCategoryBySlug, listCategories, type CategorySummary } from "@/features/catalog/queries";
@@ -54,11 +53,12 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/catalog/[c
 export default async function CategoryPage({ params, searchParams }: PageProps<"/[lang]/catalog/[category]">) {
   const { locale, category } = await load(params);
   const [dict, categories] = await Promise.all([getDictionary(locale), listCategories(locale)]);
+  const nav = <CategoryNav locale={locale} dict={dict} categories={categories} activeId={category.id} />;
   const parent = category.parentId ? categories.find((c) => c.id === category.parentId) : undefined;
 
   return (
     <>
-      <div className="bg-surface border-line border-b">
+      <div>
         <Container className="py-10 lg:py-14">
           <Breadcrumbs
             label={dict.sections.breadcrumb}
@@ -77,23 +77,22 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
       </div>
 
       <section className="py-6 lg:py-10">
-        <Container className="space-y-6">
-          <CategoryNav locale={locale} dict={dict} categories={categories} activeId={category.id} />
+        <Container>
           <div>
-            <Suspense fallback={<ProductListingSkeleton />}>
+            <Suspense fallback={<ProductListingSkeleton nav={nav} />}>
               <ProductListing
                 locale={locale}
                 dict={dict}
                 basePath={localizedPath(locale, { route: "category", slug: category.slug })}
                 searchParams={searchParams}
                 categories={categories}
+                nav={nav}
                 fixedCategory={category}
               />
             </Suspense>
           </div>
         </Container>
       </section>
-      <CtaBand />
     </>
   );
 }

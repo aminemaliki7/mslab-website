@@ -6,21 +6,25 @@
  * MSLAB logo and brand colors are supplied. Components use semantic tokens only.
  */
 @theme {
-  /* Raw palette */
-  --color-ink-950: #08111d;
-  --color-ink-900: #0e1a2b;
-  --color-ink-800: #1b2a40;
-  --color-ink-700: #2a3a52;
-  --color-slate-500: #5b6779;
-  --color-slate-400: #67717f; /* ≥ 4.5:1 on white (4.95) and paper (4.57) — WCAG AA */
-  --color-line-300: #c9c6bc;
-  --color-line-200: #e3e1da;
-  --color-paper-100: #efede6;
-  --color-paper-50: #f7f6f2;
+  /* Raw palette — owner brand palette (2026-11-19, docs/DESIGN_SYSTEM.md §0):
+     Deep Teal #0B6E8A (primary brand, logo) · Soft Ivory #F7F6F2 (main background) ·
+     Midnight Navy #193642 (premium contrast). No gold (owner, 2026-11-19). */
+  --color-ink-950: #102630;
+  --color-ink-900: #193642; /* midnight navy: text and dark bands (11.8:1 on ivory) */
+  --color-ink-800: #23485a;
+  --color-ink-700: #2f566a;
+  --color-slate-500: #5b6779; /* muted text (5.3:1 on ivory) */
+  --color-slate-400: #56616f; /* subtle text, also on tiles (5.2:1) — WCAG AA */
+  --color-line-300: #d3d0c6;
+  --color-line-200: #e4e1d9;
+  --color-ivory: #f7f6f2; /* soft ivory: quiet bands that alternate with the white page */
+  --color-paper-50: var(--color-ivory);
+  --color-paper-100: #eceae3; /* object tiles on ivory */
+  --color-sand-200: #e3eef1; /* second tile tone: deep-teal mist */
   --color-cyan-700: #0b6e8a;
   --color-cyan-800: #085870;
   --color-cyan-50: #e7f2f5;
-  --color-cyan-300: #5ba7bc; /* accent text on dark ink (6.4:1) */
+  --color-cyan-300: #5ba7bc; /* accent text on dark ink */
   /* Process colors: printer's control strip only (docs/ART_DIRECTION.md) — never UI fills. */
   --color-process-c: #0b6e8a;
   --color-process-m: #c2255c;
@@ -31,13 +35,13 @@
   --color-fg: var(--color-ink-900);
   --color-fg-muted: var(--color-slate-500);
   --color-fg-subtle: var(--color-slate-400);
-  --color-bg: #ffffff;
+  --color-bg: #ffffff; /* owner: keep the page white */
   --color-surface: var(--color-paper-50);
   --color-surface-strong: var(--color-paper-100);
   --color-line: var(--color-line-200);
   --color-line-strong: var(--color-line-300);
-  --color-primary: var(--color-ink-900);
-  --color-primary-hover: var(--color-ink-700);
+  --color-primary: var(--color-cyan-700); /* logo teal pill, white text 5.8:1 */
+  --color-primary-hover: var(--color-cyan-800);
   --color-on-primary: #ffffff;
   --color-accent: var(--color-cyan-700);
   --color-accent-hover: var(--color-cyan-800);
@@ -51,13 +55,15 @@
   --color-warning-soft: #fdf3dc;
 
   /* Typography — variables are injected by next/font in app/[lang]/layout.tsx */
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: var(--font-plex-arabic), var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-brand: var(--font-anton), var(--font-jost), ui-sans-serif, system-ui, sans-serif;
 
   /* Shape & motion */
-  --radius-control: 6px;
-  --radius-card: 10px;
+  --radius-control: 12px; /* fields; buttons are full pills (components/ui/button.tsx) */
+  --radius-card: 20px; /* cards, panels */
+  --radius-tile: 28px; /* object/image tiles: the soft, photographic frame of the reference */
   --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -72,7 +78,8 @@
     background: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-sans);
-    line-height: 1.6;
+    font-size: 0.9375rem; /* 15px: a smaller, calmer reading size */
+    line-height: 1.7;
     text-rendering: optimizeLegibility;
   }
 
@@ -128,6 +135,10 @@
   from { stroke-dashoffset: var(--dash, 120); }
   to { stroke-dashoffset: 0; }
 }
+@keyframes mslab-swap {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
 @keyframes mslab-grow-x {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
@@ -155,18 +166,39 @@
   to { transform: scale(1); opacity: 1; }
 }
 @layer components {
-  /* Display type: Archivo at expanded width (Latin only; Arabic keeps its own face). */
+  /* Display type: Jost light — calm section headings, sentence case (Latin; Arabic keeps its
+     own face). Weight comes from space, not from bold. */
   .type-display {
-    font-variation-settings: "wdth" 118;
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 0.98;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    line-height: 1.12;
   }
-  :lang(ar) .type-display {
-    font-variation-settings: normal;
+  /* Poster: page titles and brand moments — Anton, the logo's "Lab" face, bold condensed capitals. */
+  .type-poster {
+    font-family: var(--font-brand);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+  :lang(ar) .type-poster {
+    font-family: var(--font-arabic);
     font-weight: 600;
     letter-spacing: 0;
     line-height: 1.35;
+  }
+  :lang(ar) .type-display {
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+  /* Navigation and buttons: small capitals with air between letters. */
+  .type-caps {
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  :lang(ar) .type-caps {
+    letter-spacing: 0;
   }
 
   /* SVG parts animate around their own box. */
@@ -176,6 +208,8 @@
     transform-box: fill-box;
     transform-origin: center;
   }
+  /* Hero collage: the product that comes in when the visitor pages (answers their click). */
+  .anim-swap { animation: mslab-swap 0.45s var(--ease-out-soft) both; }
   .anim-float { animation: mslab-float 6s ease-in-out infinite; }
   .anim-float-slow { animation-duration: 8s; }
   .anim-print { animation: mslab-print 7s var(--ease-out-soft) infinite; }

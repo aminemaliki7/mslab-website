@@ -1,4 +1,4 @@
-import { Archivo, Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Anton, Archivo, Geist, Geist_Mono, IBM_Plex_Sans_Arabic, Jost } from "next/font/google";
 
 /**
  * Geist is the primary UI font and is preloaded. The Arabic and mono fonts are NOT preloaded:
@@ -6,14 +6,32 @@ import { Archivo, Geist, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/goog
  * those glyphs (Arabic pages / SKU and number labels), saving ~100 KB on French/English pages.
  */
 /**
- * Archivo (variable weight + width) is the site typeface: normal width for text, expanded
- * width for display headings (docs/ART_DIRECTION.md). Preloaded.
+ * Jost (variable weight, Futura lineage) is the site typeface: light spaced capitals for
+ * titles, regular weight for text — simple, classic, calm (docs/DESIGN_SYSTEM.md §0). Preloaded.
  */
+export const jost = Jost({
+  variable: "--font-jost",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/**
+ * Anton — the typeface of "Lab" in the MSLAB logo. Used sparingly for brand moments (page
+ * titles, step numerals) so the site speaks with the logo's voice. Latin only; preloaded.
+ */
+export const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+/** Archivo stays available as a design font in the mockup studio only (not preloaded). */
 export const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],
-  axes: ["wdth"],
   display: "swap",
+  preload: false,
 });
 
 /** Geist is kept for the approved MSLAB wordmark and the mockup studio text only. */
@@ -41,4 +59,4 @@ export const plexArabic = IBM_Plex_Sans_Arabic({
   preload: false,
 });
 
-export const fontVariables = `${archivo.variable} ${geist.variable} ${geistMono.variable} ${plexArabic.variable}`;
+export const fontVariables = `${jost.variable} ${anton.variable} ${archivo.variable} ${geist.variable} ${geistMono.variable} ${plexArabic.variable}`;

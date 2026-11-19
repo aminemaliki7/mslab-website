@@ -391,6 +391,7 @@ export type Database = {
           description_fr: string | null
           id: string
           is_featured: boolean
+          min_order_quantity: number | null
           name_ar: string | null
           name_en: string | null
           name_fr: string
@@ -417,6 +418,7 @@ export type Database = {
           description_fr?: string | null
           id?: string
           is_featured?: boolean
+          min_order_quantity?: number | null
           name_ar?: string | null
           name_en?: string | null
           name_fr: string
@@ -443,6 +445,7 @@ export type Database = {
           description_fr?: string | null
           id?: string
           is_featured?: boolean
+          min_order_quantity?: number | null
           name_ar?: string | null
           name_en?: string | null
           name_fr?: string

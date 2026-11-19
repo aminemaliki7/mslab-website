@@ -8,13 +8,14 @@ import { resolveVisualKey } from "@/features/catalog/visual";
 import { JsonLd } from "@/components/content/json-ld";
 import { RichText } from "@/components/content/rich-text";
 import { AddToQuoteButton } from "@/components/quote/add-to-quote-button";
-import { CtaBand } from "@/components/layout/cta-band";
 import { ButtonLink } from "@/components/ui/button";
+import { ArrowLink } from "@/components/ui/arrow-link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Container, Heading, Lead, Section } from "@/components/ui/layout";
 import { getProductBySlug, listProducts, listRelatedProducts, type ProductDetail } from "@/features/catalog/queries";
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
+import { format } from "@/i18n/format";
 import { localizedPath, type RouteKey } from "@/i18n/routes";
 import { siteUrl } from "@/lib/env";
 import { buildPageMetadata } from "@/lib/seo";
@@ -135,13 +136,25 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
               ) : null}
               {product.shortDescription ? <Lead className="mt-5">{product.shortDescription}</Lead> : null}
 
-              <div className="border-line mt-8 space-y-4 border-t pt-6">
+              {/* Bulk production: MOQ when MSLAB has set one, otherwise "confirmed in your quote". */}
+              <div className="border-fg mt-8 border-t-2 pt-4">
+                {product.minOrderQuantity ? (
+                  <p className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <span className="text-fg-muted text-sm">{dict.product.moq}</span>
+                    <span className="text-fg font-semibold">{format(dict.product.moqValue, { count: product.minOrderQuantity })}</span>
+                  </p>
+                ) : (
+                  <p className="text-fg text-sm font-medium">{dict.product.moqUnknown}</p>
+                )}
+              </div>
+
+              <div className="border-line mt-4 space-y-4 border-t pt-6">
                 <ButtonLink href={quoteHref} size="lg" className="w-full sm:w-auto">
                   {dict.product.requestQuote}
                 </ButtonLink>
                 {/* Multi-product requests: collect several products, then send one quote (ADR-017). */}
                 <AddToQuoteButton
-                  product={{ productId: product.id, name: product.name, sku: product.sku }}
+                  product={{ productId: product.id, name: product.name, sku: product.sku, minOrderQuantity: product.minOrderQuantity }}
                   quoteHref={localizedPath(locale, { route: "quote" })}
                   labels={{ add: dict.quotePage.addToQuote, added: dict.quotePage.addedToQuote, view: dict.quotePage.viewQuote }}
                 />
@@ -150,8 +163,8 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
 
               {product.specifications.length > 0 ? (
                 <div className="mt-10">
-                  <h2 className="text-fg text-lg font-semibold">{dict.product.specifications}</h2>
-                  <dl className="border-line mt-4 border-t">
+                  <h2 className="type-display text-fg text-xl">{dict.product.specifications}</h2>
+                  <dl className="border-fg mt-4 border-t-2">
                     {product.specifications.map((spec) => (
                       <div key={spec.label} className="border-line grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 border-b py-3 text-sm">
                         <dt className="text-fg-muted">{spec.label}</dt>
@@ -165,8 +178,8 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
           </div>
 
           {product.description ? (
-            <div className="border-line mt-16 grid gap-6 border-t pt-10 lg:grid-cols-12">
-              <h2 className="text-fg text-xl font-semibold lg:col-span-4">{dict.product.description}</h2>
+            <div className="border-fg mt-16 grid gap-6 border-t-2 pt-10 lg:grid-cols-12">
+              <h2 className="type-display text-fg text-2xl lg:col-span-4">{dict.product.description}</h2>
               <RichText text={product.description} className="lg:col-span-8" />
             </div>
           ) : null}
@@ -174,18 +187,21 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
       </Section>
 
       {related.length > 0 ? (
-        <Section tone="surface" aria-labelledby="related-heading">
+        <Section aria-labelledby="related-heading">
           <Container>
-            <Heading as="h2" size="md" id="related-heading">
-              {dict.product.related}
-            </Heading>
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <Heading as="h2" size="xl" id="related-heading" className="type-display">
+                {dict.product.related}
+              </Heading>
+              <ArrowLink href={localizedPath(locale, { route: "catalog" })}>{dict.sections.allProducts}</ArrowLink>
+            </div>
+            <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {related.map((item) => (
                 <li key={item.id}>
                   <ProductCard
                     product={item}
                     href={localizedPath(locale, { route: "product", slug: item.slug })}
-                    labels={{ sku: dict.product.sku, noImage: dict.product.noImage }}
+                    labels={{ sku: dict.product.sku, noImage: dict.product.noImage, moq: dict.product.moqShort }}
                   />
                 </li>
               ))}
@@ -194,7 +210,6 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
         </Section>
       ) : null}
 
-      <CtaBand />
     </>
   );
 }

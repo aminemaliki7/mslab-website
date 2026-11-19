@@ -190,6 +190,8 @@ const fr = {
       featuredLabel: "Mettre en avant sur la page d'accueil",
       sectionSpecs: "Caractéristiques techniques (facultatif)",
       sku: "Référence (facultatif)",
+      moq: "Quantité minimum de commande (facultatif)",
+      moqHint: "En unités. Laissez vide si elle n'est pas définie : le site indiquera qu'elle est confirmée dans le devis.",
       create: "Créer le produit",
     },
     upload: {
@@ -707,6 +709,8 @@ const en: AdminDict = {
       featuredLabel: "Feature on the homepage",
       sectionSpecs: "Specifications (optional)",
       sku: "Reference (optional)",
+      moq: "Minimum order quantity (optional)",
+      moqHint: "In units. Leave empty if not defined: the site will say it is confirmed in the quote.",
       create: "Create product",
     },
     upload: {
@@ -1222,6 +1226,8 @@ const ar: AdminDict = {
       featuredLabel: "إبرازه في الصفحة الرئيسية",
       sectionSpecs: "المواصفات التقنية (اختياري)",
       sku: "المرجع (اختياري)",
+      moq: "الحد الأدنى للطلب (اختياري)",
+      moqHint: "بالوحدات. اتركه فارغاً إذا لم يكن محدداً: سيذكر الموقع أنه يُؤكَّد في عرض السعر.",
       create: "إنشاء المنتج",
     },
     upload: {
@@ -1619,6 +1625,7 @@ const MESSAGES: Record<string, { en: string; ar: string }> = {
   "L'enregistrement a échoué. Réessayez.": { en: "Saving failed. Try again.", ar: "فشل الحفظ. حاول مرة أخرى." },
   "Champ requis.": { en: "Required field.", ar: "حقل إلزامي." },
   "Minuscules, chiffres et tirets uniquement.": { en: "Lowercase letters, numbers and hyphens only.", ar: "حروف لاتينية صغيرة وأرقام وشرطات فقط." },
+  "Nombre entier entre 1 et 1 000 000, ou vide.": { en: "Whole number between 1 and 1,000,000, or empty.", ar: "عدد صحيح بين 1 و1 000 000، أو فارغ." },
   "Nombre entier attendu.": { en: "Whole number expected.", ar: "يُنتظر عدد صحيح." },
   "Renseignez d'abord le nom dans cette langue.": { en: "Enter the name in this language first.", ar: "أدخل الاسم بهذه اللغة أولاً." },
   "Slug français requis (lettres latines).": { en: "French slug required (Latin letters).", ar: "الـslug الفرنسي مطلوب (حروف لاتينية)." },

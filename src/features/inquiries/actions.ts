@@ -80,6 +80,24 @@ export async function submitQuote(_prev: FormState, formData: FormData): Promise
   if (!parsed.success) return { status: "error", fieldErrors: toFieldErrors(parsed.error), values };
 
   const input = parsed.data;
+
+  // Bulk production: a catalog item may not be requested below its minimum order quantity.
+  const ids = input.items.flatMap((item) => (item.productId ? [item.productId] : []));
+  // A failed lookup must not block the request: the RPC still validates the products.
+  const products = ids.length
+    ? await getProductsByIds("fr", ids).catch((error: unknown) => {
+        console.error("[quote] product lookup failed", error instanceof Error ? error.message : error);
+        return [];
+      })
+    : [];
+  const moq = new Map(products.map((p) => [p.id, p.minOrderQuantity]));
+  const moqErrors: FieldErrors = {};
+  input.items.forEach((item, index) => {
+    const min = item.productId ? moq.get(item.productId) : null;
+    if (min && item.quantity < min) moqErrors[`items.${index}.quantity`] = "below_moq";
+  });
+  if (Object.keys(moqErrors).length > 0) return { status: "error", fieldErrors: moqErrors, values };
+
   const result = await insertQuotationRequest({
     submissionId: submissionId(formData),
     fullName: input.fullName,
@@ -107,8 +125,6 @@ export async function submitQuote(_prev: FormState, formData: FormData): Promise
 
   const reference = result.reference;
   after(async () => {
-    const ids = input.items.flatMap((item) => (item.productId ? [item.productId] : []));
-    const products = ids.length ? await getProductsByIds("fr", ids) : [];
     await notifyQuote(input, reference, new Map(products.map((p) => [p.id, p.sku ? `${p.name} (${p.sku})` : p.name])));
   });
   return { status: "success", reference };

@@ -5,6 +5,8 @@ _Last updated: 2026-11-14 · Phase 1 (Architecture & Foundation)_
 ## 1. Purpose
 MSLAB is a **Moroccan company**. The website must present its identity, activities, services, products and business information professionally, and above all **generate qualified business inquiries** while making MSLAB's services easy to discover.
 
+> **Positioning (2026-11-19):** MSLAB is a bulk custom-production partner for businesses, brands and creators. See [POSITIONING.md](POSITIONING.md) for the confirmed production lines, journeys and copy rules; supplies below are a secondary activity.
+
 ## 2. Business areas (verified from brief)
 | # | Area | Website expression |
 |---|---|---|

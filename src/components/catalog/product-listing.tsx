@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ArrowLink } from "@/components/ui/arrow-link";
 import { Skeleton } from "@/components/ui/layout";
 import { listProducts, type CategorySummary } from "@/features/catalog/queries";
@@ -19,13 +20,28 @@ type Props = {
   categories: CategorySummary[];
   /** Set on category pages: the route fixes the category, the form hides the selector. */
   fixedCategory?: CategorySummary;
+  /** Category links shown beside the search line (static; also passed to the skeleton). */
+  nav?: ReactNode;
 };
+
+/**
+ * Filter bar in the site's index style (docs/ART_DIRECTION.md): a 2 px ink rule opens it,
+ * categories on the start side, the search line on the end side (stacked on phones).
+ */
+function FilterBar({ nav, search }: { nav?: ReactNode; search: ReactNode }) {
+  return (
+    <div className="border-fg grid grid-cols-1 gap-x-10 gap-y-3 border-t-2 pt-3 md:grid-cols-12 md:items-center">
+      {nav ? <div className="min-w-0 md:col-span-7">{nav}</div> : null}
+      <div className={nav ? "md:col-span-5" : "md:col-span-12"}>{search}</div>
+    </div>
+  );
+}
 
 /**
  * Search form + results + pagination. Reads searchParams (request-time data), so callers
  * render it inside <Suspense fallback={<ProductListingSkeleton />}>.
  */
-export async function ProductListing({ locale, dict, basePath, searchParams, categories, fixedCategory }: Props) {
+export async function ProductListing({ locale, dict, basePath, searchParams, categories, fixedCategory, nav }: Props) {
   const query = parseCatalogQuery(await searchParams);
 
   const filterCategory = fixedCategory ?? (query.category ? categories.find((c) => c.slug === query.category) : undefined);
@@ -42,17 +58,11 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
       {/* Filtered/paginated variants are not separate pages for search engines. */}
       {query.q || (!fixedCategory && filterCategory) ? <meta name="robots" content="noindex, follow" /> : null}
 
-      <div>
-        <CatalogSearchForm
-          action={basePath}
-          dict={dict}
-          q={query.q}
-        />
-      </div>
+      <FilterBar nav={nav} search={<CatalogSearchForm action={basePath} dict={dict} q={query.q} />} />
 
       <div className="mt-8 flex flex-wrap items-baseline justify-between gap-2" aria-live="polite">
         {query.q ? (
-          <h2 className="text-fg text-lg font-semibold">{format(dict.catalog.resultsFor, { q: query.q })}</h2>
+          <h2 className="type-display text-fg text-xl">{format(dict.catalog.resultsFor, { q: query.q })}</h2>
         ) : (
           <span />
         )}
@@ -66,7 +76,7 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
               <ProductCard
                 product={product}
                 href={localizedPath(locale, { route: "product", slug: product.slug })}
-                labels={{ sku: dict.product.sku, noImage: dict.product.noImage }}
+                labels={{ sku: dict.product.sku, noImage: dict.product.noImage, moq: dict.product.moqShort }}
               />
             </li>
           ))}
@@ -91,12 +101,12 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
   );
 }
 
-export function ProductListingSkeleton() {
+export function ProductListingSkeleton({ nav }: { nav?: ReactNode }) {
   return (
     <div aria-busy="true">
-      <Skeleton className="h-[5.5rem] w-full" />
+      <FilterBar nav={nav} search={<Skeleton className="h-12 w-full" />} />
       <Skeleton className="mt-8 h-5 w-32" />
-      <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 6 }, (_, i) => (
           <Skeleton key={i} className="aspect-[4/5] w-full" />
         ))}

@@ -41,6 +41,8 @@ export type ProductSummary = {
   /** Drawing chosen by MSLAB for when there is no photo (features/catalog/visual.ts). */
   visualKey: ProductVisualKey | null;
   sku: string | null;
+  /** Minimum order quantity set by MSLAB; null = confirmed in the quote (never invented). */
+  minOrderQuantity: number | null;
   shortDescription: string | null;
   categoryId: string | null;
   isFeatured: boolean;
@@ -59,7 +61,7 @@ export type ProductDetail = ProductSummary & {
 const CATEGORY_COLUMNS =
   "id, parent_id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en, description_fr, description_ar, description_en, image_path, sort_order";
 const PRODUCT_SUMMARY_COLUMNS =
-  "id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en, sku, short_description_fr, short_description_ar, short_description_en, category_id, is_featured, sort_order, " +
+  "id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en, sku, min_order_quantity, short_description_fr, short_description_ar, short_description_en, category_id, is_featured, sort_order, " +
   "product_images(storage_path, alt_fr, alt_ar, alt_en, width, height, is_primary, sort_order)";
 
 function toCategory(row: Pick<CategoryRow, "id" | "parent_id" | "name_fr" | "name_ar" | "name_en" | "slug_fr" | "slug_ar" | "slug_en" | "description_fr" | "description_ar" | "description_en" | "image_path">, locale: Locale): CategorySummary {
@@ -89,7 +91,7 @@ function sortImages(images: ImagePick[]): ImagePick[] {
   return [...images].sort((a, b) => Number(b.is_primary) - Number(a.is_primary) || a.sort_order - b.sort_order);
 }
 
-type ProductSummaryRow = Pick<ProductRow, "id" | "name_fr" | "name_ar" | "name_en" | "slug_fr" | "slug_ar" | "slug_en" | "sku" | "short_description_fr" | "short_description_ar" | "short_description_en" | "category_id" | "is_featured"> & {
+type ProductSummaryRow = Pick<ProductRow, "id" | "name_fr" | "name_ar" | "name_en" | "slug_fr" | "slug_ar" | "slug_en" | "sku" | "min_order_quantity" | "short_description_fr" | "short_description_ar" | "short_description_en" | "category_id" | "is_featured"> & {
   product_images: ImagePick[];
 };
 
@@ -104,6 +106,7 @@ function toProductSummary(row: ProductSummaryRow, locale: Locale): ProductSummar
     // TODO(catalog step 2): read products.visual_key once the column exists.
     visualKey: null,
     sku: row.sku,
+    minOrderQuantity: row.min_order_quantity,
     shortDescription: pick(row, "short_description", locale),
     categoryId: row.category_id,
     isFeatured: row.is_featured,
@@ -227,7 +230,7 @@ export async function getProductBySlug(locale: Locale, slug: string): Promise<Pr
   cacheTag(CATALOG_TAG);
 
   const columns =
-    "id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en, sku, short_description_fr, short_description_ar, short_description_en, " +
+    "id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en, sku, min_order_quantity, short_description_fr, short_description_ar, short_description_en, " +
     "description_fr, description_ar, description_en, specifications, category_id, is_featured, updated_at, " +
     `product_images(storage_path, alt_fr, alt_ar, alt_en, width, height, is_primary, sort_order), categories(${CATEGORY_COLUMNS})`;
   const column = locale === "fr" ? "slug_fr" : locale === "ar" ? "slug_ar" : "slug_en";

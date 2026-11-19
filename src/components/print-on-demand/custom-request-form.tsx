@@ -34,7 +34,8 @@ const subscribeNothing = () => () => {};
 const OTHER = "other";
 
 /** Quick quantities and standard print sizes (ISO A series, business card, roll-up). */
-const QUANTITIES = [1, 10, 50, 100, 250, 500, 1000];
+/** Volume quick picks: MSLAB produces in quantity only (no MOQ is invented; the field stays free). */
+const QUANTITIES = [50, 100, 250, 500, 1000, 5000];
 const FORMATS = [
   { key: "businessCard", width: "85", height: "55", unit: "mm" },
   { key: "a6", width: "105", height: "148", unit: "mm" },
@@ -131,7 +132,7 @@ function CustomRequestFormInner({
         <div className="space-y-3">
           <Field id="quantity" label={t.pod.quantity} required error={message("quantity")} className="max-w-[12rem]">
             {(p) => (
-              <Input {...p} name="quantity" type="number" inputMode="numeric" min={1} max={1000000} step={1} dir="ltr" defaultValue={values.quantity ?? "1"} />
+              <Input {...p} name="quantity" type="number" inputMode="numeric" min={1} max={1000000} step={1} dir="ltr" defaultValue={values.quantity ?? ""} />
             )}
           </Field>
           <QuickPicks label={`${t.pod.quantity} — ${t.forms.quickPick}`} picks={QUANTITIES.map((n) => ({ label: n.toLocaleString(locale === "ar" ? "ar-MA" : locale, { numberingSystem: "latn" }), values: { quantity: String(n) } }))} />

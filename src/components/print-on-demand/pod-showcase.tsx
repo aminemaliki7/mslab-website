@@ -14,8 +14,14 @@ import { studioSelect } from "./studio-select";
 const PLACEHOLDER: Design = { imageUrl: null, text: "", scale: 0.7, dx: 0, dy: 0 };
 
 /** Soft brand tints behind each mockup (cycled). */
-const TINTS = ["#E7F2F5", "#EFEDE6", "#F4ECDD", "#E8ECF1", "#FBF1D6", "#EAF1EC"] as const;
+const TINTS = ["#EFEBE5", "#E6DFD4", "#F3F0EB", "#EAE4DB", "#E1D9CD", "#F0ECE6"] as const;
 const tint = (index: number) => TINTS[index % TINTS.length];
+
+/** A single product drawing with the "your logo here" placeholder (production-line illustrations). */
+export function MockupArt({ product, className }: { product: MockupKey; className?: string }) {
+  const Mockup = MOCKUPS[product];
+  return <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[product]} label="" className={className} />;
+}
 
 /** Hero: a row of product tiles; tapping one opens that product in the studio below. */
 export function HeroMockups({ products, names, studioId, className }: { products: MockupKey[]; names: Record<MockupKey, string>; studioId: string; className?: string }) {
@@ -33,7 +39,7 @@ export function HeroMockups({ products, names, studioId, className }: { products
                 studioSelect.send(key);
                 document.getElementById(studioId)?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
-              className="group focus-visible:ring-accent block w-full overflow-hidden rounded-2xl text-start focus-visible:ring-2 focus-visible:outline-none"
+              className="group focus-visible:ring-accent block w-full overflow-hidden rounded-[var(--radius-tile)] text-start focus-visible:ring-2 focus-visible:outline-none"
               style={{ backgroundColor: tint(index) }}
             >
               <span className="flex aspect-[4/5] items-center justify-center p-2 transition-transform duration-300 group-hover:scale-[1.03] sm:p-4">

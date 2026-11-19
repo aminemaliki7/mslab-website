@@ -5,7 +5,6 @@ import { lang } from "next/root-params";
 import { ServiceCard } from "@/components/catalog/service-card";
 import { PRINT_ON_DEMAND_SLUG, SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
 import { RichText } from "@/components/content/rich-text";
-import { CtaBand } from "@/components/layout/cta-band";
 import { ButtonLink } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Container, Heading, Lead, Section } from "@/components/ui/layout";
@@ -66,7 +65,7 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
   return (
     <>
 
-      <div className="bg-surface border-line overflow-hidden border-b">
+      <div className="overflow-hidden">
         <Container className="grid items-center gap-8 py-10 md:grid-cols-12 lg:py-14">
           <div className="md:col-span-7">
           <Breadcrumbs
@@ -115,7 +114,7 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
       ) : null}
 
       {others.length > 0 ? (
-        <Section tone="surface" aria-labelledby="other-services-heading">
+        <Section aria-labelledby="other-services-heading">
           <Container>
             <Heading as="h2" size="md" id="other-services-heading">
               {dict.servicesPage.otherServices}
@@ -135,7 +134,6 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
         </Section>
       ) : null}
 
-      <CtaBand />
     </>
   );
 }

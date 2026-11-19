@@ -2,7 +2,24 @@
 
 _Status: Milestone 1. The palette is **provisional** (ADR-018) until MSLAB supplies its logo and brand colors. Swap the raw values in `src/app/globals.css`; components only use semantic tokens, so nothing else changes._
 
-## 1. Direction
+## 0. Current direction — "Atelier" (2026-11-19, supersedes §1 and the raw values in §2)
+Owner brief: a calm, airy fashion-house feel (reference: minimal white page, large light capitals, rounded photographic tiles, charcoal pill button), applied to a bulk production partner.
+
+- **Color — owner brand palette (2026-11-19):**
+  - **Deep Teal `#0B6E8A`** — primary brand (logo), links, focus, teal-mist tiles `#E3EEF1`.
+  - **White `#FFFFFF`** — page background and almost every section (owner: white on most sections). **Soft Ivory `#F7F6F2`** — only small boxes (contact details, tracking form, gallery frames); tiles `#ECEAE3`.
+  - **Midnight Navy `#193642`** — premium contrast: text (11.8:1 on ivory) and dark bands (process, brand journey, CTA, footer).
+  - Muted text slate `#5B6779` (5.3:1 on ivory). The logo keeps its own exact colours (`#0B6E8A`, `#0E1A2B`, light teal `#5BA7BC` on dark).
+  - **No gold** (owner, 2026-11-19). Main calls to action: Deep Teal pill, white text; on navy bands: white pill, navy text. Numerals and small accents on navy: logo light teal `#5BA7BC`.
+  - Muted text slate `#5B6779` (5.7:1 on white). Rejected: a "Mediterranean Craft" blue/cream/terracotta palette (2026-11-19).
+- **Type:** Jost (Futura lineage) for text, IBM Plex Sans Arabic for Arabic, and **Anton — the logo's "Lab" face — for brand moments only**: `.type-poster` (hero, page titles) and step numerals. Bold (Jost 600) for card and item titles. Smaller, calm scale: body 15px / 1.7; hero max ~4.25rem in Anton; section headings `.type-display` light sentence case, max 2rem; navigation and buttons `.type-caps` small spaced capitals. Archivo is kept only as a studio design font (not preloaded).
+- **Shape:** buttons are full pills; fields 12 px; cards and tiles 20 px (kept compact: two product cards per row on phones). Copy is short: one line per idea. No shadows except the white paging buttons on the hero tile.
+- **Structure:** a 1 px charcoal hairline under the header and above the footer, inside the page margins. Index lists keep their 2 px opening rule.
+- **Hero:** title, lead, brand-name field (styled like a search line), bulk-only note, one pill CTA — beside an object collage (one large pageable tile + two small tiles) that shows the typed brand on MSLAB products. This is the one bold moment; everything else stays quiet.
+- **Product photos (2026-11-19):** owner-supplied mockups in `src/assets/production/`, registered in `src/config/photos.ts`. Every product image carries the MSLAB logo — blank mockups and the three photos (heat press, mug press, event kits, where the previous mark was erased first) — applied by `scripts/brand-mockups.mjs` (perspective warp on flat surfaces, cylinder wrap on the mug, multiply blend so print takes the surface shading; the logo's own on-dark variant on black cloth). Never publish watermarked stock previews (a "dreamstime" stationery set was removed). Not used: 3D printing and signage photos (not offered). Placement carries meaning: hero tiles = "Votre idée" (T-shirt tech pack) · "Votre design" (live preview) · "Notre production" (owner's red heat-press illustration, shown whole on its own red #9C0D29); business card = corporate kit (owner photo, used as is); brands card = shopping bag; process band = mug press.
+- **Motion:** only the collage swap when the visitor pages (and the existing scroll reveals, all disabled for reduced motion).
+
+## 1. Direction (previous, Milestone 1)
 "Ink on paper": an editorial, print-trade look suited to a printing / stationery / books company. Hairline rules instead of shadows, a single accent color, generous whitespace, strong type hierarchy. No gradients, no decorative illustrations, no stock "AI" visuals.
 
 ## 2. Color tokens (`@theme` in `src/app/globals.css`)

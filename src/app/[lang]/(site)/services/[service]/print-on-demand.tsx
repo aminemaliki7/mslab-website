@@ -1,3 +1,4 @@
+import { ProductionIndex } from "@/components/catalog/production-index";
 import { CustomRequestForm } from "@/components/print-on-demand/custom-request-form";
 import { StudioEditor } from "@/components/print-on-demand/studio/studio-editor";
 import { HeroMockups } from "@/components/print-on-demand/pod-showcase";
@@ -18,9 +19,11 @@ const STUDIO_ID = "studio";
 // In-page jumps use plain <a href="#…"> (native, works before hydration); page links use ButtonLink.
 
 /**
- * Print on demand ("Your idea. Your design. Our production."): hero with floating product
- * mockups, product picker, how it works, live mockup studio, gallery of past work (hidden
- * while empty), FAQ, the custom request form with file upload, and a closing call to action.
+ * Custom production ("Your idea. Your design. Our production."; French slug kept as
+ * `impression-a-la-demande` for URL stability — docs/POSITIONING.md): hero with floating product
+ * mockups and the bulk-only note, how a production project works, live mockup studio (to
+ * prepare a brief), gallery of past work (hidden while empty), FAQ, the production request form
+ * with file upload, and a closing call to action.
  * Text comes from the service record (owner-managed) and the dictionaries. No prices,
  * statistics, reviews or delivery promises (CLAUDE.md §1).
  */
@@ -65,28 +68,46 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href={`#${hasStudio ? STUDIO_ID : FORM_ID}`} className={buttonClasses("primary", "lg")}>
-                {hasStudio ? t.designCta : t.startCta}
+              <a href={`#${FORM_ID}`} className={buttonClasses("primary", "lg")}>
+                {t.startCta}
               </a>
-              <ButtonLink href={trackingHref} variant="secondary" size="lg">
-                {t.trackCta}
-              </ButtonLink>
+              {hasStudio ? (
+                <a href={`#${STUDIO_ID}`} className={buttonClasses("secondary", "lg")}>
+                  {t.designCta}
+                </a>
+              ) : (
+                <ButtonLink href={trackingHref} variant="secondary" size="lg">
+                  {t.trackCta}
+                </ButtonLink>
+              )}
             </div>
+            <p className="text-fg mt-5 flex max-w-xl items-start gap-2 text-sm font-medium">
+              <span aria-hidden="true" className="bg-accent mt-1.5 size-2 shrink-0 rounded-full" />
+              {dict.sections.bulkNote}
+            </p>
           </div>
           {hasStudio ? <HeroMockups products={mockups} names={t.studio.products} studioId={STUDIO_ID} className="mt-12 lg:mt-16" /> : null}
         </Container>
       </div>
 
+      {/* ─── Production capabilities (each line leads to the request form) ── */}
+      <Section aria-labelledby="pod-lines-heading">
+        <Container>
+          <SectionIntro id="pod-lines-heading" title={dict.sections.servicesTitle} lead={dict.sections.capabilitiesLead} />
+          <ProductionIndex dict={dict} href={`#${FORM_ID}`} className="mt-8 lg:mt-10" />
+        </Container>
+      </Section>
+
       {/* ─── How it works ─────────────────────────────────────────────────── */}
       <section aria-labelledby="pod-steps-heading" className="bg-ink-900 text-white">
         <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
-          <h2 id="pod-steps-heading" className="type-display text-3xl text-balance sm:text-4xl lg:col-span-4">
+          <h2 id="pod-steps-heading" className="type-display text-2xl text-balance sm:text-3xl lg:col-span-4">
             {t.stepsTitle}
           </h2>
           <ol className="grid gap-8 sm:grid-cols-3 lg:col-span-8">
             {steps.map((step, index) => (
               <li key={step.title} className="border-t border-white/25 pt-5">
-                <span className="type-display text-cyan-300 block text-5xl" dir="ltr">
+                <span className="type-poster text-cyan-300 block text-5xl" dir="ltr">
                   {index + 1}
                 </span>
                 <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
@@ -111,7 +132,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
 
       {/* ─── Gallery (hidden while empty) ─────────────────────────────────── */}
       {portfolio.length > 0 ? (
-        <Section tone="surface" aria-labelledby="pod-gallery-heading">
+        <Section aria-labelledby="pod-gallery-heading">
           <Container>
             <SectionIntro id="pod-gallery-heading" title={t.galleryTitle} />
             <div className="mt-10">
@@ -122,7 +143,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
       ) : null}
 
       {/* ─── FAQ ──────────────────────────────────────────────────────────── */}
-      <Section tone={portfolio.length > 0 ? "default" : "surface"} aria-labelledby="pod-faq-heading">
+      <Section aria-labelledby="pod-faq-heading">
         <Container className="max-w-3xl">
           <SectionIntro id="pod-faq-heading" title={t.faqTitle} />
           <div className="border-line bg-bg mt-10 divide-y divide-[var(--color-line)] rounded-[var(--radius-card)] border">
@@ -162,7 +183,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
       {/* ─── Closing call to action ───────────────────────────────────────── */}
       <section aria-labelledby="pod-final-heading" className="bg-ink-900 text-white">
         <Container className="py-16 lg:py-20">
-          <h2 id="pod-final-heading" className="type-display max-w-2xl text-3xl leading-[1.08] text-balance sm:text-4xl">
+          <h2 id="pod-final-heading" className="type-display max-w-2xl text-2xl text-balance sm:text-3xl">
             {t.finalTitle}
           </h2>
           <p className="mt-4 max-w-xl text-white/75">{t.finalBody}</p>
@@ -186,7 +207,7 @@ function SectionIntro({ id, title, lead }: { id: string; title: string; lead?: s
       <Heading as="h2" size="xl" id={id}>
         {title}
       </Heading>
-      {lead ? <p className="text-fg-muted mt-4 text-lg leading-relaxed text-pretty">{lead}</p> : null}
+      {lead ? <p className="text-fg-muted mt-4 text-base leading-relaxed text-pretty">{lead}</p> : null}
     </div>
   );
 }

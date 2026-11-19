@@ -28,11 +28,11 @@ type HeadingProps = {
 
 const headingSizes = {
   // Display type (Archivo expanded, globals.css .type-display); sizes are fluid between phone and desktop.
-  display: "type-display text-[clamp(2rem,6.5vw,3.75rem)] leading-[1.02]",
-  xl: "type-display text-[clamp(1.75rem,4.6vw,2.5rem)] leading-[1.08]",
-  lg: "type-display text-[clamp(1.375rem,3.4vw,1.875rem)] leading-[1.12]",
-  md: "text-xl sm:text-2xl font-semibold leading-snug",
-  sm: "text-lg font-semibold leading-snug",
+  display: "type-poster text-[clamp(1.875rem,5.5vw,3rem)]",
+  xl: "type-display text-[clamp(1.5rem,3.4vw,2rem)]",
+  lg: "type-display text-[clamp(1.25rem,2.6vw,1.5rem)]",
+  md: "text-lg sm:text-xl font-medium leading-snug",
+  sm: "text-base font-medium leading-snug",
 } as const;
 
 export function Heading({ as: Tag = "h2", size = "lg", className, ...props }: HeadingProps) {
@@ -53,7 +53,7 @@ export function Eyebrow({ className, ...props }: ComponentProps<"p">) {
 }
 
 export function Lead({ className, ...props }: ComponentProps<"p">) {
-  return <p className={cn("text-fg-muted text-lg leading-relaxed text-pretty", className)} {...props} />;
+  return <p className={cn("text-fg-muted text-base leading-relaxed text-pretty sm:text-[1.0625rem]", className)} {...props} />;
 }
 
 type CardProps<T extends ElementType> = { as?: T; className?: string; children: ReactNode };

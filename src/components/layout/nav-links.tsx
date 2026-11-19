@@ -22,7 +22,7 @@ export function NavList({
   className?: string;
 }) {
   return (
-    <ul className={cn("flex items-center gap-1", className)}>
+    <ul className={cn("flex items-center gap-2 xl:gap-5", className)}>
       {items.map((item) => {
         const isActive = active === item.section;
         return (
@@ -31,10 +31,9 @@ export function NavList({
               href={item.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "relative inline-flex h-10 items-center rounded-[var(--radius-control)] px-3 text-[0.9375rem] font-medium transition-colors",
-                isActive ? "text-fg" : "text-fg-muted hover:text-fg",
-                isActive &&
-                  "after:bg-accent after:absolute after:inset-x-3 after:-bottom-[0.6875rem] after:h-0.5",
+                "type-caps relative inline-flex h-10 items-center px-3 text-xs font-medium transition-colors",
+                isActive ? "text-fg" : "text-fg/70 hover:text-fg",
+                isActive && "after:bg-accent after:absolute after:inset-x-3 after:bottom-1.5 after:h-px",
               )}
             >
               {item.label}

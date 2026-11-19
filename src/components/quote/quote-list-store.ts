@@ -13,6 +13,8 @@ export type QuoteRow = {
   /** Display name (catalog item) or the customer's description (custom item). */
   name: string;
   sku?: string | null;
+  /** Product minimum order quantity (display + default quantity; enforced by the server). */
+  minOrderQuantity?: number | null;
   quantity: string;
   specifications: string;
   custom: boolean;
@@ -82,15 +84,15 @@ function newKey() {
 }
 
 export const quoteList = {
-  addProduct(product: { productId: string; name: string; sku?: string | null }) {
+  addProduct(product: { productId: string; name: string; sku?: string | null; minOrderQuantity?: number | null }) {
     load();
     const existing = rows.find((r) => r.productId === product.productId);
     if (existing) return;
-    commit([...rows, { key: newKey(), productId: product.productId, name: product.name, sku: product.sku ?? null, quantity: "1", specifications: "", custom: false }]);
+    commit([...rows, { key: newKey(), productId: product.productId, name: product.name, sku: product.sku ?? null, minOrderQuantity: product.minOrderQuantity ?? null, quantity: product.minOrderQuantity ? String(product.minOrderQuantity) : "", specifications: "", custom: false }]);
   },
   addCustom() {
     load();
-    commit([...rows, { key: newKey(), name: "", quantity: "1", specifications: "", custom: true }]);
+    commit([...rows, { key: newKey(), name: "", quantity: "", specifications: "", custom: true }]);
   },
   update(key: string, patch: Partial<Pick<QuoteRow, "name" | "quantity" | "specifications">>) {
     load();

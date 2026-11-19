@@ -4,7 +4,7 @@ import { Container, Skeleton } from "@/components/ui/layout";
 export default function Loading() {
   return (
     <div aria-busy="true">
-      <div className="bg-surface border-line border-b">
+      <div>
         <Container className="py-12 lg:py-16">
           <Skeleton className="h-10 w-2/3 max-w-xl" />
           <Skeleton className="mt-5 h-5 w-full max-w-2xl" />

@@ -7,22 +7,25 @@ type Variant = "primary" | "secondary" | "accent" | "ghost" | "inverse" | "inver
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] text-center font-medium sm:whitespace-nowrap " +
+  // Full pills, small capitals (docs/DESIGN_SYSTEM.md §0).
+  "type-caps inline-flex items-center justify-center gap-2 rounded-full text-center sm:whitespace-nowrap " +
   "transition-[color,background-color,border-color,transform] duration-150 ease-[var(--ease-out-soft)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-accent text-white hover:bg-accent-hover",
-  secondary: "border border-primary text-primary hover:bg-surface",
-  accent: "bg-accent text-white hover:bg-accent-hover",
-  ghost: "text-fg hover:bg-surface",
-  inverse: "border border-white/40 text-white hover:bg-white/10",
-  inverseGhost: "text-white hover:bg-white/10",
+  /** Deep Teal: the one action that matters on the screen (white text 5.8:1). */
+  primary: "bg-primary text-on-primary font-semibold hover:bg-primary-hover",
+  secondary: "border border-fg text-fg font-medium hover:bg-surface",
+  /** On dark (navy) bands: a white pill with navy text. */
+  accent: "bg-white text-fg font-semibold hover:bg-paper-50",
+  ghost: "text-fg font-medium hover:bg-surface",
+  inverse: "border border-white/40 text-white font-medium hover:bg-white/10",
+  inverseGhost: "text-white font-medium hover:bg-white/10",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "min-h-9 px-3 py-1 text-sm",
-  md: "min-h-11 px-5 py-2 text-[0.9375rem]",
-  lg: "min-h-12 px-6 py-2.5 text-base",
+  sm: "min-h-9 px-4 py-1 text-xs",
+  md: "min-h-11 px-6 py-2 text-[0.8125rem]",
+  lg: "min-h-13 px-8 py-3 text-sm",
 };
 
 export function buttonClasses(variant: Variant = "primary", size: Size = "md", className?: string) {

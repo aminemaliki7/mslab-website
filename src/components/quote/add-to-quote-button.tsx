@@ -6,7 +6,7 @@ import { format } from "@/i18n/format";
 import { quoteList, useQuoteRows } from "./quote-list-store";
 
 type Props = {
-  product: { productId: string; name: string; sku: string | null };
+  product: { productId: string; name: string; sku: string | null; minOrderQuantity: number | null };
   quoteHref: string;
   labels: { add: string; added: string; view: string };
 };

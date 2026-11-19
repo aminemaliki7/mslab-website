@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ChecklistIllustration } from "@/components/illustrations";
+import { PHOTOS } from "@/config/photos";
 import { PageHeader } from "@/components/layout/page-header";
 import { QuoteForm } from "@/components/quote/quote-form";
 import { Container, Section, Skeleton } from "@/components/ui/layout";
@@ -28,7 +28,7 @@ export default async function QuotePage({ searchParams }: PageProps<"/[lang]/quo
   const dict = await getDictionary(locale);
   return (
     <>
-      <PageHeader title={dict.pages.quote.title} lead={dict.pages.quote.description} illustration={<ChecklistIllustration />} />
+      <PageHeader title={dict.pages.quote.title} lead={dict.pages.quote.description} photo={{ src: PHOTOS.tshirt, alt: dict.photos.tshirt, contain: true }} />
       <Section>
         <Container className="max-w-3xl">
           <Suspense fallback={<QuoteFormSkeleton />}>
@@ -60,7 +60,7 @@ async function QuoteFormWithPrefill({
       sourcePath={localizedPath(locale, { route: "quote" })}
       privacyHref={localizedPath(locale, { route: "privacy" })}
       catalogHref={localizedPath(locale, { route: "catalog" })}
-      prefill={product ? { productId: product.id, name: product.name, sku: product.sku } : null}
+      prefill={product ? { productId: product.id, name: product.name, sku: product.sku, minOrderQuantity: product.minOrderQuantity } : null}
       t={{ forms: dict.forms, page: dict.quotePage, sku: dict.product.sku }}
     />
   );

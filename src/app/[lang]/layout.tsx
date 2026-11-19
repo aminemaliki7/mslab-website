@@ -31,7 +31,7 @@ const LOGO_INTRO_SCRIPT =
 const GTM_ID = "GTM-NZGP5ZDF";
 
 export const viewport: Viewport = {
-  themeColor: "#0e1a2b",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
   // Lets the page extend under the notch / home indicator; components add env(safe-area-inset-*) padding.

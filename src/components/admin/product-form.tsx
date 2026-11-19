@@ -37,6 +37,7 @@ export function ProductForm({ product, categories }: Props) {
             <div className="grid gap-5 md:grid-cols-2">
               <SelectField name="category_id" label={f.category} values={values} errors={state.fieldErrors} options={categories.map((c) => ({ value: c.id, label: c.label }))} emptyLabel={f.noCategory} />
               <StatusField values={values} errors={state.fieldErrors} />
+              <TextField name="min_order_quantity" label={f.moq} hint={f.moqHint} type="number" values={values} errors={state.fieldErrors} dir="ltr" />
               <div className="md:col-span-2">
                 <CheckboxField name="is_featured" label={f.featuredLabel} checked={Boolean(product?.is_featured)} />
               </div>

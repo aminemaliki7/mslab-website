@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { HeroScene } from "@/components/illustrations/scenes";
-import { ServiceIndex } from "@/components/catalog/service-index";
-import { CtaBand } from "@/components/layout/cta-band";
+import { ProductionIndex } from "@/components/catalog/production-index";
+import { PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { PageHeader } from "@/components/layout/page-header";
-import { ArrowLink } from "@/components/ui/arrow-link";
+import { ButtonLink } from "@/components/ui/button";
 import { Container, Heading, Section } from "@/components/ui/layout";
+import { PHOTOS } from "@/config/photos";
 import { listServices } from "@/features/services/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath } from "@/i18n/routes";
@@ -24,38 +24,33 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ServicesPage() {
   const locale = await getLocale();
   const [dict, services] = await Promise.all([getDictionary(locale), listServices(locale)]);
-
+  // Production first (docs/POSITIONING.md §6): the five lines lead to the production page.
+  const production = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
+  const productionHref = production ? localizedPath(locale, { route: "service", slug: production.slug }) : null;
   return (
     <>
-      <PageHeader title={dict.pages.services.title} lead={dict.pages.services.description} illustration={<HeroScene />} />
+      <PageHeader title={dict.pages.services.title} lead={dict.pages.services.description} photo={{ src: PHOTOS.shoppingBag, alt: dict.photos.shoppingBag }} />
 
-      <Section aria-labelledby="services-list-heading">
+      <Section aria-labelledby="production-heading">
         <Container>
-          <Heading as="h2" size="lg" id="services-list-heading">
-            {dict.servicesPage.listTitle}
+          <Heading as="h2" size="lg" id="production-heading">
+            {dict.sections.servicesTitle}
           </Heading>
-          {services.length > 0 ? (
-            <ServiceIndex
-              className="mt-8"
-              rows={services.map((service) => ({
-                slugFr: service.slugs.fr,
-                name: service.name,
-                summary: service.summary,
-                href: localizedPath(locale, { route: "service", slug: service.slug }),
-              }))}
-            />
-          ) : (
-            <div className="border-line mt-10 rounded-[var(--radius-card)] border border-dashed p-8">
-              <p className="text-fg-muted max-w-xl">{dict.servicesPage.empty}</p>
-              <ArrowLink href={localizedPath(locale, { route: "contact" })} className="mt-4">
-                {dict.common.contactUs}
-              </ArrowLink>
-            </div>
-          )}
+          <p className="text-fg-muted mt-4 max-w-2xl text-lg leading-relaxed text-pretty">{dict.sections.capabilitiesLead}</p>
+          <ProductionIndex dict={dict} href={productionHref ? `${productionHref}#demande` : localizedPath(locale, { route: "quote" })} className="mt-8" />
+          <div className="mt-8 flex flex-wrap gap-3">
+            <ButtonLink href={productionHref ? `${productionHref}#demande` : localizedPath(locale, { route: "quote" })} size="lg">
+              {dict.printOnDemand.startCta}
+            </ButtonLink>
+            {productionHref ? (
+              <ButtonLink href={productionHref} variant="secondary" size="lg">
+                {dict.printOnDemand.bandCta}
+              </ButtonLink>
+            ) : null}
+          </div>
         </Container>
       </Section>
 
-      <CtaBand />
     </>
   );
 }

@@ -3,18 +3,22 @@ import Link from "next/link";
 import { ProductArt } from "@/components/illustrations/product-art";
 import type { ProductSummary } from "@/features/catalog/queries";
 import { resolveProductVisual } from "@/features/catalog/visual";
+import { format } from "@/i18n/format";
 
-type Labels = { sku: string; noImage: string };
+type Labels = { sku: string; noImage: string; /** "Min. {count} unités" */ moq: string };
 
-/** Catalog card: image (or neutral placeholder), name, short description, SKU. No price (ADR-007). */
+/**
+ * Catalog card: image (or neutral placeholder), name, short description, minimum order quantity
+ * when MSLAB has set one, SKU. No price (ADR-007).
+ */
 export function ProductCard({ product, href, labels }: { product: ProductSummary; href: string; labels: Labels }) {
   const visual = resolveProductVisual(product);
   return (
     <Link
       href={href}
-      className="group border-line bg-bg hover:border-line-strong flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-18px_rgb(14_26_43/0.45)]"
+      className="group flex h-full flex-col"
     >
-      <div className="bg-surface relative aspect-[4/3]">
+      <div className="bg-paper-100 relative aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] transition-colors duration-300 group-hover:bg-sand-200">
         {visual.kind === "photo" ? (
           <Image
             src={visual.image.url}
@@ -31,10 +35,15 @@ export function ProductCard({ product, href, labels }: { product: ProductSummary
           </span>
         )}
       </div>
-      <div className="border-line flex flex-1 flex-col border-t p-3 sm:p-4">
-        <h3 className="text-fg text-[0.9375rem] font-semibold leading-snug sm:text-base">{product.name}</h3>
+      <div className="flex flex-1 flex-col px-1 pt-3">
+        <h3 className="text-fg text-sm font-semibold leading-snug">{product.name}</h3>
         {product.shortDescription ? (
           <p className="text-fg-muted mt-1.5 line-clamp-2 text-sm leading-relaxed">{product.shortDescription}</p>
+        ) : null}
+        {product.minOrderQuantity ? (
+          <p className="text-fg mt-3 text-xs font-semibold">
+            {format(labels.moq, { count: product.minOrderQuantity })}
+          </p>
         ) : null}
         {product.sku ? (
           <p className="text-fg-subtle mt-auto pt-3 text-xs">

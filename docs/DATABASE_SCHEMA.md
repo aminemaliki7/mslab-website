@@ -20,7 +20,7 @@ erDiagram
 
   admin_profiles { uuid id PK "= auth.users.id" text full_name admin_role role bool is_active }
   categories { uuid id PK uuid parent_id FK text name_fr "required" slug slug_fr "unique" bool is_published int sort_order }
-  products { uuid id PK uuid category_id FK text name_fr "required" slug slug_fr "unique" text sku "unique, optional" jsonb specifications content_status status bool is_featured timestamptz published_at text search_text "generated, trigram" }
+  products { uuid id PK uuid category_id FK text name_fr "required" slug slug_fr "unique" text sku "unique, optional" int min_order_quantity "optional MOQ, 1-1000000" jsonb specifications content_status status bool is_featured timestamptz published_at text search_text "generated, trigram" }
   product_images { uuid id PK uuid product_id FK text storage_path "unique" bool is_primary "one per product" int width int height }
   services { uuid id PK text name_fr slug slug_fr content_status status bool is_featured }
   inquiries { uuid id PK text reference "MSC-YYYY-NNNNNN" uuid submission_id "unique" email email inquiry_status status timestamptz read_at text ip_hash }

@@ -20,6 +20,7 @@ export const ERROR_CODES = [
   "invalid_number",
   "invalid_date",
   "invalid_option",
+  "below_moq",
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 

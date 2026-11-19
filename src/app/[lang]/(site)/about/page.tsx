@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LibraryIllustration } from "@/components/illustrations/scenes";
 import { RichText } from "@/components/content/rich-text";
-import { CtaBand } from "@/components/layout/cta-band";
 import { PageHeader } from "@/components/layout/page-header";
 import { ArrowLink } from "@/components/ui/arrow-link";
 import { Container, Heading, Section } from "@/components/ui/layout";
+import { PRODUCTION_LINES } from "@/config/production-lines";
 import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
@@ -76,7 +76,7 @@ export default async function AboutPage() {
       </Section>
 
       {mission || values ? (
-        <Section tone="surface" aria-label={[dict.about.missionTitle, dict.about.valuesTitle].join(" / ")}>
+        <Section aria-label={[dict.about.missionTitle, dict.about.valuesTitle].join(" / ")}>
           <Container className="grid gap-10 md:grid-cols-2">
             {mission ? (
               <div>
@@ -105,7 +105,13 @@ export default async function AboutPage() {
           </Heading>
           <div className="lg:col-span-8">
             <ul className="border-line grid border-t sm:grid-cols-2">
-              {Object.values(dict.businessAreas).map((area) => (
+              {/* Production lines first, then supplies (secondary) — docs/POSITIONING.md. */}
+              {[
+                ...PRODUCTION_LINES.map((line) => dict.productionLines[line.key].name),
+                dict.businessAreas.office,
+                dict.businessAreas.school,
+                dict.businessAreas.books,
+              ].map((area) => (
                 <li key={area} className="border-line text-fg border-b py-4 font-medium sm:pe-6">
                   {area}
                 </li>
@@ -133,7 +139,7 @@ export default async function AboutPage() {
       </Section>
 
       {facts.length > 0 ? (
-        <Section tone="surface" aria-labelledby="info-heading">
+        <Section aria-labelledby="info-heading">
           <Container className="grid gap-8 lg:grid-cols-12">
             <Heading as="h2" size="lg" id="info-heading" className="lg:col-span-4">
               {dict.about.infoTitle}
@@ -157,7 +163,6 @@ export default async function AboutPage() {
         </Section>
       ) : null}
 
-      <CtaBand />
     </>
   );
 }

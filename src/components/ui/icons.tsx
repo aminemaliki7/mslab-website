@@ -36,6 +36,13 @@ export const CloseIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const SearchIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="11" cy="11" r="6.5" />
+    <path d="M16 16l4.5 4.5" />
+  </Svg>
+);
+
 /** Points to the inline end; add `rtl:-scale-x-100` where used. */
 export const ArrowIcon = (p: IconProps) => (
   <Svg {...p}>

@@ -14,7 +14,10 @@ import { QuickPicks } from "@/components/forms/quick-picks";
 import { format } from "@/i18n/format";
 import { quoteList, useQuoteRows, type QuoteRow } from "./quote-list-store";
 
-type Prefill = { productId: string; name: string; sku: string | null };
+type Prefill = { productId: string; name: string; sku: string | null; minOrderQuantity: number | null };
+
+/** Volume quick picks (bulk production); never below a product's minimum order quantity. */
+const QUANTITY_PICKS = [50, 100, 250, 500, 1000, 5000];
 
 type Props = {
   locale: Locale;
@@ -71,7 +74,7 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
   }
 
   const prefillRow: QuoteRow | null = prefill
-    ? { key: "prefill", productId: prefill.productId, name: prefill.name, sku: prefill.sku, quantity: "1", specifications: "", custom: false }
+    ? { key: "prefill", productId: prefill.productId, name: prefill.name, sku: prefill.sku, minOrderQuantity: prefill.minOrderQuantity, quantity: prefill.minOrderQuantity ? String(prefill.minOrderQuantity) : "", specifications: "", custom: false }
     : null;
   const rows: QuoteRow[] = hydrated ? storeRows : prefillRow ? [prefillRow] : [];
 
@@ -154,14 +157,20 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
                   ) : (
                     <span className="hidden sm:block" />
                   )}
-                  <Field id={`item-${row.key}-qty`} label={t.page.quantity} required error={rowError(row, "quantity")}>
+                  <Field
+                    id={`item-${row.key}-qty`}
+                    label={t.page.quantity}
+                    required
+                    hint={row.minOrderQuantity ? format(t.page.moqHint, { min: row.minOrderQuantity }) : undefined}
+                    error={rowError(row, "quantity")}
+                  >
                     {(p) => (
                       <Input
                         {...p}
                         name={`items.${index}.quantity`}
                         type="number"
                         inputMode="numeric"
-                        min={1}
+                        min={row.minOrderQuantity ?? 1}
                         max={1000000}
                         step={1}
                         dir="ltr"
@@ -174,7 +183,7 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
                 <QuickPicks
                   label={`${t.page.quantity} — ${t.forms.quickPick}`}
                   className="mt-3"
-                  picks={[1, 10, 50, 100, 250, 500, 1000].map((n) => ({ label: String(n), values: { [`item-${row.key}-qty`]: String(n) } }))}
+                  picks={QUANTITY_PICKS.filter((n) => n >= (row.minOrderQuantity ?? 1)).map((n) => ({ label: String(n), values: { [`item-${row.key}-qty`]: String(n) } }))}
                 />
                 <Field id={`item-${row.key}-specs`} label={t.page.specifications} error={rowError(row, "specifications")} className="mt-4">
                   {(p) => (
@@ -203,7 +212,7 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
               {(p) => <Input {...p} name="items.0.label" maxLength={200} placeholder={t.page.customPlaceholder} />}
             </Field>
             <Field id="nojs-qty" label={t.page.quantity} required>
-              {(p) => <Input {...p} name="items.0.quantity" type="number" min={1} defaultValue="1" dir="ltr" />}
+              {(p) => <Input {...p} name="items.0.quantity" type="number" min={1} dir="ltr" />}
             </Field>
             <Field id="nojs-specs" label={t.page.specifications} className="sm:col-span-2">
               {(p) => <Textarea {...p} name="items.0.specifications" rows={2} maxLength={2000} />}

@@ -3,6 +3,7 @@ import { CookieSettingsButton } from "@/components/consent/cookie-settings-butto
 import { Container } from "@/components/ui/layout";
 import { orderedLegalDocuments } from "@/content/legal";
 import { MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/icons";
+import { PRODUCTION_LINES } from "@/config/production-lines";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath } from "@/i18n/routes";
@@ -34,17 +35,28 @@ export async function Footer() {
   const linkClass = "inline-flex min-h-11 items-center text-white/85 underline-offset-4 hover:text-white hover:underline md:min-h-8";
 
   return (
-    <footer className="bg-ink-900 mt-auto text-white">
+    <footer className="mt-auto text-white" style={{ backgroundColor: "#0E1A2B" }}>
+      {/* Same hairline as under the header, inside the page margins. */}
+      <Container>
+        <div aria-hidden="true" className="h-px bg-white/20" />
+      </Container>
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
         <div className="sm:col-span-2 lg:col-span-3">
           <Wordmark inverted />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">{dict.footer.about}</p>
         </div>
 
+        {/* Production lines first, supplies (secondary activity) below — docs/POSITIONING.md. */}
         <div className="lg:col-span-2">
-          <h2 className={headingClass}>{dict.footer.activities}</h2>
+          <h2 className={headingClass}>{dict.footer.production}</h2>
           <ul className="mt-4 space-y-2.5 text-sm text-white/85">
-            {Object.values(dict.businessAreas).map((area) => (
+            {PRODUCTION_LINES.map((line) => (
+              <li key={line.key}>{dict.productionLines[line.key].name}</li>
+            ))}
+          </ul>
+          <h2 className={`${headingClass} mt-8`}>{dict.footer.activities}</h2>
+          <ul className="mt-4 space-y-2.5 text-sm text-white/85">
+            {[dict.businessAreas.office, dict.businessAreas.school, dict.businessAreas.books].map((area) => (
               <li key={area}>{area}</li>
             ))}
           </ul>

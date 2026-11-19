@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "MSLAB",
-    "defaultDescription": "MSLAB, entreprise marocaine : impression et reprographie, fournitures de bureau, papeterie et fournitures scolaires, livres et ouvrages. Demandez votre devis en ligne."
+    "defaultDescription": "MSLAB, partenaire de production sur mesure au Maroc : textile, objets promotionnels, impression, packaging et collections en marque propre, fabriqués en série pour les entreprises, les marques et les créateurs. Devis sur demande."
   },
   "common": {
     "skipToContent": "Aller au contenu",
@@ -10,7 +10,8 @@
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
     "language": "Langue",
-    "mainNavigation": "Navigation principale"
+    "mainNavigation": "Navigation principale",
+    "requestProductionQuote": "Demander un devis de production"
   },
   "nav": {
     "home": "Accueil",
@@ -26,18 +27,19 @@
     "books": "Livres & ouvrages"
   },
   "footer": {
-    "about": "MSLAB accompagne les professionnels, les établissements et les particuliers pour l'impression, les fournitures de bureau, la papeterie et les livres.",
-    "activities": "Activités",
+    "about": "MSLAB fabrique en série les produits personnalisés des entreprises, des marques et des créateurs : textile, objets, imprimés et packaging.",
+    "activities": "Fournitures",
     "navigation": "Navigation",
     "contact": "Contact",
     "rights": "Tous droits réservés.",
     "tracking": "Suivi de commande",
     "legalInfo": "Informations légales",
-    "cookieSettings": "Gérer les cookies"
+    "cookieSettings": "Gérer les cookies",
+    "production": "Production"
   },
   "whatsapp": {
     "label": "Contacter MSLAB sur WhatsApp",
-    "prefill": "Bonjour MSLAB, je souhaite obtenir des informations."
+    "prefill": "Bonjour MSLAB, je souhaite discuter d'un projet de production."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -55,19 +57,42 @@
     "featuredProductsTitle": "Produits à la une",
     "allProducts": "Voir tout le catalogue",
     "whyTitle": "Pourquoi choisir MSLAB",
-    "ctaTitle": "Un projet d'impression, un besoin en fournitures ou en livres ?",
-    "ctaBody": "Décrivez votre besoin dans une demande de devis ou contactez-nous : notre équipe revient vers vous.",
+    "ctaTitle": "Un projet de production en série ?",
+    "ctaBody": "Envoyez le produit, les quantités et vos fichiers : nous revenons avec un devis.",
     "ctaWhatsApp": "Écrire sur WhatsApp",
-    "heroLead": "Impression, objets personnalisés et fournitures : MSLAB transforme vos idées et vos fichiers en produits, pour les particuliers, les entreprises et les institutions.",
+    "heroLead": "Textile, objets, imprimés et packaging à votre marque, fabriqués en série pour les entreprises, les marques et les créateurs.",
     "clientsTitle": "Ils nous font confiance.",
     "clientsSubtitle": "Institutions et organismes.",
-    "proofLabel": "Essayez : écrivez votre nom ou celui de votre marque",
+    "proofLabel": "Écrivez le nom de votre marque",
     "proofPlaceholder": "Votre marque",
     "proofCta": "Continuer dans le studio",
-    "proofNote": "Aperçu indicatif. Rien n'est envoyé.",
-    "servicesTitle": "Ce que nous produisons",
-    "processCta": "Créer mon aperçu",
-    "catalogTitle": "Le catalogue"
+    "proofNote": "Aperçu indicatif.",
+    "servicesTitle": "Nos capacités de production",
+    "processCta": "Démarrer un projet de production",
+    "catalogTitle": "Fournitures pour les organisations",
+    "ctaDiscuss": "Discuter de votre projet",
+    "tagline": "Production sur mesure, en série",
+    "bulkNote": "Commandes en quantité uniquement.",
+    "capabilitiesCta": "Voir nos capacités de production",
+    "capabilitiesLead": "Cinq lignes de production, un seul devis.",
+    "catalogLead": "Fournitures de bureau, papeterie et livres, en volume.",
+    "painTitle": "Ce que MSLAB simplifie",
+    "painPoints": [
+      {
+        "title": "Un seul partenaire",
+        "body": "Textile, objets, imprimés et packaging avec un seul interlocuteur."
+      },
+      {
+        "title": "Une identité cohérente",
+        "body": "Le même logo et les mêmes couleurs sur chaque produit."
+      },
+      {
+        "title": "De l'idée au produit",
+        "body": "Devis, validation, production et suivi en ligne."
+      }
+    ],
+    "proofPrev": "Produit précédent",
+    "proofNext": "Produit suivant"
   },
   "about": {
     "presentationTitle": "Présentation",
@@ -85,7 +110,7 @@
     "map": "Voir sur la carte"
   },
   "servicesPage": {
-    "listTitle": "Nos services",
+    "listTitle": "Fournitures et autres services",
     "empty": "Nos services sont en cours de mise en ligne. En attendant, décrivez votre besoin : nous vous répondons.",
     "otherServices": "Autres services",
     "askQuote": "Demander un devis pour ce service"
@@ -100,7 +125,11 @@
     "related": "Produits de la même catégorie",
     "category": "Catégorie",
     "imageNumber": "Image {n} sur {total}",
-    "quoteHint": "Indiquez les quantités et vos besoins dans la demande de devis. MSLAB vous recontacte."
+    "quoteHint": "Indiquez les quantités souhaitées et vos besoins de personnalisation dans la demande de devis. MSLAB vous recontacte avec une proposition.",
+    "moq": "Quantité minimum de commande",
+    "moqValue": "{count} unités",
+    "moqShort": "Min. {count} unités",
+    "moqUnknown": "Commande en quantité : le minimum est confirmé dans votre devis."
   },
   "catalog": {
     "searchLabel": "Rechercher un produit",
@@ -166,12 +195,13 @@
       "server_error": "L'envoi a échoué. Réessayez, ou contactez-nous par un autre moyen.",
       "invalid_number": "Valeur invalide (nombre positif).",
       "invalid_date": "Date invalide (aujourd'hui ou plus tard).",
-      "invalid_option": "Une option choisie n'est plus disponible. Rechargez la page et réessayez."
+      "invalid_option": "Une option choisie n'est plus disponible. Rechargez la page et réessayez.",
+      "below_moq": "Quantité inférieure au minimum de commande de ce produit."
     },
     "quickPick": "Choix rapide",
     "subjects": {
       "quote": "Demande de devis",
-      "pod": "Impression à la demande",
+      "pod": "Production sur mesure",
       "printing": "Impression & reprographie",
       "supplies": "Fournitures de bureau",
       "books": "Livres & ouvrages",
@@ -188,19 +218,19 @@
     "sendAnother": "Envoyer un autre message",
     "detailsTitle": "Coordonnées",
     "whatsappCta": "Écrire sur WhatsApp",
-    "quoteCta": "Besoin d'un devis ? Utilisez la demande de devis détaillée."
+    "quoteCta": "Un projet de production ? Utilisez la demande de devis détaillée."
   },
   "quotePage": {
     "itemsTitle": "Produits et besoins",
-    "itemsHint": "Ajoutez des produits depuis le catalogue ou décrivez un besoin sur mesure (impression, fournitures…).",
+    "itemsHint": "Ajoutez des produits du catalogue ou décrivez un besoin de production (textile, objets, impression, packaging…), avec les quantités.",
     "emptyList": "Votre demande ne contient encore aucun article.",
     "browseCatalog": "Parcourir le catalogue",
-    "addCustom": "Ajouter un besoin sur mesure",
+    "addCustom": "Ajouter un besoin de production",
     "customLabel": "Description du besoin",
-    "customPlaceholder": "Ex. : impression de flyers A5",
+    "customPlaceholder": "Ex. : tote bags imprimés à votre logo",
     "quantity": "Quantité",
     "specifications": "Spécifications (facultatif)",
-    "specificationsPlaceholder": "Format, couleur, papier, délai…",
+    "specificationsPlaceholder": "Format, couleurs, matière, finitions, échéance…",
     "remove": "Retirer",
     "customItem": "Besoin sur mesure",
     "customerTitle": "Vos coordonnées",
@@ -211,32 +241,33 @@
     "newRequest": "Faire une nouvelle demande",
     "addToQuote": "Ajouter à ma demande de devis",
     "addedToQuote": "Ajouté à votre demande",
-    "viewQuote": "Voir ma demande ({count})"
+    "viewQuote": "Voir ma demande ({count})",
+    "moqHint": "Minimum : {min}"
   },
   "pages": {
     "home": {
-      "title": "Impression, fournitures de bureau, papeterie et livres",
-      "description": "MSLAB, entreprise marocaine : impression et reprographie, fournitures de bureau, papeterie et fournitures scolaires, livres et ouvrages. Demandez votre devis en ligne."
+      "title": "Production sur mesure en série : textile, objets, impression, packaging",
+      "description": "MSLAB, partenaire de production sur mesure au Maroc : textile, objets promotionnels, impression, packaging et collections en marque propre, fabriqués en série pour les entreprises, les marques et les créateurs. Devis sur demande."
     },
     "about": {
       "title": "À propos de MSLAB",
-      "description": "MSLAB, entreprise marocaine au service des professionnels, des établissements et des particuliers : impression, fournitures de bureau, papeterie et livres."
+      "description": "MSLAB, entreprise marocaine de production sur mesure : nous fabriquons en série les produits personnalisés des entreprises, des organisations, des marques et des créateurs."
     },
     "services": {
       "title": "Services",
-      "description": "MSLAB accompagne les professionnels, les établissements et les particuliers à travers une offre dédiée à l'impression, aux fournitures et aux produits de papeterie."
+      "description": "Textile, objets promotionnels, impression, packaging et marque propre : les capacités de production de MSLAB pour des commandes en quantité, et des fournitures pour les organisations."
     },
     "catalog": {
       "title": "Catalogue",
-      "description": "Fournitures de bureau, papeterie et fournitures scolaires, livres et ouvrages : parcourez le catalogue MSLAB et demandez un devis."
+      "description": "Produits personnalisables et fournitures pour les organisations, commandés en volume : parcourez le catalogue MSLAB et demandez un devis."
     },
     "contact": {
       "title": "Contact",
-      "description": "Une question, un projet d'impression ou un besoin en fournitures ? Écrivez à MSLAB, notre équipe vous répond."
+      "description": "Un projet de production, une commande d'entreprise ou une question ? Écrivez à MSLAB, notre équipe vous répond."
     },
     "quote": {
       "title": "Demande de devis",
-      "description": "Sélectionnez des produits du catalogue ou décrivez votre besoin d'impression : MSLAB étudie votre demande et vous recontacte."
+      "description": "Décrivez votre projet de production ou sélectionnez des produits du catalogue, avec les quantités : MSLAB étudie votre demande et vous recontacte avec un devis."
     },
     "tracking": {
       "title": "Suivi de commande",
@@ -244,30 +275,39 @@
     }
   },
   "printOnDemand": {
-    "eyebrow": "Impression à la demande",
+    "eyebrow": "Production sur mesure",
     "heroTitle": "Votre idée. Votre design. Notre production.",
-    "heroLead": "Donnez vie à vos idées. Des objets personnalisés aux supports professionnels, jusqu'aux produits sur mesure : nous vous aidons à concrétiser vos projets.",
-    "startCta": "Démarrer mon projet",
+    "heroLead": "Textile, objets, imprimés, packaging et marque propre, fabriqués en série à partir de vos designs.",
+    "startCta": "Démarrer un projet de production",
     "trackCta": "Suivre ma commande",
     "heroPoints": [
-      "Aperçu de votre design en direct",
+      "Production en série, sur devis",
+      "Aperçu de votre design sur nos produits",
       "PDF, AI, PSD, JPG et PNG acceptés",
-      "Suivi de votre commande en ligne"
+      "Suivi de production en ligne"
     ],
-    "designCta": "Créer mon aperçu",
+    "designCta": "Visualiser mon design",
     "productsTitle": "Choisissez votre support",
     "productsLead": "Textile, objets, packaging ou papeterie : sélectionnez un produit et placez-y votre logo ou votre texte.",
-    "customize": "Personnaliser",
-    "stepsTitle": "Comment ça marche",
-    "step1Title": "Partagez votre idée",
-    "step1Body": "Décrivez votre projet et joignez vos fichiers, croquis ou logos.",
-    "step2Title": "Recevez votre devis",
-    "step2Body": "Nous étudions votre demande et revenons vers vous avec une proposition.",
-    "step3Title": "Nous produisons",
-    "step3Body": "Après votre accord, votre projet passe en production. Suivez son avancement en ligne.",
+    "customize": "Visualiser",
+    "stepsTitle": "Comment se déroule un projet de production",
+    "step1Title": "Votre brief",
+    "step1Body": "Produit, quantités, échéance et fichiers.",
+    "step2Title": "Devis et validation",
+    "step2Body": "Un devis clair. Rien n'est produit sans votre accord.",
+    "step3Title": "Production en série",
+    "step3Body": "Production en série, suivie en ligne.",
     "galleryTitle": "Nos réalisations",
     "faqTitle": "Questions fréquentes",
     "faq": [
+      {
+        "q": "Produisez-vous des pièces à l'unité ?",
+        "a": "Non. MSLAB produit uniquement en quantité : commandes d'entreprise, collections ou séries pour un événement. La quantité minimum dépend du produit et de la technique ; elle est indiquée sur la fiche produit lorsqu'elle est définie, sinon confirmée dans votre devis."
+      },
+      {
+        "q": "Pouvez-vous produire sous ma propre marque ?",
+        "a": "Oui. Nous fabriquons votre collection à partir de vos designs, sous votre marque. Précisez-le dans votre demande, avec les produits et les quantités envisagés."
+      },
       {
         "q": "Quels fichiers puis-je envoyer ?",
         "a": "Jusqu'à 5 fichiers de 15 Mo chacun, aux formats PDF, AI, EPS, PSD, JPG, PNG ou TIFF. Un logo en PNG à fond transparent donne le meilleur aperçu."
@@ -289,16 +329,16 @@
         "a": "Après l'envoi de votre demande, vous recevez une référence. Saisissez-la sur la page de suivi pour voir l'avancement de votre projet."
       }
     ],
-    "finalTitle": "Prêt à donner vie à votre idée ?",
-    "finalBody": "Décrivez votre projet en quelques minutes : MSLAB l'étudie et revient vers vous avec une proposition.",
-    "formTitle": "Décrivez votre projet",
-    "formLead": "Plus votre description est précise, plus notre proposition sera adaptée.",
+    "finalTitle": "Prêt à lancer votre production ?",
+    "finalBody": "Produit, quantités, échéance : nous revenons avec un devis.",
+    "formTitle": "Décrivez votre projet de production",
+    "formLead": "Produit, quantité visée et échéance suffisent pour commencer.",
     "projectSection": "Votre projet",
     "projectType": "Type de produit",
-    "projectTypePlaceholder": "Ex. : cartes de visite, packaging, objet personnalisé…",
+    "projectTypePlaceholder": "Ex. : T-shirts imprimés, boîtes personnalisées, mugs à votre logo…",
     "description": "Description du projet",
     "descriptionPlaceholder": "Usage, couleurs, textes à imprimer, références…",
-    "quantity": "Quantité",
+    "quantity": "Quantité visée",
     "dimensions": "Dimensions",
     "width": "Largeur",
     "height": "Hauteur",
@@ -329,10 +369,10 @@
     "successReference": "Référence : {reference}",
     "successTrack": "Conservez cette référence : elle vous permet de suivre votre commande.",
     "newRequest": "Nouvelle demande",
-    "bandCta": "Découvrir l'impression à la demande",
+    "bandCta": "Découvrir la production sur mesure",
     "studio": {
       "title": "Visualisez votre design",
-      "lead": "Ajoutez votre logo ou un texte et voyez-le sur nos produits. Rien n'est envoyé tant que vous n'avez pas validé votre demande.",
+      "lead": "Placez votre logo ou un texte sur nos produits pour préparer votre brief. Rien n'est envoyé tant que vous n'avez pas validé votre demande.",
       "colorLabel": "Couleur du support",
       "productsLabel": "Choisir un produit",
       "previewLabel": "Aperçu : {product}",
@@ -468,12 +508,13 @@
           }
         },
         "usage": {
-          "label": "Pour quel usage ?",
+          "label": "Type de projet",
           "options": {
-            "business": "Entreprise",
+            "business": "Commande d'entreprise",
+            "merch": "Merchandising / cadeaux d'entreprise",
             "event": "Événement",
-            "gift": "Cadeau",
-            "resale": "Revente",
+            "collection": "Collection de marque",
+            "privateLabel": "Marque propre (private label)",
             "school": "École / association"
           }
         },
@@ -569,5 +610,67 @@
     "analyticsBody": "Statistiques de fréquentation via Google Tag Manager et Google Analytics. Désactivée par défaut.",
     "save": "Enregistrer mes choix",
     "close": "Fermer"
+  },
+  "journeys": {
+    "title": "Deux façons de travailler avec MSLAB",
+    "business": {
+      "eyebrow": "Pour les entreprises",
+      "title": "Commandes d'entreprise et d'organisation",
+      "body": "Merch, tenues, imprimés et packaging pour vos équipes et vos clients.",
+      "points": [
+        "Entreprises et administrations",
+        "Hôtels, agences, associations",
+        "Commandes ponctuelles ou récurrentes"
+      ],
+      "cta": "Demander un devis entreprise"
+    },
+    "brands": {
+      "eyebrow": "Pour les marques & créateurs",
+      "title": "Collections et marque propre",
+      "body": "Votre collection, fabriquée en série sous votre marque.",
+      "points": [
+        "Marques de mode et entrepreneurs",
+        "Artistes et créateurs",
+        "Grands événements"
+      ],
+      "cta": "Démarrer un projet de production"
+    }
+  },
+  "productionLines": {
+    "textile": {
+      "name": "Textile & vêtements",
+      "summary": "T-shirts, sweats, tote bags, tenues de travail."
+    },
+    "merch": {
+      "name": "Objets promotionnels & d'entreprise",
+      "summary": "Mugs, carnets, stickers et objets à votre marque."
+    },
+    "print": {
+      "name": "Impression & papeterie",
+      "summary": "Cartes de visite, flyers, affiches, tampons."
+    },
+    "packaging": {
+      "name": "Packaging & produits de marque",
+      "summary": "Boîtes et emballages à votre identité."
+    },
+    "privateLabel": {
+      "name": "Marque propre & collections",
+      "summary": "Votre collection, sous votre marque."
+    }
+  },
+  "photos": {
+    "heatPress": "Presse à chaud imprimant le logo MSLAB sur un sweat bleu",
+    "mugPress": "Mug portant le logo MSLAB dans une presse à mugs",
+    "eventTotes": "Tote bags et documents au logo MSLAB préparés pour un événement",
+    "shoppingBag": "Sac en papier blanc imprimé du logo MSLAB",
+    "hoodies": "Sweat à capuche noir avec le logo MSLAB devant et dans le dos",
+    "mug": "Mug blanc imprimé du logo MSLAB",
+    "box": "Boîte d'expédition kraft imprimée du logo MSLAB",
+    "sketch": "Dessin technique d'un sweat à capuche avec le logo MSLAB, devant et dos",
+    "posters": "Trois affiches MSLAB encadrées sur un mur",
+    "book": "Livre avec le logo MSLAB sur la couverture",
+    "tshirt": "Dessin technique d'un T-shirt avec le logo MSLAB, devant et dos",
+    "corporateKit": "Kit d'entreprise personnalisé : gourdes, tote bags, tours de cou, badges, carnets et stylos",
+    "heatPressArt": "Illustration d'une presse à chaud imprimant un T-shirt"
   }
 }

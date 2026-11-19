@@ -30,8 +30,9 @@ export async function Header() {
       >
         {dict.common.skipToContent}
       </a>
-      <header className="bg-bg/95 border-line sticky top-0 z-40 border-b backdrop-blur-sm">
-        <Container className="relative flex h-[4.5rem] items-center justify-between gap-6">
+      <header className="bg-bg/95 sticky top-0 z-40 backdrop-blur-sm">
+        {/* A hairline under the bar, inside the page margins (docs/DESIGN_SYSTEM.md §0). */}
+        <Container className="relative flex h-[4.5rem] items-center justify-between gap-6 after:absolute after:inset-x-4 after:bottom-0 after:h-px after:bg-fg/80 sm:after:inset-x-6 lg:h-20 lg:after:inset-x-8">
           <Link href={localizedPath(locale, { route: "home" })} className="shrink-0" aria-label={`MSLAB — ${dict.nav.home}`}>
             <Wordmark intro />
           </Link>

@@ -2,7 +2,7 @@
 
 @AGENTS.md
 
-MSLAB is a Moroccan company working in **printing services, office supplies & stationery, books, and B2B services**. This repository is its public website, product catalog, inquiry/quotation system and private admin back office.
+MSLAB is a Moroccan **custom production partner**: it manufactures customized products **in quantity only** (apparel, promotional merchandise, printing & stationery, packaging, private-label collections) for businesses, brands and creators, and also supplies office/school stationery and books to organizations (secondary). Positioning and copy rules: `docs/POSITIONING.md`. This repository is its public website, product catalog, inquiry/quotation system and private admin back office.
 
 The primary business goal is to **generate qualified B2B inquiries** and make MSLAB's services easy to discover in **French (primary), Arabic (RTL) and English**.
 
