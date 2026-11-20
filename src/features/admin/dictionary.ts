@@ -410,6 +410,9 @@ const fr = {
       flyer: "Flyer",
       poster: "Affiche / poster",
       letterhead: "Papier à en-tête",
+      "folded-card": "Carte pliée / dépliant",
+      catalog: "Catalogue / brochure",
+      banner: "Bâche / banderole",
     },
     studio: {
       title: "Studio : produits configurés",
@@ -929,6 +932,9 @@ const en: AdminDict = {
       flyer: "Flyer",
       poster: "Poster",
       letterhead: "Letterhead",
+      "folded-card": "Folded card / leaflet",
+      catalog: "Catalogue / brochure",
+      banner: "Banner",
     },
     studio: {
       title: "Studio: configured products",
@@ -1446,6 +1452,9 @@ const ar: AdminDict = {
       flyer: "مطوية",
       poster: "ملصق جداري",
       letterhead: "ورق مراسلات",
+      "folded-card": "بطاقة مطوية",
+      catalog: "كتالوج / كتيّب",
+      banner: "لافتة",
     },
     studio: {
       title: "الاستوديو: المنتجات المُعدّة",

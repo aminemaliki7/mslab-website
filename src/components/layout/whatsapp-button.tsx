@@ -25,7 +25,9 @@ export async function WhatsAppButton() {
       aria-label={dict.whatsapp.label}
       className="fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 inline-flex size-14 items-center justify-center rounded-full bg-[#1f8f4e] text-white shadow-[0_6px_20px_-6px_rgb(14_26_43/0.45)] transition-transform hover:scale-105 sm:end-6 sm:bottom-6"
     >
-      <WhatsAppIcon width={28} height={28} />
+      {/* A soft ring pulses three times after load, then the button rests. */}
+      <span aria-hidden="true" className="anim-ping pointer-events-none absolute inset-0 rounded-full bg-[#1f8f4e] opacity-0" />
+      <WhatsAppIcon width={28} height={28} className="relative" />
     </a>
   );
 }

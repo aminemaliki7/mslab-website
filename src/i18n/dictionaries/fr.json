@@ -159,6 +159,9 @@
     "ackFooter": "Ceci est un message automatique, merci de ne pas y répondre directement."
   },
   "forms": {
+    "copyReference": "Copier la référence",
+    "referenceCopied": "Référence copiée",
+    "saveReference": "Conservez cette référence : notez-la ou faites une capture d'écran. Elle vous sera demandée pour suivre votre demande.",
     "required": "requis",
     "optional": "facultatif",
     "fullName": "Nom complet",
@@ -199,6 +202,9 @@
       "below_moq": "Quantité inférieure au minimum de commande de ce produit."
     },
     "quickPick": "Choix rapide",
+    "choose": "Choisir…",
+    "pickOrType": "Choisissez dans la liste ou écrivez votre produit.",
+    "pickOrTypeSubject": "Choisissez un sujet ou écrivez le vôtre.",
     "subjects": {
       "quote": "Demande de devis",
       "pod": "Production sur mesure",
@@ -242,7 +248,17 @@
     "addToQuote": "Ajouter à ma demande de devis",
     "addedToQuote": "Ajouté à votre demande",
     "viewQuote": "Voir ma demande ({count})",
-    "moqHint": "Minimum : {min}"
+    "moqHint": "Minimum : {min}",
+    "heroLead": "Dites-nous ce que vous voulez produire et en quelle quantité. MSLAB étudie votre demande et vous recontacte avec un devis.",
+    "pointSteps": "2 étapes, quelques champs",
+    "pointOneNeed": "Un seul produit suffit pour commencer",
+    "pointReply": "MSLAB vous recontacte avec un devis",
+    "stepNeed": "Que voulez-vous produire ?",
+    "stepContact": "Comment vous joindre ?",
+    "addDetails": "Ajouter des détails (format, couleurs, échéance…)",
+    "addMessage": "Ajouter un message",
+    "addAnother": "Ajouter un autre produit",
+    "submitNote": "Vous préciserez les détails avec MSLAB après l'envoi."
   },
   "pages": {
     "home": {
@@ -336,6 +352,7 @@
     "projectSection": "Votre projet",
     "projectType": "Type de produit",
     "projectTypePlaceholder": "Ex. : T-shirts imprimés, boîtes personnalisées, mugs à votre logo…",
+    "quantityPlaceholder": "Ex. : 500",
     "description": "Description du projet",
     "descriptionPlaceholder": "Usage, couleurs, textes à imprimer, références…",
     "quantity": "Quantité visée",
@@ -388,7 +405,10 @@
         "business-card": "Carte de visite",
         "flyer": "Flyer",
         "poster": "Affiche / poster",
-        "letterhead": "Papier à en-tête"
+        "letterhead": "Papier à en-tête",
+        "folded-card": "Carte pliée / dépliant",
+        "catalog": "Catalogue / brochure",
+        "banner": "Bâche / banderole"
       },
       "colors": {
         "white": "Blanc",
@@ -473,7 +493,7 @@
     },
     "guide": {
       "title": "Votre projet en quelques choix",
-      "hint": "Touchez ce qui correspond. Plusieurs choix possibles.",
+      "hint": "Choisissez dans les listes, tout est facultatif.",
       "notes": "Autres précisions (facultatif)",
       "notesPlaceholder": "Texte à imprimer, emplacement du logo, références…",
       "chooseOrWrite": "Choisissez au moins une option ou écrivez quelques précisions.",
@@ -671,6 +691,8 @@
     "book": "Livre avec le logo MSLAB sur la couverture",
     "tshirt": "Dessin technique d'un T-shirt avec le logo MSLAB, devant et dos",
     "corporateKit": "Kit d'entreprise personnalisé : gourdes, tote bags, tours de cou, badges, carnets et stylos",
-    "heatPressArt": "Illustration d'une presse à chaud imprimant un T-shirt"
+    "heatPressArt": "Illustration d'une presse à chaud imprimant un T-shirt",
+    "staffTshirt": "Personne de dos portant un T-shirt rouge marqué STAFF",
+    "printedSweatshirts": "Sweat-shirts imprimés de motifs colorés, suspendus devant une boutique"
   }
 }

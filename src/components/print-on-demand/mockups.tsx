@@ -2,6 +2,7 @@
 
 import { useId, type ReactNode } from "react";
 import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
+import { MOCKUP_KEYS } from "@/features/print-on-demand/mockup-keys";
 import { PLACEHOLDERS, type PlaceholderPhoto, type PlaceholderTemplate } from "@/features/print-on-demand/placeholder-views";
 import { garmentImages } from "./garment/garment-template";
 
@@ -324,7 +325,8 @@ function Letterhead({ design, color, label, className }: MockupProps) {
   );
 }
 
-export const DRAWINGS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
+/** Vector drawings (products added from photos only, like the folded card, have none). */
+export const DRAWINGS: Partial<Record<MockupKey, (props: MockupProps) => ReactNode>> = {
   tshirt: TShirt,
   hoodie: Hoodie,
   tote: Tote,
@@ -339,7 +341,7 @@ export const DRAWINGS: Record<MockupKey, (props: MockupProps) => ReactNode> = {
 };
 
 // ─── Photo mockups ──────────────────────────────────────────────────────────
-// Placeholder photos (Unsplash, see public/mockups/CREDITS.md and placeholder-views.ts) until
+// Placeholder photos (public/mockups/photos, see CREDITS.md and placeholder-views.ts) until
 // MSLAB configures its own product photos for the Studio. The design is blended with
 // "multiply": folds and shadows show through it, like real ink.
 
@@ -352,8 +354,18 @@ function photoMockup(photo: PlaceholderPhoto) {
     return (
       <svg viewBox={`0 0 ${photo.w} ${photo.h}`} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className={className}>
         <image href={photo.src} width={photo.w} height={photo.h} preserveAspectRatio="xMidYMid slice" />
-        <g style={{ mixBlendMode: "multiply" }} opacity={0.94}>
-          <PrintArea x={x} y={y} w={w} h={h} design={design} background={PAPER} />
+        {/* White products: ink multiplied into the photo; a dark product gets it laid on top. */}
+        <g style={{ mixBlendMode: photo.dark ? "normal" : "multiply" }} opacity={0.94}>
+          <PrintArea
+            x={x}
+            y={y}
+            w={w}
+            h={h}
+            design={design}
+            background={photo.dark ? INK : PAPER}
+            transform={photo.transform}
+            clip={photo.clip ? <path d={photo.clip} transform={`translate(${x} ${y})`} /> : undefined}
+          />
         </g>
       </svg>
     );
@@ -377,9 +389,9 @@ function templateMockup(template: PlaceholderTemplate) {
 }
 
 export const MOCKUPS: Record<MockupKey, (props: MockupProps) => ReactNode> = Object.fromEntries(
-  (Object.keys(DRAWINGS) as MockupKey[]).map((key) => {
+  MOCKUP_KEYS.map((key) => {
     const placeholder = PLACEHOLDERS[key];
-    const mockup = placeholder.kind === "photo" ? photoMockup(placeholder) : placeholder.kind === "template" ? templateMockup(placeholder) : DRAWINGS[key];
+    const mockup = placeholder.kind === "photo" ? photoMockup(placeholder) : placeholder.kind === "template" ? templateMockup(placeholder) : (DRAWINGS[key] ?? Sticker);
     return [key, mockup];
   }),
 ) as Record<MockupKey, (props: MockupProps) => ReactNode>;
@@ -397,4 +409,7 @@ export const DEFAULT_COLORS: Record<MockupKey, string> = {
   flyer: "#0B6E8A",
   poster: "#F2C14E",
   letterhead: "#0B6E8A",
+  "folded-card": "#FFFFFF",
+  catalog: "#FFFFFF",
+  banner: "#FFFFFF",
 };

@@ -4,11 +4,12 @@ The print-on-demand customisation tool on `/fr/services/impression-a-la-demande#
 
 ## 1. Principles
 - **No invented production data.** Product photos, printable areas, colours, sizes, materials, printing techniques and the minimum resolution are entered by MSLAB in `/admin/print-on-demand/studio/<product>`. Until a product has a configured side, the Studio shows a **placeholder** visual (one of MSLAB's vector templates, or an SVG drawing for the sticker and letterhead). It then exposes no specification and computes no print size.
-- **Vector product templates (all products except sticker and letterhead).** `scripts/build-product-mockups.mjs` builds `public/mockups/svg/<product>.svg` for the hoodie, tote bag, mug, box, notebook, business card, flyer and poster:
+- **Photo placeholders (T-shirt, business card, flyer, poster, letterhead, notebook, folded card, catalogue, banner).** The last three were added on 2026-11-20 (migration `20261120120000_mockup_products_photo_mockups.sql`). `public/mockups/photos/<product>.webp` (see `public/mockups/CREDITS.md`). One front side each, not recolourable; on tilted products the print area is mapped onto the surface with an SVG `matrix(...)` transform (stage, cards and exported mockup).
+- **Vector product templates (hoodie, tote bag, mug, box).** `scripts/build-product-mockups.mjs` builds `public/mockups/svg/<product>.svg` for the hoodie, tote bag, mug, box, notebook, business card, flyer and poster:
   - one front side each, in a 1200 × 900 frame (the business card's area is rotated with the card);
   - recolourable, with the same under/over layering as the T-shirt;
   - it also writes `product-templates.generated.ts` and `garment/product-layers.generated.ts`. The sticker and letterhead stay SVG drawings.
-- **Vector garment template (T-shirt).** `public/mockups/svg/tshirt.svg` (docs/TSHIRT_SVG_MOCKUP.md) is the T-shirt placeholder:
+- **Vector garment template (T-shirt, not used since 2026-11-20: replaced by the photo).** `public/mockups/svg/tshirt.svg` (docs/TSHIRT_SVG_MOCKUP.md) was the T-shirt placeholder:
   - four sides (front, back, left sleeve, right sleeve); the sleeves are shown close up, with a print area rotated along the sleeve;
   - recolourable with the drawing swatches;
   - the artwork is drawn between the fabric colour and the lighting layers, so folds, texture and seams fall on the print.

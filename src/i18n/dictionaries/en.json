@@ -159,6 +159,9 @@
     "ackFooter": "This is an automated message, please do not reply to it directly."
   },
   "forms": {
+    "copyReference": "Copy reference",
+    "referenceCopied": "Reference copied",
+    "saveReference": "Keep this reference: write it down or take a screenshot. You will need it to follow up on your request.",
     "required": "required",
     "optional": "optional",
     "fullName": "Full name",
@@ -199,6 +202,9 @@
       "below_moq": "Quantity below this product's minimum order."
     },
     "quickPick": "Quick pick",
+    "choose": "Choose…",
+    "pickOrType": "Pick from the list or type your product.",
+    "pickOrTypeSubject": "Pick a subject or write your own.",
     "subjects": {
       "quote": "Quote request",
       "pod": "Custom production",
@@ -242,7 +248,17 @@
     "addToQuote": "Add to my quotation request",
     "addedToQuote": "Added to your request",
     "viewQuote": "View my request ({count})",
-    "moqHint": "Minimum: {min}"
+    "moqHint": "Minimum: {min}",
+    "heroLead": "Tell us what you want produced and how many. MSLAB reviews your request and gets back to you with a quote.",
+    "pointSteps": "2 steps, a few fields",
+    "pointOneNeed": "One product is enough to start",
+    "pointReply": "MSLAB gets back to you with a quote",
+    "stepNeed": "What do you want produced?",
+    "stepContact": "How can we reach you?",
+    "addDetails": "Add details (size, colours, deadline…)",
+    "addMessage": "Add a message",
+    "addAnother": "Add another product",
+    "submitNote": "You will fine-tune the details with MSLAB after sending."
   },
   "pages": {
     "home": {
@@ -336,6 +352,7 @@
     "projectSection": "Your project",
     "projectType": "Product type",
     "projectTypePlaceholder": "E.g. printed T-shirts, custom boxes, mugs with your logo…",
+    "quantityPlaceholder": "E.g. 500",
     "description": "Project description",
     "descriptionPlaceholder": "Use, colors, text to print, references…",
     "quantity": "Target quantity",
@@ -388,7 +405,10 @@
         "business-card": "Business card",
         "flyer": "Flyer",
         "poster": "Poster",
-        "letterhead": "Letterhead"
+        "letterhead": "Letterhead",
+        "folded-card": "Folded card / leaflet",
+        "catalog": "Catalogue / brochure",
+        "banner": "Banner"
       },
       "colors": {
         "white": "White",
@@ -473,7 +493,7 @@
     },
     "guide": {
       "title": "Your project in a few choices",
-      "hint": "Tap what applies. Several choices allowed.",
+      "hint": "Pick from the lists; everything is optional.",
       "notes": "Other details (optional)",
       "notesPlaceholder": "Text to print, logo placement, references…",
       "chooseOrWrite": "Choose at least one option or write a few details.",
@@ -671,6 +691,8 @@
     "book": "Book with the MSLAB logo on the cover",
     "tshirt": "Technical drawing of a T-shirt with the MSLAB logo, front and back",
     "corporateKit": "Branded corporate kit: bottles, tote bags, lanyards, badges, notebooks and pens",
-    "heatPressArt": "Illustration of a heat press printing a T-shirt"
+    "heatPressArt": "Illustration of a heat press printing a T-shirt",
+    "staffTshirt": "Person seen from behind wearing a red T-shirt printed STAFF",
+    "printedSweatshirts": "Sweatshirts printed with colourful designs, hanging outside a shop"
   }
 }

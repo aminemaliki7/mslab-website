@@ -2,13 +2,13 @@
 
 import { useActionState, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Combobox } from "@/components/ui/combobox";
 import { Field, Input, Textarea } from "@/components/ui/form";
 import { submitContact, type FormState } from "@/features/inquiries/actions";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { QuickPicks } from "./quick-picks";
-import { format } from "@/i18n/format";
 import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "./form-parts";
+import { ReferenceNotice } from "./reference-notice";
 import { useEnhancedForm, useFocusFirstError } from "./use-enhanced-form";
 
 type Props = {
@@ -36,13 +36,7 @@ function ContactFormInner({ locale, sourcePath, privacyHref, t, onReset }: Props
     return (
       <SuccessPanel title={t.page.successTitle}>
         <p>{t.page.successBody}</p>
-        {state.reference ? (
-          <p className="text-sm">
-            <bdi dir="ltr" className="font-[family-name:var(--font-geist-mono)]">
-              {format(t.page.successReference, { reference: state.reference })}
-            </bdi>
-          </p>
-        ) : null}
+        {state.reference ? <ReferenceNotice reference={state.reference} label={t.page.successReference} t={t.forms} /> : null}
         <Button variant="secondary" size="sm" onClick={onReset}>
           {t.page.sendAnother}
         </Button>
@@ -74,12 +68,17 @@ function ContactFormInner({ locale, sourcePath, privacyHref, t, onReset }: Props
       <Field id="phone" label={`${t.forms.phone} (${t.forms.optional})`} hint={t.forms.phoneHint} error={message("phone")}>
         {(p) => <Input {...p} name="phone" type="tel" autoComplete="tel" dir="ltr" maxLength={32} defaultValue={values.phone} />}
       </Field>
-      <div className="space-y-3">
-        <Field id="subject" label={t.forms.subject} required error={message("subject")}>
-          {(p) => <Input {...p} name="subject" maxLength={200} defaultValue={values.subject} />}
-        </Field>
-        <QuickPicks label={`${t.forms.subject} — ${t.forms.quickPick}`} picks={Object.values(t.forms.subjects).map((subject) => ({ label: subject, values: { subject } }))} />
-      </div>
+      <Field id="subject" label={t.forms.subject} required hint={t.forms.pickOrTypeSubject} error={message("subject")}>
+        {(p) => (
+          <Combobox
+            {...p}
+            name="subject"
+            maxLength={200}
+            defaultValue={values.subject}
+            suggestions={Object.values(t.forms.subjects).map((subject) => ({ value: subject }))}
+          />
+        )}
+      </Field>
       <Field id="message" label={t.forms.message} required error={message("message")}>
         {(p) => <Textarea {...p} name="message" rows={6} maxLength={5000} defaultValue={values.message} />}
       </Field>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image, { type StaticImageData } from "next/image";
+import type { CSSProperties } from "react";
 import { ProductionIndex } from "@/components/catalog/production-index";
 import { ClientLogos } from "@/components/content/client-logos";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
@@ -17,7 +18,7 @@ import { listMockupProducts } from "@/features/print-on-demand/queries";
 import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale, type Dictionary } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { cn } from "@/lib/utils";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -57,7 +58,7 @@ export default async function HomePage() {
   const highlights = toLines(forLocale(settings.highlights, locale));
   const production = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
   const productionHref = production ? localizedPath(locale, { route: "service", slug: production.slug }) : null;
-  const quoteHref = localizedPath(locale, { route: "quote" });
+  const quoteHref = quoteFormHref(locale);
   // Production request form when the production page exists, otherwise the general quote.
   const productionRequestHref = productionHref ? `${productionHref}#demande` : quoteHref;
   const servicesHref = localizedPath(locale, { route: "services" });
@@ -80,12 +81,12 @@ export default async function HomePage() {
       {/* ─── Two journeys: businesses / brands & creators ─────────────────── */}
       <Section aria-labelledby="journeys-heading">
         <Container>
-          <Heading as="h2" size="xl" id="journeys-heading" className="type-display">
+          <Heading as="h2" size="xl" id="journeys-heading" className="type-display reveal">
             {dict.journeys.title}
           </Heading>
-          <div className="mt-8 grid gap-5 md:grid-cols-2 lg:mt-10">
-            <Journey journey={dict.journeys.business} href={quoteHref} photo={{ src: PHOTOS.corporateKit, alt: dict.photos.corporateKit, focus: "50% 48%" }} />
-            <Journey journey={dict.journeys.brands} href={productionRequestHref} photo={{ src: PHOTOS.shoppingBag, alt: dict.photos.shoppingBag }} dark />
+          <div className="reveal-stagger mt-8 grid gap-5 md:grid-cols-2 lg:mt-10">
+            <Journey journey={dict.journeys.business} href={quoteHref} photo={{ src: PHOTOS.staffTshirt, alt: dict.photos.staffTshirt, focus: "50% 12%" }} />
+            <Journey journey={dict.journeys.brands} href={productionRequestHref} photo={{ src: PHOTOS.printedSweatshirts, alt: dict.photos.printedSweatshirts, focus: "50% 53%" }} dark />
           </div>
         </Container>
       </Section>
@@ -102,7 +103,7 @@ export default async function HomePage() {
       {/* ─── How a production project works (a real sequence, so it is numbered) ─── */}
       <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: "#0E1A2B" }}>
         <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
-          <div className="lg:col-span-4">
+          <div className="reveal lg:col-span-4">
             <h2 id="process-heading" className="type-display text-2xl text-balance sm:text-3xl">
               {dict.printOnDemand.stepsTitle}
             </h2>
@@ -110,7 +111,7 @@ export default async function HomePage() {
               {dict.sections.processCta}
             </ButtonLink>
           </div>
-          <ol className="grid gap-8 sm:grid-cols-3 lg:col-span-8">
+          <ol className="reveal-stagger grid gap-8 sm:grid-cols-3 lg:col-span-8">
             {steps.map((step, index) => (
               <li key={step.title} className="border-t border-white/25 pt-5">
                 <span className="type-poster text-cyan-300 block text-5xl" dir="ltr">
@@ -127,10 +128,10 @@ export default async function HomePage() {
       {/* ─── What MSLAB simplifies (not a sequence: no numbers) ───────────── */}
       <Section aria-labelledby="pain-heading">
         <Container>
-          <Heading as="h2" size="xl" id="pain-heading" className="type-display">
+          <Heading as="h2" size="xl" id="pain-heading" className="type-display reveal">
             {dict.sections.painTitle}
           </Heading>
-          <ul className="mt-8 grid gap-8 md:grid-cols-3 lg:mt-10">
+          <ul className="reveal-stagger mt-8 grid gap-8 md:grid-cols-3 lg:mt-10">
             {dict.sections.painPoints.map((point) => (
               <li key={point.title} className="border-fg border-t-2 pt-5">
                 <h3 className="text-fg text-base font-semibold leading-snug">{point.title}</h3>
@@ -147,7 +148,7 @@ export default async function HomePage() {
         <Section aria-labelledby={about ? "intro-heading" : "why-heading"}>
           <Container className="grid gap-12 lg:grid-cols-12">
             {about ? (
-              <div className={highlights.length > 0 ? "lg:col-span-6" : "lg:col-span-8"}>
+              <div className={cn("reveal", highlights.length > 0 ? "lg:col-span-6" : "lg:col-span-8")}>
                 <Heading as="h2" size="lg" id="intro-heading" className="type-display">
                   {dict.sections.introTitle}
                 </Heading>
@@ -162,7 +163,7 @@ export default async function HomePage() {
                 <Heading as="h2" size="lg" id="why-heading" className="type-display">
                   {dict.sections.whyTitle}
                 </Heading>
-                <ul className="border-fg mt-6 border-t-2">
+                <ul className="reveal-stagger border-fg mt-6 border-t-2">
                   {highlights.map((point, index) => (
                     <li key={index} className="border-line text-fg border-b py-4 font-medium leading-snug">
                       {point}
@@ -208,23 +209,23 @@ function Hero({
 
   return (
     <section className="overflow-hidden">
-      <Container className="grid grid-cols-[minmax(0,1fr)] gap-x-12 gap-y-10 pt-10 pb-16 sm:pt-14 lg:grid-cols-12 lg:gap-y-12 lg:pt-16 lg:pb-24">
+      <Container className="grid grid-cols-[minmax(0,1fr)] gap-x-12 gap-y-6 pt-7 pb-10 sm:pt-8 sm:pb-12 lg:grid-cols-12 lg:gap-y-8 lg:pt-10 lg:pb-14">
         <div className="order-1 lg:col-span-6 lg:row-start-1">
-          <p className="text-accent text-sm tracking-wide">{dict.sections.tagline}</p>
-          <h1 className="type-poster text-fg mt-4 text-[clamp(2.5rem,12vw,4rem)] [overflow-wrap:normal] lg:text-[clamp(3rem,4.4vw,4.25rem)]">
-            {lines.map((line) => (
-              <span key={line} className="block">
-                {line}
+          <p className="text-accent anim-rise text-sm tracking-wide">{dict.sections.tagline}</p>
+          <h1 className="type-poster text-fg mt-3 text-[clamp(2.25rem,11vw,3.5rem)] [overflow-wrap:normal] lg:text-[clamp(2.75rem,4vw,3.75rem)]">
+            {lines.map((line, index) => (
+              <span key={line} className="anim-line" style={{ "--d": index + 1 } as CSSProperties}>
+                <span>{line}</span>
               </span>
             ))}
           </h1>
-          <p className="text-fg-muted mt-7 max-w-lg text-base leading-relaxed text-pretty sm:text-[1.0625rem]">{dict.sections.heroLead}</p>
+          <p className="text-fg-muted anim-rise mt-5 max-w-lg text-base leading-relaxed text-pretty [--d:4] sm:text-[1.0625rem]">{dict.sections.heroLead}</p>
         </div>
 
         {proof ? (
           <ProofField
             studioHref={studioHref}
-            className="order-4 max-w-xl lg:order-none lg:col-span-6 lg:row-start-2"
+            className="anim-rise order-4 max-w-xl [--d:5] lg:order-none lg:col-span-6 lg:row-start-2"
             labels={{
               field: dict.sections.proofLabel,
               placeholder: dict.sections.proofPlaceholder,
@@ -234,7 +235,7 @@ function Hero({
           />
         ) : null}
 
-        <div className="order-2 lg:order-none lg:col-span-6 lg:row-start-3">
+        <div className="anim-rise order-2 [--d:6] lg:order-none lg:col-span-6 lg:row-start-3">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
             <ButtonLink href={requestHref} size="lg">
               {dict.common.requestProductionQuote}
@@ -245,7 +246,7 @@ function Hero({
           </div>
         </div>
 
-        <div className="order-3 lg:order-none lg:col-span-6 lg:col-start-7 lg:row-span-3 lg:row-start-1 lg:ms-auto lg:w-full lg:max-w-[32rem] lg:self-center">
+        <div className="anim-rise order-3 [--d:2] [--rise:36px] lg:order-none lg:col-span-6 lg:col-start-7 lg:row-span-3 lg:row-start-1 lg:ms-auto lg:w-full lg:max-w-[27rem] lg:self-center">
           {proof ? (
             <ProofCollage
               products={mockups}
@@ -286,19 +287,21 @@ function Journey({
   return (
     <article
       className={cn(
-        "flex flex-col rounded-[var(--radius-card)] p-3 pb-6 sm:pb-7",
+        "lift flex flex-col rounded-[var(--radius-card)] p-3 pb-6 sm:pb-7",
         dark ? "bg-ink-900 text-white" : "bg-paper-100",
       )}
     >
-      <div className="bg-paper-100 relative aspect-[21/9] overflow-hidden rounded-[calc(var(--radius-card)-0.5rem)]">
-        <Image
-          src={photo.src}
-          alt={photo.alt}
-          fill
-          sizes="(min-width: 768px) 36rem, 100vw"
-          className="object-cover"
-          style={photo.focus ? { objectPosition: photo.focus } : undefined}
-        />
+      <div className="bg-paper-100 settle-frame relative aspect-[21/9] overflow-hidden rounded-[calc(var(--radius-card)-0.5rem)]">
+        <div className="reveal-settle absolute inset-0">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            sizes="(min-width: 768px) 36rem, 100vw"
+            className="lift-photo object-cover"
+            style={photo.focus ? { objectPosition: photo.focus } : undefined}
+          />
+        </div>
       </div>
       <div className="flex flex-1 flex-col px-3 pt-5 sm:px-4">
         <p className={cn("text-sm font-semibold", dark ? "text-cyan-300" : "text-accent")}>{journey.eyebrow}</p>

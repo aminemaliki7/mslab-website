@@ -215,7 +215,7 @@ export function Stage({
 
   const Drawing = view.base.kind === "drawing" ? DRAWINGS[view.base.product] : null;
   const garment = view.base.kind === "template" ? garmentImages(view.base.template, view.base.scene, drawingColor) : null;
-  const light = tint ? isLight(tint) : view.base.kind !== "photo" ? isLight(drawingColor) : true;
+  const light = tint ? isLight(tint) : view.base.kind !== "photo" ? isLight(drawingColor) : !view.base.dark;
   const extra = areaTransform(view);
   const placeArea = `${extra ? extra + " " : ""}translate(${area.x} ${area.y})`;
   const selectedBox = selected ? layerBoxPx(selected, area) : null;
@@ -238,6 +238,8 @@ export function Stage({
         <clipPath id={`clip-${uid}`}>
           {view.base.kind === "drawing" && view.base.circle ? (
             <circle cx={view.base.circle.cx - area.x} cy={view.base.circle.cy - area.y} r={view.base.circle.r} />
+          ) : view.base.kind === "photo" && view.base.clip ? (
+            <path d={view.base.clip} />
           ) : (
             <rect x={0} y={0} width={area.w} height={area.h} />
           )}

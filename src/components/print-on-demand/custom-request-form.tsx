@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useRef, useState, useSyncExternalStore } from "react";
 import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "@/components/forms/form-parts";
+import { ReferenceNotice } from "@/components/forms/reference-notice";
 import { useEnhancedForm, useFocusFirstError } from "@/components/forms/use-enhanced-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox, Field, Input, Select } from "@/components/ui/form";
@@ -11,8 +12,8 @@ import type { ProductionOption } from "@/features/print-on-demand/queries";
 import { DIMENSION_UNITS } from "@/features/print-on-demand/schema";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { format } from "@/i18n/format";
-import { QuickPicks } from "@/components/forms/quick-picks";
+import { fillField } from "@/components/forms/quick-picks";
+import { Combobox } from "@/components/ui/combobox";
 import { FileUploader } from "./file-uploader";
 import { ProjectOptions } from "./project-options";
 import { StudioDesignField } from "./studio-design-field";
@@ -86,11 +87,7 @@ function CustomRequestFormInner({
         <p>{t.pod.successBody}</p>
         {state.reference ? (
           <>
-            <p className="text-sm">
-              <bdi dir="ltr" className="font-[family-name:var(--font-geist-mono)] font-semibold">
-                {format(t.pod.successReference, { reference: state.reference })}
-              </bdi>
-            </p>
+            <ReferenceNotice reference={state.reference} label={t.pod.successReference} t={t.forms} />
             <p className="text-sm">
               {t.pod.successTrack}{" "}
               <Link href={trackingHref} className="text-accent underline underline-offset-2">
@@ -123,22 +120,38 @@ function CustomRequestFormInner({
 
       <fieldset className="space-y-5">
         <legend className={legend}>{t.pod.projectSection}</legend>
-        <div className="space-y-3">
-          <Field id="projectType" label={t.pod.projectType} required error={message("projectType")}>
-            {(p) => <Input {...p} name="projectType" maxLength={160} placeholder={t.pod.projectTypePlaceholder} defaultValue={values.projectType} />}
-          </Field>
-          <QuickPicks label={`${t.pod.projectType} — ${t.forms.quickPick}`} picks={Object.values(t.pod.studio.products).map((name) => ({ label: name, values: { projectType: name } }))} />
-        </div>
-        <div className="space-y-3">
-          <Field id="quantity" label={t.pod.quantity} required error={message("quantity")} className="max-w-[12rem]">
+        <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_14rem]">
+          {/* Pick from the list or type anything else. */}
+          <Field id="projectType" label={t.pod.projectType} required hint={t.forms.pickOrType} error={message("projectType")}>
             {(p) => (
-              <Input {...p} name="quantity" type="number" inputMode="numeric" min={1} max={1000000} step={1} dir="ltr" defaultValue={values.quantity ?? ""} />
+              <Combobox
+                {...p}
+                name="projectType"
+                maxLength={160}
+                placeholder={t.pod.projectTypePlaceholder}
+                defaultValue={values.projectType}
+                suggestions={Object.values(t.pod.studio.products).map((name) => ({ value: name }))}
+              />
             )}
           </Field>
-          <QuickPicks label={`${t.pod.quantity} — ${t.forms.quickPick}`} picks={QUANTITIES.map((n) => ({ label: n.toLocaleString(locale === "ar" ? "ar-MA" : locale, { numberingSystem: "latn" }), values: { quantity: String(n) } }))} />
+          <Field id="quantity" label={t.pod.quantity} required error={message("quantity")}>
+            {(p) => (
+              <Combobox
+                {...p}
+                name="quantity"
+                inputMode="numeric"
+                dir="ltr"
+                maxLength={7}
+                placeholder={t.pod.quantityPlaceholder}
+                defaultValue={values.quantity ?? ""}
+                suggestions={QUANTITIES.map((n) => ({ value: String(n), label: n.toLocaleString(locale === "ar" ? "ar-MA" : locale, { numberingSystem: "latn" }) }))}
+              />
+            )}
+          </Field>
         </div>
         <ProjectOptions
           guide={t.pod.guide}
+          choose={t.forms.choose}
           hydrated={hydrated}
           defaultNotes={values.description}
           error={errors.description ? t.pod.guide.chooseOrWrite : undefined}
@@ -148,12 +161,27 @@ function CustomRequestFormInner({
           <legend className="text-fg mb-2 text-sm font-medium">
             {t.pod.dimensions} <span className="text-fg-muted font-normal">({t.forms.optional})</span>
           </legend>
-          <p className="text-fg-muted mb-2 text-sm">{t.pod.formatsLabel}</p>
-          <QuickPicks
-            label={t.pod.formatsLabel}
-            className="mb-4"
-            picks={FORMATS.map((f) => ({ label: t.pod.formats[f.key], values: { width: f.width, height: f.height, depth: "", dimensionUnit: f.unit } }))}
-          />
+          {/* A standard format fills width, height and unit; the fields stay editable. */}
+          <Select
+            aria-label={t.pod.formatsLabel}
+            defaultValue=""
+            className="mb-4 sm:max-w-xs"
+            onChange={(e) => {
+              const f = FORMATS.find((x) => x.key === e.target.value);
+              if (!f) return;
+              fillField("width", f.width);
+              fillField("height", f.height);
+              fillField("depth", "");
+              fillField("dimensionUnit", f.unit);
+            }}
+          >
+            <option value="">{t.pod.formatsLabel}…</option>
+            {FORMATS.map((f) => (
+              <option key={f.key} value={f.key}>
+                {t.pod.formats[f.key]}
+              </option>
+            ))}
+          </Select>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {(["width", "height", "depth"] as const).map((name) => (
               <Field key={name} id={name} label={t.pod[name]} error={message(name)}>
@@ -199,15 +227,29 @@ function CustomRequestFormInner({
               {(p) => <Input {...p} name="materialOther" maxLength={200} placeholder={t.pod.materialOtherPlaceholder} defaultValue={values.materialOther} />}
             </Field>
           ) : null}
-          <div className="space-y-3">
-            <Field id="deadline" label={`${t.pod.deadline} (${t.forms.optional})`} error={message("deadline")}>
-              {(p) => <Input {...p} name="deadline" type="date" dir="ltr" defaultValue={values.deadline} />}
-            </Field>
-            <QuickPicks
-              label={`${t.pod.deadline} — ${t.forms.quickPick}`}
-              picks={([["week", 7], ["twoWeeks", 14], ["month", 30]] as const).map(([key, days]) => ({ label: t.pod.deadlines[key], values: { deadline: inDays(days) } }))}
-            />
-          </div>
+          <Field id="deadline" label={`${t.pod.deadline} (${t.forms.optional})`} error={message("deadline")}>
+            {(p) => (
+              <div className="grid grid-cols-2 gap-3">
+                {/* A timeframe fills the date; an exact date can still be picked. */}
+                <Select
+                  aria-label={`${t.pod.deadline} — ${t.forms.quickPick}`}
+                  defaultValue=""
+                  onChange={(e) => {
+                    const days = Number(e.target.value);
+                    if (days) fillField("deadline", inDays(days));
+                  }}
+                >
+                  <option value="">{t.forms.choose}</option>
+                  {([["week", 7], ["twoWeeks", 14], ["month", 30]] as const).map(([key, days]) => (
+                    <option key={key} value={days}>
+                      {t.pod.deadlines[key]}
+                    </option>
+                  ))}
+                </Select>
+                <Input {...p} name="deadline" type="date" dir="ltr" defaultValue={values.deadline} />
+              </div>
+            )}
+          </Field>
         </div>
 
         {finishings.length > 0 ? (

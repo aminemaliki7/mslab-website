@@ -186,7 +186,20 @@ export function StudioEditor({ products, config, t, formId }: {
     const fit = Math.min(0.7, (0.4 * view.area.h) / view.area.w / aspect);
     dispatch({
       type: "add",
-      layer: { id: newId(), kind: "text", view: view.key, x: 0.5, y: 0.5, w: Math.max(0.05, fit), rotation: 0, aspect, text, font, color: "#0E1A2B" },
+      layer: {
+        id: newId(),
+        kind: "text",
+        view: view.key,
+        x: 0.5,
+        y: 0.5,
+        w: Math.max(0.05, fit),
+        rotation: 0,
+        aspect,
+        text,
+        font,
+        // White ink on a dark product (black hoodie photo), navy otherwise.
+        color: view.base.kind === "photo" && view.base.dark ? "#FFFFFF" : "#0E1A2B",
+      },
     });
   }
 

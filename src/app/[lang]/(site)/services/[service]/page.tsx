@@ -11,7 +11,7 @@ import { Container, Heading, Lead, Section } from "@/components/ui/layout";
 import { getServiceBySlug, listServices, type ServiceDetail } from "@/features/services/queries";
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { localizedPath, type RouteKey } from "@/i18n/routes";
+import { localizedPath, type RouteKey, quoteFormHref } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
 import { PrintOnDemandPage } from "./print-on-demand";
 
@@ -81,7 +81,7 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
           </Heading>
           {service.summary ? <Lead className="mt-4 max-w-2xl">{service.summary}</Lead> : null}
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={localizedPath(locale, { route: "quote" })}>{dict.servicesPage.askQuote}</ButtonLink>
+            <ButtonLink href={quoteFormHref(locale)}>{dict.servicesPage.askQuote}</ButtonLink>
             <ButtonLink href={localizedPath(locale, { route: "contact" })} variant="secondary">
               {dict.common.contactUs}
             </ButtonLink>

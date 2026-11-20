@@ -53,10 +53,10 @@ test.describe("submission", () => {
   test("request with a file, then track it", async ({ page }) => {
     const problems = watchConsole(page);
     await page.goto("/fr/services/impression-a-la-demande");
-    // exact: the quick-choice groups are labelled "Type de produit — Choix rapide" etc.
-    await page.getByRole("textbox", { name: "Type de produit", exact: true }).fill("Boîtes personnalisées");
+    // Product type and quantity are suggestion fields (combobox): free text is still accepted.
+    await page.getByRole("combobox", { name: "Type de produit", exact: true }).fill("Boîtes personnalisées");
     await page.locator("#quantity").fill("250");
-    await page.getByRole("button", { name: "1 couleur" }).click();
+    await page.getByLabel("Couleurs d'impression").selectOption({ label: "1 couleur" });
     await page.getByLabel("Autres précisions (facultatif)").fill("Boîtes kraft avec un logo imprimé sur le dessus.");
     await page.getByLabel("Largeur").fill("20");
     await page.getByLabel("Hauteur").fill("12,5");

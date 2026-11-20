@@ -94,6 +94,11 @@ export const quoteList = {
     load();
     commit([...rows, { key: newKey(), name: "", quantity: "", specifications: "", custom: true }]);
   },
+  /** One blank line when the list is empty (idempotent: safe if an effect runs twice). */
+  ensureOne() {
+    load();
+    if (rows.length === 0) quoteList.addCustom();
+  },
   update(key: string, patch: Partial<Pick<QuoteRow, "name" | "quantity" | "specifications">>) {
     load();
     commit(rows.map((r) => (r.key === key ? { ...r, ...patch } : r)));

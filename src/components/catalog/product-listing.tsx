@@ -6,7 +6,7 @@ import { catalogHref, parseCatalogQuery } from "@/features/catalog/search-params
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { CatalogSearchForm } from "./catalog-search-form";
 import { Pagination } from "./pagination";
 import { ProductCard } from "./product-card";
@@ -85,7 +85,7 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
         <div className="border-line mt-5 rounded-[var(--radius-card)] border border-dashed p-8">
           <p className="text-fg font-medium">{isFiltered ? dict.catalog.noResults : dict.catalog.emptyCatalog}</p>
           {isFiltered ? <p className="text-fg-muted mt-2 text-sm">{dict.catalog.noResultsHint}</p> : null}
-          <ArrowLink href={localizedPath(locale, { route: "quote" })} className="mt-4">
+          <ArrowLink href={quoteFormHref(locale)} className="mt-4">
             {dict.common.requestQuote}
           </ArrowLink>
         </div>

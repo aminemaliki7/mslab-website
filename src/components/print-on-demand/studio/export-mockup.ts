@@ -35,6 +35,13 @@ function fontFamily(css: string): string {
 
 /** Parse "rotate(a cx cy)" (the only transform placeholder drawings use). */
 function applyRotate(ctx: CanvasRenderingContext2D, transform: string | undefined, s: number) {
+  // matrix(a b c d e f): a print area mapped onto a product photographed at an angle.
+  const mx = transform ? /matrix(([^)]+))/.exec(transform) : null;
+  if (mx) {
+    const [a, b, c, d, e, f] = mx[1]!.trim().split(/[s,]+/).map(Number) as [number, number, number, number, number, number];
+    ctx.transform(a, b, c, d, e * s, f * s);
+    return;
+  }
   const m = transform ? /rotate\(\s*(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*\)/.exec(transform) : null;
   if (!m) return;
   const [a, cx, cy] = [Number(m[1]), Number(m[2]) * s, Number(m[3]) * s];
@@ -126,13 +133,20 @@ export async function exportMockup({
   applyRotate(ctx, areaTransform(view), s);
   ctx.translate(area.x * s, area.y * s);
   ctx.beginPath();
-  if (view.base.kind === "drawing" && view.base.circle) {
-    ctx.arc((view.base.circle.cx - area.x) * s, (view.base.circle.cy - area.y) * s, view.base.circle.r * s, 0, Math.PI * 2);
+  if (view.base.kind === "photo" && view.base.clip) {
+    // The clip path is in print-area units: scale it like the rest of the canvas.
+    const clip = new Path2D();
+    clip.addPath(new Path2D(view.base.clip), new DOMMatrix([s, 0, 0, s, 0, 0]));
+    ctx.clip(clip);
   } else {
-    ctx.rect(0, 0, area.w * s, area.h * s);
+    if (view.base.kind === "drawing" && view.base.circle) {
+      ctx.arc((view.base.circle.cx - area.x) * s, (view.base.circle.cy - area.y) * s, view.base.circle.r * s, 0, Math.PI * 2);
+    } else {
+      ctx.rect(0, 0, area.w * s, area.h * s);
+    }
+    ctx.clip();
   }
-  ctx.clip();
-  const light = tint ? isLight(tint) : true;
+  const light = tint ? isLight(tint) : !(view.base.kind === "photo" && view.base.dark);
   if (view.base.kind === "photo") {
     if (light) ctx.globalCompositeOperation = "multiply";
     ctx.globalAlpha = 0.95;

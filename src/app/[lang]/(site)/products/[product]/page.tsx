@@ -16,7 +16,7 @@ import { getProductBySlug, listProducts, listRelatedProducts, type ProductDetail
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
-import { localizedPath, type RouteKey } from "@/i18n/routes";
+import { localizedPath, type RouteKey, quoteFormHref } from "@/i18n/routes";
 import { siteUrl } from "@/lib/env";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -68,7 +68,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
     listRelatedProducts(locale, product.id, product.categoryId),
   ]);
 
-  const quoteHref = `${localizedPath(locale, { route: "quote" })}?product=${encodeURIComponent(product.id)}`;
+  const quoteHref = quoteFormHref(locale, product.id);
   const productUrl = `${siteUrl}${localizedPath(locale, { route: "product", slug: product.slug })}`;
   const crumbs = [
     { label: dict.nav.home, href: localizedPath(locale, { route: "home" }) },
@@ -155,7 +155,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
                 {/* Multi-product requests: collect several products, then send one quote (ADR-017). */}
                 <AddToQuoteButton
                   product={{ productId: product.id, name: product.name, sku: product.sku, minOrderQuantity: product.minOrderQuantity }}
-                  quoteHref={localizedPath(locale, { route: "quote" })}
+                  quoteHref={quoteFormHref(locale)}
                   labels={{ add: dict.quotePage.addToQuote, added: dict.quotePage.addedToQuote, view: dict.quotePage.viewQuote }}
                 />
                 <p className="text-fg-muted text-sm">{dict.product.quoteHint}</p>

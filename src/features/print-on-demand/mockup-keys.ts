@@ -11,6 +11,9 @@ export const MOCKUP_KEYS = [
   "flyer",
   "poster",
   "letterhead",
+  "folded-card",
+  "catalog",
+  "banner",
 ] as const;
 export type MockupKey = (typeof MOCKUP_KEYS)[number];
 

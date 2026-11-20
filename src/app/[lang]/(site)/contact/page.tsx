@@ -10,7 +10,7 @@ import { MailIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "@/components/ui/i
 import { Container, Heading, Section } from "@/components/ui/layout";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -111,7 +111,7 @@ export default async function ContactPage() {
 
               <div className={settings.phone || settings.email || address || settings.whatsappNumber ? "border-line mt-6 border-t pt-6" : ""}>
                 <p className="text-fg-muted text-sm">{dict.contactPage.quoteCta}</p>
-                <ArrowLink href={localizedPath(locale, { route: "quote" })} className="mt-3">
+                <ArrowLink href={quoteFormHref(locale)} className="mt-3">
                   {dict.common.requestQuote}
                 </ArrowLink>
               </div>

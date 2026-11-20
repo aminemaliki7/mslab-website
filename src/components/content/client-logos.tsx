@@ -28,7 +28,7 @@ export function ClientLogos({ locale, title, subtitle, logos }: Props) {
           </Heading>
           {subtitle ? <p className="text-fg-muted mt-3">{subtitle}</p> : null}
         </div>
-        <ul className="mx-auto mt-12 flex max-w-5xl flex-wrap items-center justify-center gap-x-6 gap-y-10 sm:gap-x-10 lg:mt-14 lg:flex-nowrap lg:justify-between lg:gap-x-12">
+        <ul className="reveal-stagger mx-auto mt-12 flex max-w-5xl flex-wrap items-center justify-center gap-x-6 gap-y-10 sm:gap-x-10 lg:mt-14 lg:flex-nowrap lg:justify-between lg:gap-x-12">
           {logos.map((logo) => (
             <li key={logo.id} className="flex h-16 basis-[calc(50%-0.75rem)] items-center justify-center sm:basis-[calc(33.333%-1.75rem)] lg:basis-auto">
               <Image

@@ -42,7 +42,8 @@ export function HeroMockups({ products, names, studioId, className }: { products
               className="group focus-visible:ring-accent block w-full overflow-hidden rounded-[var(--radius-tile)] text-start focus-visible:ring-2 focus-visible:outline-none"
               style={{ backgroundColor: tint(index) }}
             >
-              <span className="flex aspect-[4/5] items-center justify-center p-2 transition-transform duration-300 group-hover:scale-[1.03] sm:p-4">
+              {/* Multiply: the product photo's white backdrop takes the tile's tint. */}
+              <span className="flex aspect-[4/5] items-center justify-center p-2 mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.03] sm:p-4">
                 <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[key]} label="" className="w-full" />
               </span>
               <span className="text-fg block px-3 pb-3 text-sm font-semibold">{names[key]}</span>
@@ -83,7 +84,7 @@ export function ProductPicker({
               className="group border-line bg-bg hover:border-line-strong focus-visible:ring-accent flex h-full w-full flex-col overflow-hidden rounded-[var(--radius-card)] border text-start transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-18px_rgb(14_26_43/0.45)] focus-visible:ring-2 focus-visible:outline-none"
             >
               <span className="block p-4 sm:p-6" style={{ backgroundColor: tint(index) }}>
-                <span className="mx-auto block max-w-[11rem] transition-transform duration-300 group-hover:-translate-y-1">
+                <span className="mx-auto block max-w-[11rem] mix-blend-multiply transition-transform duration-300 group-hover:-translate-y-1">
                   <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[key]} label="" className="w-full" />
                 </span>
               </span>

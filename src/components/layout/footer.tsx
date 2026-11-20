@@ -6,7 +6,7 @@ import { MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/icons";
 import { PRODUCTION_LINES } from "@/config/production-lines";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { Wordmark } from "./wordmark";
 
 export async function Footer() {
@@ -21,7 +21,7 @@ export async function Footer() {
     { href: localizedPath(locale, { route: "catalog" }), label: dict.nav.catalog },
     { href: localizedPath(locale, { route: "about" }), label: dict.nav.about },
     { href: localizedPath(locale, { route: "contact" }), label: dict.nav.contact },
-    { href: localizedPath(locale, { route: "quote" }), label: dict.common.requestQuote },
+    { href: quoteFormHref(locale), label: dict.common.requestQuote },
     { href: localizedPath(locale, { route: "track" }), label: dict.footer.tracking },
   ];
 

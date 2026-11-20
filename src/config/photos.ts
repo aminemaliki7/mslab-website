@@ -2,6 +2,7 @@ import type { StaticImageData } from "next/image";
 import blankBook from "@/assets/production/blank-book.jpg";
 import blackHoodieViews from "@/assets/production/black-hoodie-views.jpg";
 import corporateKit from "@/assets/production/corporate-kit.jpg";
+import eventStaffTshirt from "@/assets/production/event-staff-tshirt.jpg";
 import eventToteBags from "@/assets/production/event-tote-bags.jpg";
 import framedPosters from "@/assets/production/framed-posters.jpg";
 import heatPressGarment from "@/assets/production/heat-press-garment.jpg";
@@ -9,6 +10,7 @@ import heatPressIllustration from "@/assets/production/heat-press-illustration.j
 import hoodieTechnicalSketch from "@/assets/production/hoodie-technical-sketch.jpg";
 import kraftMailerBox from "@/assets/production/kraft-mailer-box.jpg";
 import mugPress from "@/assets/production/mug-press.jpg";
+import printedSweatshirts from "@/assets/production/printed-sweatshirts.jpg";
 import paperShoppingBag from "@/assets/production/paper-shopping-bag.jpg";
 import tshirtTechnicalSketch from "@/assets/production/tshirt-technical-sketch.jpg";
 import whiteMug from "@/assets/production/white-mug.jpg";
@@ -37,6 +39,15 @@ export const PHOTOS = {
   tshirt: tshirtTechnicalSketch,
   posters: framedPosters,
   book: blankBook,
+  /**
+   * Stock photo from Unsplash (Unsplash License: free commercial use, no attribution required),
+   * chosen by the owner on 2026-11-20 for the "For businesses" card. A generic scene, not an
+   * MSLAB client or order: unsplash.com/photos/RlakZ84ex2g.
+   */
+  staffTshirt: eventStaffTshirt,
+  /** Supplied by the owner (2026-11-20) for the "For brands & creators" card: printed sweatshirts
+   *  on a shop front. Illustrative, not MSLAB's work. */
+  printedSweatshirts,
 } satisfies Record<string, StaticImageData>;
 
 export type PhotoKey = keyof typeof PHOTOS;

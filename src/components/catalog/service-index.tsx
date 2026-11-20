@@ -25,7 +25,7 @@ export function ServiceIndex({ rows, className }: { rows: ServiceIndexRow[]; cla
   return (
     <ul className={cn("border-fg border-t-2", className)}>
       {rows.map((row) => (
-        <li key={row.slugFr} className="border-line border-b">
+        <li key={row.slugFr} className="border-line reveal border-b">
           <Link
             href={row.href}
             className="group hover:bg-surface active:bg-surface -mx-4 grid rounded-[var(--radius-card)] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 gap-y-2 px-4 py-4 transition-colors duration-200 sm:-mx-6 sm:px-6 md:grid-cols-12 md:py-5"

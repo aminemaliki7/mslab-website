@@ -8,7 +8,7 @@ export type EditorView = {
   /** true = photo and print area entered by MSLAB in the admin. */
   configured: boolean;
   base:
-    | { kind: "photo"; src: string; w: number; h: number }
+    | { kind: "photo"; src: string; w: number; h: number; transform?: string; clip?: string; dark?: boolean }
     | { kind: "drawing"; product: MockupKey; w: number; h: number; transform?: string; circle?: { cx: number; cy: number; r: number } }
     | {
         kind: "template";
@@ -52,20 +52,14 @@ export function editorViews(product: MockupKey, config: Partial<Record<string, S
       printMm: null,
     }));
   }
-  return [
-    {
-      key: "front",
-      configured: false,
-      base:
-        p.kind === "photo"
-          ? { kind: "photo", src: p.src, w: p.w, h: p.h }
-          : { kind: "drawing", product, w: p.w, h: p.h, transform: p.transform, circle: p.circle },
-      area: p.area,
-      mask: null,
-      displacement: null,
-      printMm: null,
-    },
-  ];
+  const unconfigured = { configured: false, mask: null, displacement: null, printMm: null } as const;
+  if (p.kind === "photo") {
+    return [
+      { key: "front", ...unconfigured, base: { kind: "photo", src: p.src, w: p.w, h: p.h, transform: p.transform, clip: p.clip, dark: p.dark }, area: p.area },
+      ...(p.sides ?? []).map((side) => ({ key: side.key, ...unconfigured, base: { kind: "photo" as const, src: side.src, w: p.w, h: p.h, dark: p.dark }, area: side.area })),
+    ];
+  }
+  return [{ key: "front", ...unconfigured, base: { kind: "drawing", product, w: p.w, h: p.h, transform: p.transform, circle: p.circle }, area: p.area }];
 }
 
 /** The visible frame of a side: the template crop, or the whole base. */
@@ -73,7 +67,7 @@ export function viewFrame(view: EditorView): { x: number; y: number; w: number; 
   return view.base.kind === "template" ? view.base.crop : { x: 0, y: 0, w: view.base.w, h: view.base.h };
 }
 
-/** Extra transform applied to the print area (rotated sides, tilted drawings). */
+/** Extra transform applied to the print area (rotated sides, tilted drawings and photos). */
 export function areaTransform(view: EditorView): string | undefined {
-  return view.base.kind === "photo" ? undefined : view.base.transform;
+  return view.base.transform;
 }

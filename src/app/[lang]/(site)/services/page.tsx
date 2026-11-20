@@ -7,7 +7,7 @@ import { Container, Heading, Section } from "@/components/ui/layout";
 import { PHOTOS } from "@/config/photos";
 import { listServices } from "@/features/services/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -37,9 +37,9 @@ export default async function ServicesPage() {
             {dict.sections.servicesTitle}
           </Heading>
           <p className="text-fg-muted mt-4 max-w-2xl text-lg leading-relaxed text-pretty">{dict.sections.capabilitiesLead}</p>
-          <ProductionIndex dict={dict} href={productionHref ? `${productionHref}#demande` : localizedPath(locale, { route: "quote" })} className="mt-8" />
+          <ProductionIndex dict={dict} href={productionHref ? `${productionHref}#demande` : quoteFormHref(locale)} className="mt-8" />
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={productionHref ? `${productionHref}#demande` : localizedPath(locale, { route: "quote" })} size="lg">
+            <ButtonLink href={productionHref ? `${productionHref}#demande` : quoteFormHref(locale)} size="lg">
               {dict.printOnDemand.startCta}
             </ButtonLink>
             {productionHref ? (

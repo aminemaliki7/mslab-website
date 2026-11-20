@@ -27,17 +27,17 @@ export function PageHeader({
     <div className="overflow-hidden">
       <Container className="flex items-center justify-between gap-10 pt-10 pb-6 sm:pt-14 lg:pt-16 lg:pb-8">
         <div className="min-w-0">
-          {eyebrow ? <Eyebrow className="mb-3">{eyebrow}</Eyebrow> : null}
-          <Heading as="h1" size="display" className="max-w-4xl">
+          {eyebrow ? <Eyebrow className="anim-rise mb-3">{eyebrow}</Eyebrow> : null}
+          <Heading as="h1" size="display" className="anim-rise max-w-4xl [--d:1]">
             {title}
           </Heading>
-          {lead ? <Lead className="mt-4 max-w-2xl">{lead}</Lead> : null}
+          {lead ? <Lead className="anim-rise mt-4 max-w-2xl [--d:2]">{lead}</Lead> : null}
           {children}
         </div>
         {photo ? (
           <div
             className={cn(
-              "relative hidden size-48 shrink-0 overflow-hidden rounded-[var(--radius-card)] md:block lg:size-56",
+              "anim-rise relative hidden size-48 shrink-0 overflow-hidden rounded-[var(--radius-card)] [--d:2] [--rise:28px] md:block lg:size-56",
               photo.contain ? "border-line border bg-white" : "bg-paper-100",
             )}
           >

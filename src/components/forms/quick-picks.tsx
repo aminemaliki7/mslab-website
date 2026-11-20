@@ -10,7 +10,7 @@ export type QuickPick = {
 };
 
 /** Set a form control's value the way typing would, so React and validation see the change. */
-function fill(id: string, value: string) {
+export function fillField(id: string, value: string) {
   const el = document.getElementById(id);
   if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement)) return;
   const proto = Object.getPrototypeOf(el) as HTMLInputElement;
@@ -35,7 +35,7 @@ export function QuickPicks({ label, picks, className }: { label: string; picks: 
           type="button"
           aria-pressed={chosen === index}
           onClick={() => {
-            for (const [id, value] of Object.entries(pick.values)) fill(id, value);
+            for (const [id, value] of Object.entries(pick.values)) fillField(id, value);
             setChosen(index);
             const first = Object.keys(pick.values)[0];
             if (first) document.getElementById(first)?.focus({ preventScroll: true });

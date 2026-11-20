@@ -149,6 +149,31 @@
   from { transform: translateY(24px); }
   to { transform: none; }
 }
+/* Page load: a block rises into place (transform only, same contrast rule as above). */
+@keyframes mslab-rise {
+  from { transform: translateY(var(--rise, 18px)); }
+  to { transform: none; }
+}
+/* Hero title lines slide up from behind their own line box (masked, text never faded). */
+@keyframes mslab-line-up {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+/* Images settle in: a slight zoom-out as they reach the screen. */
+@keyframes mslab-settle {
+  from { transform: scale(1.08); }
+  to { transform: none; }
+}
+/* Sticky header gains depth once the page has scrolled. */
+@keyframes mslab-header-lift {
+  from { box-shadow: 0 0 0 0 rgb(14 26 43 / 0); }
+  to { box-shadow: 0 10px 28px -20px rgb(14 26 43 / 0.55); }
+}
+/* WhatsApp: a soft ring that invites without nagging (three pulses, then still). */
+@keyframes mslab-ping {
+  0% { transform: scale(1); opacity: 0.5; }
+  80%, 100% { transform: scale(1.75); opacity: 0; }
+}
 /* Logo intro: the corner of the sheet turns over along the fold line (axis 1,1) and lands as
    the cyan flap. Front half turns edge-on, then the flap turns in from the other side. */
 @keyframes mslab-corner-front {
@@ -264,6 +289,67 @@
         animation-timeline: view();
         animation-range: entry 0% entry 35%;
       }
+      /* Siblings in a row arrive one after another: each child's range starts a little later. */
+      .reveal-stagger > * {
+        animation: mslab-fade-up linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--i, 0) * 9%) entry calc(38% + var(--i, 0) * 9%);
+      }
+      .reveal-stagger > :nth-child(2) { --i: 1; }
+      .reveal-stagger > :nth-child(3) { --i: 2; }
+      .reveal-stagger > :nth-child(4) { --i: 3; }
+      .reveal-stagger > :nth-child(n + 5) { --i: 4; }
+      /* Photos zoom out gently as they scroll in. The frame clips (overflow: hidden makes it a
+         scroll container), so the timeline is taken from the frame's own view of the page. */
+      .settle-frame { view-timeline-name: --settle; }
+      .reveal-settle {
+        animation: mslab-settle linear both;
+        animation-timeline: --settle;
+        animation-range: entry 0% cover 45%;
+      }
     }
+    @supports (animation-timeline: scroll()) {
+      .header-lift {
+        animation: mslab-header-lift linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 140px;
+      }
+    }
+
+    /* Page load: blocks rise in sequence (--d = step). Short: done within a second. */
+    .anim-rise {
+      animation: mslab-rise 0.75s var(--ease-out-soft) both;
+      animation-delay: calc(var(--d, 0) * 90ms + 60ms);
+    }
+    .anim-line {
+      display: block;
+      overflow: hidden;
+      /* room for descenders and accents inside the mask */
+      padding-block: 0.06em;
+      margin-block: -0.06em;
+    }
+    .anim-line > span {
+      display: block;
+      animation: mslab-line-up 0.8s var(--ease-out-soft) both;
+      animation-delay: calc(var(--d, 0) * 110ms + 80ms);
+    }
+    .anim-ping {
+      animation: mslab-ping 2.2s ease-out 2.5s 3 both;
+    }
+  }
+
+  /* Cards that answer the pointer: lift, and their photo leans in (hover-capable screens only). */
+  .lift {
+    transition: transform 0.35s var(--ease-out-soft), box-shadow 0.35s var(--ease-out-soft);
+  }
+  .lift-photo {
+    transition: transform 0.9s var(--ease-out-soft);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 40px -28px rgb(14 26 43 / 0.55);
+    }
+    .lift:hover .lift-photo { transform: scale(1.045); }
   }
 }

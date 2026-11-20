@@ -45,6 +45,15 @@ export function isStaticSection(value: string): value is Exclude<Section, "produ
 }
 
 /** Build the public, localized path for a route. Only way to build public hrefs. */
+/** Id of the quote form on the quote page: every "request a quote" link lands on the form itself. */
+export const QUOTE_FORM_ID = "formulaire";
+
+/** The quote form, optionally with a catalogue product already in the list. */
+export function quoteFormHref(locale: Locale, productId?: string): string {
+  const query = productId ? `?product=${encodeURIComponent(productId)}` : "";
+  return `${localizedPath(locale, { route: "quote" })}${query}#${QUOTE_FORM_ID}`;
+}
+
 export function localizedPath(locale: Locale, key: RouteKey): string {
   switch (key.route) {
     case "home":

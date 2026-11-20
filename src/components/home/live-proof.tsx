@@ -119,7 +119,9 @@ export function ProofCollage({
               position === 2 && "bg-paper-100",
             )}
           >
-            <div className={cn("anim-swap absolute inset-0 grid place-items-center", large ? "px-16 pt-6 pb-10" : "p-4 sm:p-6")}>
+            {/* Multiply: the photo's white backdrop takes the tile's colour (the blend sits on the
+                animated wrapper so it still reaches the tile while the wrapper moves). */}
+            <div className={cn("anim-swap absolute inset-0 grid place-items-center mix-blend-multiply", large ? "px-16 pt-6 pb-10" : "p-4 sm:p-6")}>
               <Mockup
                 design={design}
                 color={DEFAULT_COLORS[key]}

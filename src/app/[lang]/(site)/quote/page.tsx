@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { PHOTOS } from "@/config/photos";
-import { PageHeader } from "@/components/layout/page-header";
 import { QuoteForm } from "@/components/quote/quote-form";
-import { Container, Section, Skeleton } from "@/components/ui/layout";
+import { CheckIcon } from "@/components/ui/icons";
+import { Container, Skeleton } from "@/components/ui/layout";
 import { getProductsByIds } from "@/features/catalog/queries";
 import type { Locale } from "@/i18n/config";
 import { getDictionary, getLocale, type Dictionary } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, QUOTE_FORM_ID } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,16 +25,33 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 export default async function QuotePage({ searchParams }: PageProps<"/[lang]/quote">) {
   const locale = await getLocale();
   const dict = await getDictionary(locale);
+  const points = [dict.quotePage.pointSteps, dict.quotePage.pointOneNeed, dict.quotePage.pointReply];
   return (
     <>
-      <PageHeader title={dict.pages.quote.title} lead={dict.pages.quote.description} photo={{ src: PHOTOS.tshirt, alt: dict.photos.tshirt, contain: true }} />
-      <Section>
-        <Container className="max-w-3xl">
+      {/* Short coloured intro, then the form straight away: every "request a quote" link lands on it. */}
+      <div className="bg-[linear-gradient(135deg,var(--color-cyan-700),var(--color-ink-900))] text-white">
+        <Container className="max-w-3xl pt-10 pb-24 sm:pt-12 sm:pb-28">
+          <h1 className="type-poster text-[clamp(1.875rem,5.5vw,3rem)] text-balance text-white">{dict.pages.quote.title}</h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-pretty text-white/85 sm:text-[1.0625rem]">{dict.quotePage.heroLead}</p>
+          <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+            {points.map((point) => (
+              <li key={point} className="flex items-center gap-2">
+                <span className="bg-process-y text-ink-900 grid size-5 shrink-0 place-items-center rounded-full">
+                  <CheckIcon width={13} height={13} strokeWidth={2.75} />
+                </span>
+                {point}
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </div>
+      <Container className="relative -mt-16 max-w-3xl pb-16 sm:-mt-20 sm:pb-20">
+        <div id={QUOTE_FORM_ID} className="border-line bg-bg scroll-mt-24 rounded-[var(--radius-card)] border p-5 shadow-[0_24px_60px_-28px_rgb(25_54_66/0.45)] sm:p-8">
           <Suspense fallback={<QuoteFormSkeleton />}>
             <QuoteFormWithPrefill locale={locale} dict={dict} searchParams={searchParams} />
           </Suspense>
-        </Container>
-      </Section>
+        </div>
+      </Container>
     </>
   );
 }

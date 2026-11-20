@@ -1,8 +1,8 @@
 # Studio mockups
 
-Every product preview uses MSLAB's own vector templates in `svg/` (no third-party photos):
+Product previews in the Studio come from two sources:
 
-- `svg/tshirt.svg`: built by `scripts/build-tshirt-mockup.mjs` (docs/TSHIRT_SVG_MOCKUP.md).
-- `svg/<product>.svg` (hoodie, tote, mug, box, notebook, business-card, flyer, poster): built by `scripts/build-product-mockups.mjs`.
-
-Print areas are defined in those scripts. They reach the site through `src/features/print-on-demand/placeholder-views.ts`.
+- `photos/<product>.webp` (T-shirt, business card, flyer, poster/roll-up, letterhead, notebook, folded card, catalogue, banner): 1200 × 900 crops of the mockup sheet supplied by MSLAB on 2026-11-20. The T-shirt's right sleeve, hidden in the sheet, was rebuilt by mirroring the left half. Print areas (and the `matrix(...)` that follows a tilted surface) live in `src/features/print-on-demand/placeholder-views.ts`.
+- `photos/mug.webp`, `photos/box.webp`, `photos/tote.webp`, `photos/sticker.webp` (mug, mailer box, paper bag shown for the tote product, peeled round sticker): blank mockup photos supplied by MSLAB on 2026-11-20, cut out of their backdrops and set on the same plain white (#FEFEFE) as the other photos, 1200 × 900. The mug keeps its own contact shadow; the bag and sticker get a soft drawn one; the box is held in the air, its hands fading out at the sides. The sticker's print area is clipped to the circle and stops at the peeled fold (`clip` in `placeholder-views.ts`).
+- `photos/hoodie.webp`, `photos/hoodie-back.webp` (black hoodie, front and back): from a 732 × 360 three-view sheet supplied by MSLAB on 2026-11-20, each view upscaled ×2.33 onto the same white, hems aligned. The hoodie is marked `dark`: designs are laid on top (not multiplied) and new text starts white.
+- `svg/<product>.svg`: MSLAB's own vector templates, built by `scripts/build-product-mockups.mjs`; none is used by the Studio any more. `svg/tshirt.svg` (`scripts/build-tshirt-mockup.mjs`) and the hoodie, mug, tote, box, notebook, business-card, flyer and poster SVGs are no longer used by the Studio.
