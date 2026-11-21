@@ -166,6 +166,47 @@ export type Database = {
           },
         ]
       }
+      digital_request_details: {
+        Row: {
+          budget: string | null
+          created_at: string
+          deadline: string | null
+          description: string
+          existing_website: string | null
+          features: string[]
+          project_types: string[]
+          quotation_request_id: string
+        }
+        Insert: {
+          budget?: string | null
+          created_at?: string
+          deadline?: string | null
+          description: string
+          existing_website?: string | null
+          features?: string[]
+          project_types: string[]
+          quotation_request_id: string
+        }
+        Update: {
+          budget?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          existing_website?: string | null
+          features?: string[]
+          project_types?: string[]
+          quotation_request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "digital_request_details_quotation_request_id_fkey"
+            columns: ["quotation_request_id"]
+            isOneToOne: true
+            referencedRelation: "quotation_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiries: {
         Row: {
           consent: boolean
@@ -1042,6 +1083,10 @@ export type Database = {
         Args: { payload: Json; submission_key: string }
         Returns: string
       }
+      submit_digital_request: {
+        Args: { payload: Json; submission_key: string }
+        Returns: string
+      }
       submit_quotation_request: {
         Args: { payload: Json; submission_key: string }
         Returns: string
@@ -1068,7 +1113,7 @@ export type Database = {
         | "delivered"
         | "rejected"
         | "closed"
-      request_kind: "catalog" | "custom"
+      request_kind: "catalog" | "custom" | "digital"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1213,7 +1258,7 @@ export const Constants = {
         "rejected",
         "closed",
       ],
-      request_kind: ["catalog", "custom"],
+      request_kind: ["catalog", "custom", "digital"],
     },
   },
 } as const

@@ -13,8 +13,9 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3001";
-const SAMPLE_PRODUCT = "b0000000-0000-4000-8000-000000000001";
-const SAMPLE_PRODUCT_2 = "b0000000-0000-4000-8000-000000000003";
+// Two real published product ids (comma-separated), if MSLAB has added any: no product is
+// seeded, so the multi-product test skips without them.
+const [PUBLISHED_PRODUCT, PUBLISHED_PRODUCT_2] = (process.env.TEST_PRODUCT_IDS ?? "").split(",").filter(Boolean);
 const DRAFT_PRODUCT = "b0000000-0000-4000-8000-000000000006";
 
 /** Hidden inputs React renders for a server-action form (action id + bound state). */
@@ -113,14 +114,14 @@ describe("quotation form (no JavaScript)", () => {
     assert.match(html, /MSQ-\d{4}-\d{6}/);
   });
 
-  it("accepts several catalog products plus a custom item with quantities", async () => {
+  it("accepts several catalog products plus a custom item with quantities", { skip: !PUBLISHED_PRODUCT_2 && "set TEST_PRODUCT_IDS" }, async () => {
     const html = await post(
       "/fr/devis",
       {
         ...quoteBase,
-        "items.0.productId": SAMPLE_PRODUCT,
+        "items.0.productId": PUBLISHED_PRODUCT,
         "items.0.quantity": "20",
-        "items.1.productId": SAMPLE_PRODUCT_2,
+        "items.1.productId": PUBLISHED_PRODUCT_2,
         "items.1.quantity": "3",
         "items.2.label": "Reliure sur mesure (test)",
         "items.2.quantity": "10",

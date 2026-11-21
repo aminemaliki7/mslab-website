@@ -7,7 +7,7 @@ import { buttonClasses } from "@/components/ui/button";
 import { CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import type { NavItem } from "./nav-links";
-import { useActiveSection } from "./nav-links";
+import { useActiveItem } from "./nav-links";
 
 type Props = {
   items: NavItem[];
@@ -37,7 +37,7 @@ export function MobileNav({ items, cta, labels, children }: Props) {
   const [openedOn, setOpenedOn] = useState<string | null>(null);
   const open = openedOn === pathname;
   const panelId = useId();
-  const active = useActiveSection();
+  const active = useActiveItem(items);
 
   useEffect(() => {
     if (!open) return;

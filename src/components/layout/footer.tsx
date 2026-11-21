@@ -3,7 +3,9 @@ import { CookieSettingsButton } from "@/components/consent/cookie-settings-butto
 import { Container } from "@/components/ui/layout";
 import { orderedLegalDocuments } from "@/content/legal";
 import { MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/icons";
+import { DIGITAL_SOLUTIONS_SLUG } from "@/components/illustrations/service-art";
 import { PRODUCTION_LINES } from "@/config/production-lines";
+import { listServices } from "@/features/services/queries";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, quoteFormHref } from "@/i18n/routes";
@@ -11,7 +13,8 @@ import { Wordmark } from "./wordmark";
 
 export async function Footer() {
   const locale = await getLocale();
-  const [dict, settings] = await Promise.all([getDictionary(locale), getSiteSettings()]);
+  const [dict, settings, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
+  const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
 
   const address = settings.address[locale] ?? settings.address.fr ?? null;
   const hasContact = Boolean(settings.email || settings.phone || address);
@@ -46,7 +49,7 @@ export async function Footer() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">{dict.footer.about}</p>
         </div>
 
-        {/* Production lines first, supplies (secondary activity) below — docs/POSITIONING.md. */}
+        {/* MSLAB's core services — docs/POSITIONING.md. */}
         <div className="lg:col-span-2">
           <h2 className={headingClass}>{dict.footer.production}</h2>
           <ul className="mt-4 space-y-2.5 text-sm text-white/85">
@@ -54,12 +57,11 @@ export async function Footer() {
               <li key={line.key}>{dict.productionLines[line.key].name}</li>
             ))}
           </ul>
-          <h2 className={`${headingClass} mt-8`}>{dict.footer.activities}</h2>
-          <ul className="mt-4 space-y-2.5 text-sm text-white/85">
-            {[dict.businessAreas.office, dict.businessAreas.school, dict.businessAreas.books].map((area) => (
-              <li key={area}>{area}</li>
-            ))}
-          </ul>
+          {digital ? (
+            <Link href={localizedPath(locale, { route: "service", slug: digital.slug })} className={`${linkClass} mt-3 font-semibold text-white`}>
+              {dict.digital.title}
+            </Link>
+          ) : null}
         </div>
 
         <div className="lg:col-span-2">

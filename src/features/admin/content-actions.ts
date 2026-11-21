@@ -8,7 +8,7 @@ import { CATALOG_TAG } from "@/features/catalog/queries";
 import { SERVICES_TAG } from "@/features/services/queries";
 import type { Json } from "@/lib/supabase/database.types";
 import { createSessionClient } from "@/lib/supabase/server";
-import { CATALOG_BUCKET } from "@/lib/supabase/storage";
+import { CATALOG_BUCKET, isSiteImage } from "@/lib/supabase/storage";
 import { failure, fromDb, fromZod, success, type AdminActionState } from "./action-state";
 import { requireAdmin } from "./auth";
 import { categorySchema, formToObject, productSchema, serviceSchema } from "./content-schemas";
@@ -97,7 +97,8 @@ export async function deleteProduct(_prev: AdminActionState, formData: FormData)
   const { error } = await db.from("products").delete().eq("id", id);
   if (error) return fromDb(error, "delete product");
 
-  const paths = (images ?? []).map((i) => i.storage_path);
+  // Site images (public/catalog) are files of the site, not bucket objects: nothing to remove.
+  const paths = (images ?? []).map((i) => i.storage_path).filter((p) => !isSiteImage(p));
   if (paths.length) {
     const { error: storageError } = await db.storage.from(CATALOG_BUCKET).remove(paths);
     if (storageError) console.error("[admin] orphan images after product delete", id, storageError.message);
@@ -170,8 +171,10 @@ export async function deleteProductImage(_prev: AdminActionState, formData: Form
   const db = await createSessionClient();
   const { data: image, error } = await db.from("product_images").delete().eq("id", id).select("storage_path, product_id, is_primary").single();
   if (error) return fromDb(error, "delete image");
-  const { error: storageError } = await db.storage.from(CATALOG_BUCKET).remove([image.storage_path]);
-  if (storageError) console.error("[admin] orphan image", image.storage_path, storageError.message);
+  if (!isSiteImage(image.storage_path)) {
+    const { error: storageError } = await db.storage.from(CATALOG_BUCKET).remove([image.storage_path]);
+    if (storageError) console.error("[admin] orphan image", image.storage_path, storageError.message);
+  }
 
   if (image.is_primary) {
     // Promote the next image so the product keeps a main image.

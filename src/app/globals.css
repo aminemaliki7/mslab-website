@@ -143,6 +143,12 @@
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
+/* Chart bars rise from their base, hold, then settle back (Digital Solutions scene). */
+@keyframes mslab-grow-y {
+  0% { transform: scaleY(0.25); }
+  35%, 80% { transform: scaleY(1); }
+  100% { transform: scaleY(0.25); }
+}
 /* Slide-up only — no opacity change: a card resting at the edge of the screen mid-animation
    must keep full text contrast (WCAG 1.4.3; axe flagged a partial fade on tablet). */
 @keyframes mslab-fade-up {
@@ -229,7 +235,8 @@
   /* SVG parts animate around their own box. */
   .anim-float,
   .anim-print,
-  .anim-grow-x {
+  .anim-grow-x,
+  .anim-grow-y {
     transform-box: fill-box;
     transform-origin: center;
   }
@@ -248,6 +255,10 @@
     animation: mslab-grow-x 0.9s var(--ease-out-soft) both;
   }
   [dir="rtl"] .anim-grow-x { transform-origin: right center; }
+  .anim-grow-y {
+    transform-origin: center bottom;
+    animation: mslab-grow-y 4s var(--ease-out-soft) infinite;
+  }
 
   @media (prefers-reduced-motion: no-preference) {
     .hero-crop-mark { opacity: 0; animation: mslab-crop-mark-enter 0.35s var(--ease-out-soft) both; }

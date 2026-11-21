@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { expectNoHorizontalOverflow, isMobile, LOCALES, watchConsole } from "./helpers";
+import { expectNoHorizontalOverflow, firstProductPath, isMobile, LOCALES, watchConsole } from "./helpers";
 
 const PAGES: Record<(typeof LOCALES)[number], string[]> = {
-  fr: ["/fr", "/fr/a-propos", "/fr/services", "/fr/services/impression-reprographie", "/fr/services/impression-a-la-demande", "/fr/suivi-commande", "/fr/catalogue", "/fr/catalogue/papeterie", "/fr/produits/cahier", "/fr/contact", "/fr/devis", "/fr/mentions-legales"],
-  ar: ["/ar", "/ar/a-propos", "/ar/services", "/ar/services/impression-reprographie", "/ar/services/impression-a-la-demande", "/ar/suivi-commande", "/ar/catalogue", "/ar/catalogue/papeterie", "/ar/produits/cahier", "/ar/contact", "/ar/devis", "/ar/confidentialite"],
-  en: ["/en", "/en/about", "/en/services", "/en/services/printing-reprographics", "/en/services/print-on-demand", "/en/order-tracking", "/en/catalog", "/en/catalog/stationery", "/en/products/notebook", "/en/contact", "/en/quote", "/en/legal-notice"],
+  fr: ["/fr", "/fr/a-propos", "/fr/services", "/fr/services/impression-reprographie", "/fr/services/impression-a-la-demande", "/fr/services/solutions-digitales", "/fr/suivi-commande", "/fr/catalogue", "/fr/catalogue/impression-reprographie", "/fr/contact", "/fr/devis", "/fr/mentions-legales"],
+  ar: ["/ar", "/ar/a-propos", "/ar/services", "/ar/services/impression-reprographie", "/ar/services/impression-a-la-demande", "/ar/services/solutions-digitales", "/ar/suivi-commande", "/ar/catalogue", "/ar/catalogue/impression-reprographie", "/ar/contact", "/ar/devis", "/ar/confidentialite"],
+  en: ["/en", "/en/about", "/en/services", "/en/services/printing-reprographics", "/en/services/print-on-demand", "/en/services/digital-solutions", "/en/order-tracking", "/en/catalog", "/en/catalog/printing-reprographics", "/en/contact", "/en/quote", "/en/legal-notice"],
 };
 
 for (const locale of LOCALES) {
@@ -25,6 +25,16 @@ for (const locale of LOCALES) {
   });
 }
 
+test("product page renders (first published product)", async ({ page }) => {
+  const path = await firstProductPath(page, "/fr/catalogue");
+  test.skip(!path, "no published product yet");
+  const problems = watchConsole(page);
+  expect((await page.goto(path!))?.status()).toBe(200);
+  await expect(page.locator("main h1")).toHaveCount(1);
+  await expectNoHorizontalOverflow(page);
+  expect(problems).toEqual([]);
+});
+
 test("root redirects using Accept-Language", async ({ browser }) => {
   // `locale` sets Chromium's real Accept-Language (a custom header would be overridden).
   const context = await browser.newContext({ locale: "ar-MA" });
@@ -40,10 +50,11 @@ test("English segment under /fr redirects to the localized URL", async ({ page }
 });
 
 test("language switcher keeps the page and uses translated slugs", async ({ page }) => {
-  await page.goto("/fr/produits/cahier");
+  // A category page has translated slugs (impression-reprographie → printing-reprographics) and needs no product.
+  await page.goto("/fr/catalogue/impression-reprographie");
   if (isMobile(page)) await page.getByRole("button", { name: "Ouvrir le menu" }).click();
   await page.getByRole("link", { name: "English" }).first().click();
-  await expect(page).toHaveURL(/\/en\/products\/notebook$/);
+  await expect(page).toHaveURL(/\/en\/catalog\/printing-reprographics$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });
 
@@ -81,11 +92,12 @@ test("mobile menu opens, closes with Escape and on navigation", async ({ page })
 
 test("catalog search and category filter (works as a GET form)", async ({ page }) => {
   await page.goto("/fr/catalogue");
-  await page.getByLabel("Rechercher un produit").fill("stylo");
+  // No product is seeded: a search that matches nothing shows the empty state, not a broken page.
+  await page.getByLabel("Rechercher un produit").fill("zz-aucun-produit");
   await page.getByRole("button", { name: "Rechercher" }).click();
-  await expect(page).toHaveURL(/q=stylo/);
-  await expect(page.getByRole("link", { name: /Stylo/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Cahier/ })).toHaveCount(0);
+  await expect(page).toHaveURL(/q=zz-aucun-produit/);
+  await expect(page.locator("main").getByText("Aucun produit ne correspond à votre recherche.")).toBeVisible();
+  await expect(page.locator("main").getByRole("link", { name: "Voir tout le catalogue" })).toBeVisible();
 });
 
 test("security headers are present", async ({ request }) => {

@@ -21,6 +21,7 @@ export const ERROR_CODES = [
   "invalid_date",
   "invalid_option",
   "below_moq",
+  "invalid_url",
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 
@@ -95,6 +96,25 @@ const optionalPhone = z
       return z.NEVER;
     }
     return phone;
+  });
+
+/** Optional date, today or later (max two years ahead). Used by the custom production and digital request forms. */
+export const deadline = z
+  .string()
+  .trim()
+  .optional()
+  .transform((value, ctx) => {
+    if (!value) return null;
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T00:00:00Z`) : null;
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const max = new Date(today);
+    max.setUTCFullYear(max.getUTCFullYear() + 2);
+    if (!date || Number.isNaN(date.getTime()) || date < today || date > max) {
+      ctx.addIssue({ code: "custom", message: "invalid_date" });
+      return z.NEVER;
+    }
+    return value;
   });
 
 export const consent = z

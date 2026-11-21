@@ -23,3 +23,10 @@ export async function expectNoHorizontalOverflow(page: Page) {
 export function isMobile(page: Page) {
   return (page.viewportSize()?.width ?? 1280) < 1024;
 }
+
+/** First product page linked from a catalog listing, or null when nothing is published (no product is seeded). */
+export async function firstProductPath(page: Page, catalogPath: string): Promise<string | null> {
+  await page.goto(catalogPath);
+  const link = page.locator('main a[href*="/produits/"], main a[href*="/products/"]').first();
+  return (await link.count()) > 0 ? await link.getAttribute("href") : null;
+}

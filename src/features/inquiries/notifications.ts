@@ -153,3 +153,46 @@ export async function notifyCustomRequest(
     () => acknowledge(input.locale, input.email, input.fullName, reference, "quote"),
   );
 }
+
+export async function notifyDigitalRequest(
+  input: Pick<QuoteInput, "fullName" | "companyName" | "email" | "phone" | "preferredContact" | "locale"> & {
+    projectTypes: string[];
+    features: string[];
+    description: string;
+    existingWebsite: string | null;
+    budget: string | null;
+    deadline: string | null;
+  },
+  reference: string,
+) {
+  // Internal e-mail in French: labels from the French dictionary (keys are stable).
+  const f = (await getDictionary("fr")).digitalForm;
+  const label = (map: Record<string, string>, key: string) => map[key] ?? key;
+  const text = [
+    `Nouvelle demande Solutions digitales — ${reference}`,
+    "",
+    `Nom : ${input.fullName}`,
+    `Entreprise : ${input.companyName ?? "—"}`,
+    `E-mail : ${input.email}`,
+    `Téléphone : ${input.phone}`,
+    `Contact préféré : ${input.preferredContact}`,
+    `Langue : ${input.locale}`,
+    "",
+    `Type de projet : ${input.projectTypes.map((k) => label(f.projectTypes, k)).join(", ")}`,
+    `Fonctionnalités : ${input.features.length ? input.features.map((k) => label(f.features, k)).join(", ") : "—"}`,
+    `Site actuel : ${input.existingWebsite ?? "—"}`,
+    `Budget indicatif : ${input.budget ?? "—"}`,
+    `Date souhaitée : ${input.deadline ?? "—"}`,
+    "",
+    input.description,
+    "",
+    `Administration : ${siteUrl}/admin/quotations?ref=${encodeURIComponent(reference)}`,
+  ].join("\n");
+
+  await deliver(
+    "quote",
+    reference,
+    { subject: `[MSLAB] Solutions digitales ${reference}`, text, replyTo: input.email },
+    () => acknowledge(input.locale, input.email, input.fullName, reference, "quote"),
+  );
+}

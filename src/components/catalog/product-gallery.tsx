@@ -16,10 +16,17 @@ type Props = {
 };
 
 /** Main image + thumbnail buttons. Without JS the first image still renders (SSR). */
-export function ProductGallery({ images, thumbLabelTemplate, noImageLabel, placeholder }: Props) {
+export function ProductGallery({ images: allImages, thumbLabelTemplate, noImageLabel, placeholder }: Props) {
   const thumbLabel = (n: number, total: number) => format(thumbLabelTemplate, { n, total });
   const [index, setIndex] = useState(0);
-  const current = images[index];
+  // Photos that failed to load are dropped, so a broken file never leaves an empty frame.
+  const [failed, setFailed] = useState<ReadonlySet<string>>(() => new Set());
+  const markFailed = (url: string) => {
+    setFailed((prev) => new Set(prev).add(url));
+    setIndex(0);
+  };
+  const images = allImages.filter((image) => !failed.has(image.url));
+  const current = images[index] ?? images[0];
 
   if (!current) {
     return (
@@ -41,6 +48,7 @@ export function ProductGallery({ images, thumbLabelTemplate, noImageLabel, place
           priority={index === 0}
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-contain p-6"
+          onError={() => markFailed(current.url)}
         />
       </div>
       {images.length > 1 ? (
@@ -57,7 +65,7 @@ export function ProductGallery({ images, thumbLabelTemplate, noImageLabel, place
                   i === index ? "border-accent ring-accent ring-1" : "border-line hover:border-line-strong",
                 )}
               >
-                <Image src={image.url} alt="" fill sizes="96px" className="object-contain p-1.5" />
+                <Image src={image.url} alt="" fill sizes="96px" className="object-contain p-1.5" onError={() => markFailed(image.url)} />
               </button>
             </li>
           ))}

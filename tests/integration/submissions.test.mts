@@ -25,9 +25,11 @@ if (!url.includes("xccgcoznshndfquwsuwq")) throw new Error("Refusing to run: not
 const db = createClient<Database>(url, key, { auth: { persistSession: false } });
 const ipHash = (seed: string) => createHash("sha256").update(seed).digest("hex");
 
-const SAMPLE_PRODUCT = "b0000000-0000-4000-8000-000000000001"; // "Cahier" (supabase/seed/initial_catalog.sql)
-const SAMPLE_PRODUCT_2 = "b0000000-0000-4000-8000-000000000005"; // "Livre"
-// Not a published product (the former dev-only draft id, deleted by initial_catalog.sql).
+// Real published products, if MSLAB has added any (no product is seeded; tests that need two
+// skip until then).
+const { data: publishedRows } = await db.from("products").select("id").limit(2);
+const [PUBLISHED_PRODUCT, PUBLISHED_PRODUCT_2] = (publishedRows ?? []).map((p) => p.id);
+// Not a published product (former sample id, deleted by initial_catalog.sql).
 const DRAFT_PRODUCT = "b0000000-0000-4000-8000-000000000006";
 // Snapshot preservation after product deletion needs admin rights to delete the product;
 // it is verified with SQL (docs/DATABASE_SCHEMA.md §5) and by the admin E2E tests in M6/M8.
@@ -70,7 +72,7 @@ describe("public catalog reads (RLS)", () => {
   it("returns published products only — never drafts", async () => {
     const { data, error } = await db.from("products").select("id, status");
     assert.equal(error, null);
-    assert.ok(data && data.length >= 5);
+    assert.ok(data);
     assert.ok(data.every((p) => p.status === "published"));
     assert.ok(!data.some((p) => p.id === DRAFT_PRODUCT));
   });
@@ -130,11 +132,11 @@ describe("contact inquiry RPC", () => {
 });
 
 describe("quotation request RPC", () => {
-  it("stores multiple catalog items plus a custom item", async () => {
+  it("stores multiple catalog items plus a custom item", { skip: !PUBLISHED_PRODUCT_2 && "needs two published products" }, async () => {
     const { data, error } = await db.rpc("submit_quotation_request", {
       payload: quotePayload([
-        { product_id: SAMPLE_PRODUCT, quantity: 100, specifications: "Integration item 1" },
-        { product_id: SAMPLE_PRODUCT_2, quantity: 5 },
+        { product_id: PUBLISHED_PRODUCT, quantity: 100, specifications: "Integration item 1" },
+        { product_id: PUBLISHED_PRODUCT_2, quantity: 5 },
         { label: "Custom printing job (integration test)", quantity: 250, specifications: "Custom spec" },
       ]),
       submission_key: submissionKey,

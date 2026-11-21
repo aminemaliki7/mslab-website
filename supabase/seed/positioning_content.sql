@@ -1,11 +1,19 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- MSLAB — production positioning content (docs/POSITIONING.md, decided with the owner 2026-11-19)
+-- MSLAB — positioning content (docs/POSITIONING.md; revised with the owner 2026-11-21)
+-- MSLAB: a Moroccan printing, reprographics and custom-production company serving businesses,
+-- institutions and individuals. Bulk orders only, quoted per project.
 -- Safe for production: owner-confirmed wording, no figures. Idempotent (updates by slug_fr).
 -- The French slug `impression-a-la-demande` is kept so existing URLs keep working; the page is
 -- recognised by that slug (src/components/illustrations/service-art.tsx → PRINT_ON_DEMAND_SLUG).
 -- Arabic and English: translations of the French text, to be reviewed by a native speaker.
--- These texts can also be edited later in /admin/services.
+-- These texts can also be edited later in /admin/services and /admin/settings.
 -- ═══════════════════════════════════════════════════════════════════════════
+
+-- "Who we are" (homepage) and "Presentation" (About page).
+update public.site_settings set
+  about_fr = 'MSLAB est une entreprise marocaine d''impression, de reprographie et de production sur mesure. Nous imprimons et produisons en quantité, sur devis, pour les entreprises, les institutions et les particuliers : imprimés et documents, vêtements et objets personnalisés, objets d''entreprise, papeterie et fournitures de bureau, livres et brochures, packaging.',
+  about_ar = 'MSLAB شركة مغربية للطباعة والاستنساخ والإنتاج حسب الطلب. نطبع وننتج بكميات، بعرض سعر، للشركات والمؤسسات والأفراد: مطبوعات ووثائق، ملابس ومنتجات مخصصة، منتجات الشركات، قرطاسية ولوازم مكتبية، كتب وكتيبات، وتغليف.',
+  about_en = 'MSLAB is a Moroccan printing, reprographics and custom-production company. We print and produce in quantity, quoted per project, for businesses, institutions and individuals: printed materials and documents, custom apparel and personalized products, corporate merchandise, stationery and office supplies, books and brochures, packaging.';
 
 update public.services set
   name_fr = 'Production sur mesure',
@@ -14,16 +22,15 @@ update public.services set
   summary_fr = 'Votre idée. Votre design. Notre production.',
   summary_ar = 'فكرتكم. تصميمكم. إنتاجنا.',
   summary_en = 'Your idea. Your design. Our production.',
-  description_fr = 'Textile, objets promotionnels, imprimés, packaging et collections en marque propre, fabriqués en série à partir de vos designs et de vos spécifications.',
-  description_ar = 'نسيج ومنتجات ترويجية ومطبوعات وتغليف ومجموعات بعلامة خاصة، تُصنَّع بكميات انطلاقًا من تصاميمكم ومواصفاتكم.',
-  description_en = 'Apparel, promotional merchandise, print, packaging and private-label collections, manufactured in quantity from your designs and specifications.'
+  description_fr = 'Vêtements, objets personnalisés, imprimés, papeterie et packaging, produits en série à partir de vos designs et de vos spécifications, pour les entreprises, les institutions et les particuliers.',
+  description_ar = 'ملابس ومنتجات مخصصة ومطبوعات وقرطاسية وتغليف، تُنتَج بكميات انطلاقًا من تصاميمكم ومواصفاتكم، للشركات والمؤسسات والأفراد.',
+  description_en = 'Apparel, personalized products, print, stationery and packaging, made in quantity from your designs and specifications, for businesses, institutions and individuals.'
 where slug_fr = 'impression-a-la-demande';
 
--- Supply services stay published as a secondary activity; their summaries now say "in volume".
 update public.services set
-  summary_fr = 'Impression et reproduction de documents en volume pour les entreprises, administrations et établissements.',
-  summary_ar = 'طباعة الوثائق ونسخها بكميات للشركات والإدارات والمؤسسات.',
-  summary_en = 'Document printing and reproduction in volume for companies, administrations and schools.'
+  summary_fr = 'Impression et reproduction de documents en volume pour les entreprises, les institutions et les particuliers.',
+  summary_ar = 'طباعة الوثائق ونسخها بكميات للشركات والمؤسسات والأفراد.',
+  summary_en = 'Document printing and reproduction in volume for businesses, institutions and individuals.'
 where slug_fr = 'impression-reprographie';
 
 update public.services set
@@ -39,7 +46,31 @@ update public.services set
 where slug_fr = 'papeterie-fournitures-scolaires';
 
 update public.services set
-  summary_fr = 'Livres et supports d''apprentissage pour les établissements et les organisations, en volume.',
-  summary_ar = 'كتب ووسائط تعلم للمؤسسات التعليمية والهيئات، بكميات.',
-  summary_en = 'Books and learning materials for schools and organizations, in volume.'
+  summary_fr = 'Livres, brochures et supports imprimés pour les établissements, les organisations et les particuliers, en volume.',
+  summary_ar = 'كتب وكتيبات ومطبوعات للمؤسسات التعليمية والهيئات والأفراد، بكميات.',
+  summary_en = 'Books, brochures and printed materials for schools, organizations and individuals, in volume.'
 where slug_fr = 'livres-ouvrages';
+
+-- Digital Solutions: separate web division (owner request, 2026-11-21). Dedicated landing page,
+-- recognised by its French slug (src/components/illustrations/service-art.tsx →
+-- DIGITAL_SOLUTIONS_SLUG). Arabic URL uses the French slug, like the other services.
+insert into public.services (name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en,
+  summary_fr, summary_ar, summary_en, description_fr, description_ar, description_en,
+  status, is_featured, sort_order)
+values (
+  'Solutions digitales', 'الحلول الرقمية', 'Digital solutions',
+  'solutions-digitales', null, 'digital-solutions',
+  'Des solutions web conçues pour votre activité.',
+  'حلول ويب مصممة لنشاطكم.',
+  'Web solutions built for your business.',
+  'Sites d''entreprise, e-commerce, applications web et plateformes de gestion : MSLAB conçoit, développe et maintient les outils numériques de votre activité.',
+  'مواقع الشركات والتجارة الإلكترونية وتطبيقات الويب ومنصات التسيير: تصمم MSLAB الأدوات الرقمية لنشاطكم وتطوّرها وتتولى صيانتها.',
+  'Corporate websites, e-commerce, web applications and management platforms: MSLAB designs, builds and maintains your business''s digital tools.',
+  'published', false, 60
+)
+on conflict (slug_fr) do update set
+  name_fr = excluded.name_fr, name_ar = excluded.name_ar, name_en = excluded.name_en,
+  slug_ar = excluded.slug_ar, slug_en = excluded.slug_en,
+  summary_fr = excluded.summary_fr, summary_ar = excluded.summary_ar, summary_en = excluded.summary_en,
+  description_fr = excluded.description_fr, description_ar = excluded.description_ar, description_en = excluded.description_en,
+  status = excluded.status, sort_order = excluded.sort_order;

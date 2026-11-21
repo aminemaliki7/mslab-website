@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import Image, { type StaticImageData } from "next/image";
 import type { CSSProperties } from "react";
 import { ProductionIndex } from "@/components/catalog/production-index";
+import { DigitalSolutionsSection } from "@/components/digital/digital-solutions-section";
 import { ClientLogos } from "@/components/content/client-logos";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
 import { ProofCollage, ProofField } from "@/components/home/live-proof";
+import { ProjectJourney } from "@/components/home/project-journey";
 import { HeroScene } from "@/components/illustrations/scenes";
-import { PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
+import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { ArrowLink } from "@/components/ui/arrow-link";
 import { ButtonLink } from "@/components/ui/button";
 import { Container, Heading, Section } from "@/components/ui/layout";
@@ -18,7 +19,7 @@ import { listMockupProducts } from "@/features/print-on-demand/queries";
 import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale, type Dictionary } from "@/i18n/dictionaries";
-import { localizedPath, quoteFormHref } from "@/i18n/routes";
+import { digitalQuoteHref, localizedPath, quoteFormHref } from "@/i18n/routes";
 import { cn } from "@/lib/utils";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -37,11 +38,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const CAPABILITIES_ID = "capacites";
+/** Dark band behind "How your project comes to life". */
+const PROCESS_BG = "#0E1A2B";
 
 /**
  * Homepage (docs/POSITIONING.md §5). Narrative: custom production in quantity (promise, bulk-only
- * note, live proof) → two journeys (businesses / brands & creators) → production capabilities →
- * how a production project works → what MSLAB simplifies → who MSLAB is → organizations → contact.
+ * note, live proof) → how your project comes to life (six-stage journey) → services →
+ * Digital Solutions (web division) → what MSLAB simplifies → who MSLAB is → organizations → contact.
  * Database-driven sections are omitted while
  * their data is empty; no prices, quantities or figures are invented.
  */
@@ -62,11 +65,7 @@ export default async function HomePage() {
   // Production request form when the production page exists, otherwise the general quote.
   const productionRequestHref = productionHref ? `${productionHref}#demande` : quoteHref;
   const servicesHref = localizedPath(locale, { route: "services" });
-  const steps = [
-    { title: dict.printOnDemand.step1Title, body: dict.printOnDemand.step1Body },
-    { title: dict.printOnDemand.step2Title, body: dict.printOnDemand.step2Body },
-    { title: dict.printOnDemand.step3Title, body: dict.printOnDemand.step3Body },
-  ];
+  const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
 
   return (
     <>
@@ -78,18 +77,20 @@ export default async function HomePage() {
         requestHref={productionRequestHref}
       />
 
-      {/* ─── Two journeys: businesses / brands & creators ─────────────────── */}
-      <Section aria-labelledby="journeys-heading">
-        <Container>
-          <Heading as="h2" size="xl" id="journeys-heading" className="type-display reveal">
-            {dict.journeys.title}
-          </Heading>
-          <div className="reveal-stagger mt-8 grid gap-5 md:grid-cols-2 lg:mt-10">
-            <Journey journey={dict.journeys.business} href={quoteHref} photo={{ src: PHOTOS.staffTshirt, alt: dict.photos.staffTshirt, focus: "50% 12%" }} />
-            <Journey journey={dict.journeys.brands} href={productionRequestHref} photo={{ src: PHOTOS.printedSweatshirts, alt: dict.photos.printedSweatshirts, focus: "50% 53%" }} dark />
+      {/* ─── How your project comes to life (right after the hero) ───────────────── */}
+      <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: PROCESS_BG }}>
+        <Container className="py-16 lg:py-24">
+          <div className="reveal flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+            <h2 id="process-heading" className="type-display max-w-xl text-2xl text-balance sm:text-3xl">
+              {dict.printOnDemand.stepsTitle}
+            </h2>
+            <ButtonLink href={productionRequestHref} variant="accent" size="lg">
+              {dict.sections.processCta}
+            </ButtonLink>
           </div>
+          <ProjectJourney steps={dict.printOnDemand.workflow} background={PROCESS_BG} className="mt-12 lg:mt-16" />
         </Container>
-      </Section>
+      </section>
 
       {/* ─── Production capabilities ──────────────────────────────────────── */}
       <Section id={CAPABILITIES_ID} aria-labelledby="services-heading" className="scroll-mt-20">
@@ -100,30 +101,12 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {/* ─── How a production project works (a real sequence, so it is numbered) ─── */}
-      <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: "#0E1A2B" }}>
-        <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
-          <div className="reveal lg:col-span-4">
-            <h2 id="process-heading" className="type-display text-2xl text-balance sm:text-3xl">
-              {dict.printOnDemand.stepsTitle}
-            </h2>
-            <ButtonLink href={productionRequestHref} variant="accent" size="lg" className="mt-8">
-              {dict.sections.processCta}
-            </ButtonLink>
-          </div>
-          <ol className="reveal-stagger grid gap-8 sm:grid-cols-3 lg:col-span-8">
-            {steps.map((step, index) => (
-              <li key={step.title} className="border-t border-white/25 pt-5">
-                <span className="type-poster text-cyan-300 block text-5xl" dir="ltr">
-                  {index + 1}
-                </span>
-                <h3 className="mt-3 text-base font-semibold">{step.title}</h3>
-                <p className="mt-2 leading-relaxed text-white/75">{step.body}</p>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </section>
+      {/* ─── Digital Solutions: separate division (web), its own band ─────── */}
+      <DigitalSolutionsSection
+        dict={dict}
+        pageHref={digital ? localizedPath(locale, { route: "service", slug: digital.slug }) : null}
+        quoteHref={digitalQuoteHref(locale)}
+      />
 
       {/* ─── What MSLAB simplifies (not a sequence: no numbers) ───────────── */}
       <Section aria-labelledby="pain-heading">
@@ -269,58 +252,6 @@ function Hero({
         </div>
       </Container>
     </section>
-  );
-}
-
-/** One customer journey: who it is for, what MSLAB produces for them, one quote CTA. */
-function Journey({
-  journey,
-  href,
-  photo,
-  dark = false,
-}: {
-  journey: Dictionary["journeys"]["business"];
-  href: string;
-  photo: { src: StaticImageData; alt: string; focus?: string };
-  dark?: boolean;
-}) {
-  return (
-    <article
-      className={cn(
-        "lift flex flex-col rounded-[var(--radius-card)] p-3 pb-6 sm:pb-7",
-        dark ? "bg-ink-900 text-white" : "bg-paper-100",
-      )}
-    >
-      <div className="bg-paper-100 settle-frame relative aspect-[21/9] overflow-hidden rounded-[calc(var(--radius-card)-0.5rem)]">
-        <div className="reveal-settle absolute inset-0">
-          <Image
-            src={photo.src}
-            alt={photo.alt}
-            fill
-            sizes="(min-width: 768px) 36rem, 100vw"
-            className="lift-photo object-cover"
-            style={photo.focus ? { objectPosition: photo.focus } : undefined}
-          />
-        </div>
-      </div>
-      <div className="flex flex-1 flex-col px-3 pt-5 sm:px-4">
-        <p className={cn("text-sm font-semibold", dark ? "text-cyan-300" : "text-accent")}>{journey.eyebrow}</p>
-        <h3 className="mt-3 text-xl font-semibold text-balance sm:text-2xl">{journey.title}</h3>
-        <p className={cn("mt-4 leading-relaxed", dark ? "text-white/75" : "text-fg-muted")}>{journey.body}</p>
-        <ul className={cn("mt-6 border-t", dark ? "border-white/25" : "border-fg/20")}>
-          {journey.points.map((point) => (
-            <li key={point} className={cn("border-b py-3 font-medium", dark ? "border-white/15" : "border-fg/10")}>
-              {point}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-auto pt-8">
-          <ButtonLink href={href} variant={dark ? "accent" : "primary"} size="lg" className="w-full sm:w-auto">
-            {journey.cta}
-          </ButtonLink>
-        </div>
-      </div>
-    </article>
   );
 }
 

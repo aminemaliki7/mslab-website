@@ -12,7 +12,7 @@ The **application is technically ready** (features complete, 233 automated tests
 |---|---|---|---|
 | B1 | Legal documents (8 pages, fr/ar/en) | Drafted in `src/content/legal/` against Loi 09-08 / 31-08 / 53-05; status `draft` → noindex + provisional notice. Missing facts are visible placeholders. Checklist: `LEGAL_CONTENT_CHECKLIST.md` | MSLAB (facts) + lawyer (validation) |
 | B2 | Verified company information in **/admin/settings** | Contact page/footer show nothing without phone, email, address; WhatsApp buttons stay hidden | MSLAB |
-| B3 | Real services, categories and products | Initial catalog (3 categories, 5 products) is in `supabase/seed/initial_catalog.sql`; run it on production. Descriptions, references and photos to be added by MSLAB in the admin | MSLAB |
+| B3 | Real services, categories and products | `supabase/seed/initial_catalog.sql` sets up the six categories and 18 product types with photos; run it on production. References, sizes, MOQ and more photos to be added by MSLAB in the admin | MSLAB |
 | B4 | Production Supabase project (**Free plan**, ADR-020) + Vercel Pro project + env vars | Runbook §2–3. The free organization already has 2 active projects (`hirely`, `mslab-dev`) — production needs a slot: decision pending (see §6) | 👤 owner |
 | B5 | Domain name + DNS | Canonical URLs, sitemap, email sender | 👤 owner |
 | B6 | Disable public sign-ups in Supabase Auth (dev **and** prod) | Prevents account creation by strangers (RLS still blocks admin access, but accounts should not exist) | 👤 owner — dev status not yet confirmed |

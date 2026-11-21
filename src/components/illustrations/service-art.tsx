@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { DigitalScene } from "./digital-art";
 import { BusinessSupplyIllustration, LibraryIllustration, PrintOnDemandIllustration, PrintShopIllustration, StationeryIllustration } from "./scenes";
 
 /**
@@ -12,6 +13,7 @@ export const SERVICE_ART: Record<string, ComponentType<{ className?: string }>> 
   "papeterie-fournitures-scolaires": StationeryIllustration,
   "livres-ouvrages": LibraryIllustration,
   "impression-a-la-demande": PrintOnDemandIllustration,
+  "solutions-digitales": DigitalScene,
 };
 
 /** The four core services in display order (homepage picture cards). */
@@ -19,6 +21,9 @@ export const CORE_SERVICE_SLUGS = ["impression-reprographie", "fournitures-de-bu
 
 /** French slug of the print-on-demand service (dedicated page with gallery, form and tracking). */
 export const PRINT_ON_DEMAND_SLUG = "impression-a-la-demande";
+
+/** French slug of the Digital Solutions division (dedicated landing page, web services). */
+export const DIGITAL_SOLUTIONS_SLUG = "solutions-digitales";
 
 export function ServiceArt({ slugFr, className }: { slugFr: string; className?: string }) {
   const Art = SERVICE_ART[slugFr];

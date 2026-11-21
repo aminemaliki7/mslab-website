@@ -24,12 +24,13 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
   const db = await createSessionClient();
-  const [{ data: request }, { data: items }, { data: details }, { data: files }, { data: events }] = await Promise.all([
+  const [{ data: request }, { data: items }, { data: details }, { data: files }, { data: events }, { data: digital }] = await Promise.all([
     db.from("quotation_requests").select("*").eq("id", id).maybeSingle(),
     db.from("quotation_items").select("*").eq("quotation_request_id", id).order("sort_order"),
     db.from("custom_request_details").select("*").eq("quotation_request_id", id).maybeSingle(),
     db.from("quotation_files").select("*").eq("quotation_request_id", id).order("storage_path"),
     db.from("quotation_status_events").select("status, created_at").eq("quotation_request_id", id).order("created_at", { ascending: false }),
+    db.from("digital_request_details").select("*").eq("quotation_request_id", id).maybeSingle(),
   ]);
   if (!request) notFound();
 
@@ -68,7 +69,7 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
   return (
     <>
       <AdminPageHeader
-        title={format(request.kind === "custom" ? q.titleCustom : q.titleQuote, { ref: request.reference })}
+        title={format(request.kind === "custom" ? q.titleCustom : request.kind === "digital" ? q.titleDigital : q.titleQuote, { ref: request.reference })}
         description={format(q.received, { date: formatAdminDateTime(request.created_at, lang) })}
         back={{ href: "/admin/quotations", label: q.title }}
         actions={<StatusBadge status={statuses[request.status]} />}
@@ -120,6 +121,39 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
         </div>
 
         <div className="space-y-6 xl:order-1">
+          {digital ? (
+            <Panel title={q.digitalProject}>
+              <Dl
+                items={[
+                  {
+                    label: q.digitalTypes,
+                    value: digital.project_types.map((key) => q.digitalTypeLabels[key as keyof typeof q.digitalTypeLabels] ?? key).join(", "),
+                  },
+                  {
+                    label: q.digitalFeatures,
+                    value: digital.features.length
+                      ? digital.features.map((key) => q.digitalFeatureLabels[key as keyof typeof q.digitalFeatureLabels] ?? key).join(", ")
+                      : "—",
+                  },
+                  {
+                    label: q.existingWebsite,
+                    value: digital.existing_website ? (
+                      <a href={digital.existing_website} target="_blank" rel="noopener noreferrer nofollow" className="text-accent break-all" dir="ltr">
+                        {digital.existing_website}
+                      </a>
+                    ) : (
+                      "—"
+                    ),
+                  },
+                  { label: q.budget, value: digital.budget ? <bdi>{digital.budget}</bdi> : "—" },
+                  { label: q.launchDate, value: digital.deadline ? formatAdminDate(`${digital.deadline}T00:00:00`, lang) : "—" },
+                ]}
+              />
+              <h3 className="text-fg mt-6 text-sm font-semibold">{q.descriptionTitle}</h3>
+              <p dir="auto" className="mt-2 text-sm whitespace-pre-line">{digital.description}</p>
+            </Panel>
+          ) : null}
+
           {details ? (
             <Panel title={q.project}>
               <Dl
@@ -172,6 +206,8 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
             </Panel>
           ) : null}
 
+          {/* Web projects have no articles: their details are in the panel above. */}
+          {request.kind !== "digital" ? (
           <Panel title={format(q.items, { count: items?.length ?? 0 })}>
             <Table head={[q.colArticle, q.quantity, q.colSpecs]}>
               {(items ?? []).map((item) => (
@@ -200,6 +236,7 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
             </Table>
             <p className="text-fg-muted mt-3 text-xs">{q.itemsNote}</p>
           </Panel>
+          ) : null}
 
           {request.message ? (
             <Panel title={q.customerMessage}>

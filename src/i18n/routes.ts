@@ -54,6 +54,14 @@ export function quoteFormHref(locale: Locale, productId?: string): string {
   return `${localizedPath(locale, { route: "quote" })}${query}#${QUOTE_FORM_ID}`;
 }
 
+/** Query value that switches the quote page to the Digital Solutions (web project) form. */
+export const DIGITAL_QUOTE_TYPE = "digital";
+
+/** The quote page opened on the web-project form (Digital Solutions). */
+export function digitalQuoteHref(locale: Locale): string {
+  return `${localizedPath(locale, { route: "quote" })}?type=${DIGITAL_QUOTE_TYPE}#${QUOTE_FORM_ID}`;
+}
+
 export function localizedPath(locale: Locale, key: RouteKey): string {
   switch (key.route) {
     case "home":

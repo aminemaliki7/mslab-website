@@ -105,13 +105,8 @@ export default async function AboutPage() {
           </Heading>
           <div className="lg:col-span-8">
             <ul className="border-line grid border-t sm:grid-cols-2">
-              {/* Production lines first, then supplies (secondary) — docs/POSITIONING.md. */}
-              {[
-                ...PRODUCTION_LINES.map((line) => dict.productionLines[line.key].name),
-                dict.businessAreas.office,
-                dict.businessAreas.school,
-                dict.businessAreas.books,
-              ].map((area) => (
+              {/* MSLAB's core services — docs/POSITIONING.md. */}
+              {[...PRODUCTION_LINES.map((line) => dict.productionLines[line.key].name), dict.digital.title].map((area) => (
                 <li key={area} className="border-line text-fg border-b py-4 font-medium sm:pe-6">
                   {area}
                 </li>

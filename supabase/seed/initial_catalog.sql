@@ -1,63 +1,280 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- MSLAB — INITIAL CATALOG (real content, confirmed by MSLAB on 2026-11-15)
+-- MSLAB — INITIAL CATALOG (six core services, 18 product types)
 -- ═══════════════════════════════════════════════════════════════════════════
--- The catalog MSLAB offers for the moment: 3 categories, 5 products.
+-- Revised 2026-11-21 with the owner: categories = MSLAB's six core services
+-- (docs/POSITIONING.md §2); products = the product types MSLAB produces in quantity, on quotation.
 -- Rules:
---   * Names only. No descriptions, SKUs, specifications, prices or availability until
---     MSLAB provides them in /admin/products (never invented here).
---   * No photos yet: the site shows each product's illustration, captioned "Illustration".
---   * Safe for development and production. Idempotent: fixed UUIDs + upsert, so running it
---     again restores these values (it also converts the former "(exemple)" sample rows,
---     which used the same UUIDs, in place).
--- Run once per environment (SQL editor or `psql -f`). Edits made later in the admin are
--- overwritten if this file is run again — run it only to set up an environment.
+--   * Names and descriptions of the product TYPE only. No prices, stock, sizes, materials,
+--     printing techniques, lead times or minimum quantities (never invented: MSLAB adds them in
+--     /admin/products when known; the site says "confirmed in your quote" meanwhile).
+--   * Photos: MSLAB's own mockup/product photos (+ 2 free Unsplash photos), from public/catalog/products/
+--     (storage_path starting with "/" = site file, see src/lib/supabase/storage.ts). Products
+--     without a photo show their drawing until one is added in the admin.
+--   * Arabic and English: translations of the French text, to be reviewed by a native speaker.
+--   * Idempotent: fixed UUIDs + upsert. Running it again restores these values (admin edits to
+--     these rows are overwritten), so run it only to set up an environment.
+--   * Also deletes the former sample products (fixed UUIDs b0000000-…-0001 to -0006 only).
 
 begin;
 
+-- Former sample products.
+delete from public.products where id in (
+  'b0000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000002',
+  'b0000000-0000-4000-8000-000000000003', 'b0000000-0000-4000-8000-000000000004',
+  'b0000000-0000-4000-8000-000000000005', 'b0000000-0000-4000-8000-000000000006'
+);
+
+-- Categories: the six core services (same names as the rest of the site).
 insert into public.categories (id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en,
   description_fr, description_ar, description_en, sort_order, is_published)
 values
-  ('a0000000-0000-4000-8000-000000000001', 'Papeterie', 'قرطاسية', 'Stationery',
-   'papeterie', 'papeterie', 'stationery', null, null, null, 10, true),
-  ('a0000000-0000-4000-8000-000000000002', 'Fournitures de bureau', 'لوازم مكتبية', 'Office supplies',
-   'fournitures-de-bureau', 'fournitures-de-bureau', 'office-supplies', null, null, null, 20, true),
-  ('a0000000-0000-4000-8000-000000000003', 'Livres', 'كتب', 'Books',
-   'livres', 'livres', 'books', null, null, null, 30, true)
+  ('a0000000-0000-4000-8000-000000000001', 'Impression & reprographie', 'الطباعة والاستنساخ', 'Printing & reprographics',
+   'impression-reprographie', 'impression-reprographie', 'printing-reprographics',
+   'Documents, cartes de visite, affiches et stickers, imprimés en volume pour les entreprises, les institutions et les particuliers.',
+   'وثائق وبطاقات زيارة وملصقات حائطية وملصقات لاصقة، تُطبع بكميات للشركات والمؤسسات والأفراد.',
+   'Documents, business cards, posters and stickers, printed in volume for businesses, institutions and individuals.', 10, true),
+  ('a0000000-0000-4000-8000-000000000002', 'Vêtements & produits personnalisés', 'الملابس والمنتجات المخصصة', 'Custom apparel & personalized products',
+   'vetements-produits-personnalises', 'vetements-produits-personnalises', 'custom-apparel',
+   'T-shirts, sweats et tenues à votre logo ou sous votre marque, produits en série.',
+   'قمصان وسترات وملابس بشعاركم أو بعلامتكم، تُنتَج بكميات.',
+   'T-shirts, hoodies and workwear with your logo or under your brand, made in quantity.', 20, true),
+  ('a0000000-0000-4000-8000-000000000003', 'Objets promotionnels & d''entreprise', 'المنتجات الترويجية ومنتجات الشركات', 'Corporate & promotional merchandise',
+   'objets-promotionnels', 'objets-promotionnels', 'corporate-merchandise',
+   'Mugs, tote bags et kits à votre marque, pour vos équipes, vos clients et vos événements.',
+   'أكواب وحقائب قماشية وأطقم بعلامتكم، لفرقكم وزبائنكم ومناسباتكم.',
+   'Mugs, tote bags and kits with your brand, for your teams, clients and events.', 30, true),
+  ('a0000000-0000-4000-8000-000000000004', 'Papeterie d''entreprise & fournitures de bureau', 'قرطاسية الشركات واللوازم المكتبية', 'Business stationery & office supplies',
+   'papeterie-fournitures-de-bureau', 'papeterie-fournitures-de-bureau', 'stationery-office-supplies',
+   'Papier à en-tête, carnets personnalisés et fournitures pour équiper vos équipes.',
+   'أوراق بترويسة ودفاتر مخصصة ولوازم لتجهيز فرقكم.',
+   'Letterheads, custom notebooks and supplies to equip your teams.', 40, true),
+  ('a0000000-0000-4000-8000-000000000005', 'Livres, brochures & imprimés', 'الكتب والكتيبات والمطبوعات', 'Books, brochures & printed materials',
+   'livres-brochures-imprimes', 'livres-brochures-imprimes', 'books-printed-materials',
+   'Flyers, dépliants, brochures, catalogues et livres, imprimés en quantité.',
+   'منشورات ومطويات وكتيبات وكتالوجات وكتب، تُطبع بكميات.',
+   'Flyers, leaflets, brochures, catalogs and books, printed in quantity.', 50, true),
+  ('a0000000-0000-4000-8000-000000000006', 'Packaging & production en série', 'التغليف والإنتاج بالكميات', 'Custom packaging & bulk production',
+   'packaging', 'packaging', 'custom-packaging',
+   'Boîtes et sacs à votre identité, produits en série.',
+   'علب وأكياس بهويتكم، تُنتَج بكميات.',
+   'Boxes and bags in your identity, made in volume.', 60, true)
 on conflict (id) do update set
   name_fr = excluded.name_fr, name_ar = excluded.name_ar, name_en = excluded.name_en,
   slug_fr = excluded.slug_fr, slug_ar = excluded.slug_ar, slug_en = excluded.slug_en,
-  description_fr = null, description_ar = null, description_en = null,
+  description_fr = excluded.description_fr, description_ar = excluded.description_ar, description_en = excluded.description_en,
   sort_order = excluded.sort_order, is_published = excluded.is_published;
 
+-- Products (product types; quote-based, no prices or quantities). sort_order = category × 10 + rank,
+-- so the full catalogue lists products category by category.
 insert into public.products (id, category_id, name_fr, name_ar, name_en, slug_fr, slug_ar, slug_en,
   short_description_fr, short_description_ar, short_description_en,
-  description_fr, description_ar, description_en, sku, specifications, status, is_featured, sort_order)
+  description_fr, description_ar, description_en, sku, specifications, status, is_featured, sort_order, published_at)
 values
-  ('b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001',
-   'Cahier', 'دفتر', 'Notebook', 'cahier', 'cahier', 'notebook',
-   null, null, null, null, null, null, null, '[]', 'published', true, 10),
-  ('b0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000001',
-   'Stylo', 'قلم', 'Pen', 'stylo', 'stylo', 'pen',
-   null, null, null, null, null, null, null, '[]', 'published', true, 20),
-  ('b0000000-0000-4000-8000-000000000003', 'a0000000-0000-4000-8000-000000000002',
-   'Classeur', 'ملف', 'Binder', 'classeur', 'classeur', 'binder',
-   null, null, null, null, null, null, null, '[]', 'published', false, 10),
-  ('b0000000-0000-4000-8000-000000000004', 'a0000000-0000-4000-8000-000000000002',
-   'Agrafeuse', 'دباسة', 'Stapler', 'agrafeuse', 'agrafeuse', 'stapler',
-   null, null, null, null, null, null, null, '[]', 'published', false, 20),
-  ('b0000000-0000-4000-8000-000000000005', 'a0000000-0000-4000-8000-000000000003',
-   'Livre', 'كتاب', 'Book', 'livre', 'livre', 'book',
-   null, null, null, null, null, null, null, '[]', 'published', true, 10)
+  -- Printing & reprographics
+  ('d0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001',
+   'Cartes de visite', 'بطاقات الزيارة', 'Business cards', 'cartes-de-visite', 'cartes-de-visite', 'business-cards',
+   'Cartes de visite à votre identité, imprimées en série pour vos équipes.',
+   'بطاقات زيارة بهويتكم، تُطبع بكميات لفرقكم.',
+   'Business cards in your identity, printed in quantity for your teams.',
+   'Envoyez votre logo et les coordonnées de chaque personne : nous préparons la série et vous la faisons valider avant impression. Format, papier et finitions sont confirmés dans votre devis.',
+   'أرسلوا شعاركم وبيانات كل شخص: نُعدّ السلسلة ونعرضها عليكم للموافقة قبل الطباعة. يُؤكَّد المقاس والورق واللمسات النهائية في عرض السعر.',
+   'Send your logo and each person''s details: we prepare the series and have you approve it before printing. Format, paper and finishes are confirmed in your quote.',
+   null, '[]', 'published', true, 110, now()),
+  ('d0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000001',
+   'Affiches', 'ملصقات حائطية', 'Posters', 'affiches', 'affiches', 'posters',
+   'Affiches pour vos campagnes, vos points de vente et vos événements.',
+   'ملصقات حائطية لحملاتكم ونقاط بيعكم ومناسباتكم.',
+   'Posters for your campaigns, points of sale and events.',
+   'Indiquez les formats et les quantités souhaités, et joignez vos fichiers. Le papier et les finitions sont confirmés dans votre devis.',
+   'حددوا المقاسات والكميات المطلوبة وأرفقوا ملفاتكم. يُؤكَّد الورق واللمسات النهائية في عرض السعر.',
+   'Tell us the formats and quantities you need and attach your files. Paper and finishes are confirmed in your quote.',
+   null, '[]', 'published', false, 120, now()),
+  ('d0000000-0000-4000-8000-000000000003', 'a0000000-0000-4000-8000-000000000001',
+   'Stickers & autocollants', 'ملصقات لاصقة', 'Stickers', 'stickers-autocollants', 'stickers-autocollants', 'stickers',
+   'Stickers à votre logo pour vos produits, emballages et événements.',
+   'ملصقات لاصقة بشعاركم لمنتجاتكم وأغلفتكم ومناسباتكم.',
+   'Stickers with your logo for your products, packaging and events.',
+   'Précisez la forme, la taille et la quantité souhaitées : nous revenons vers vous avec un devis.',
+   'حددوا الشكل والحجم والكمية المطلوبة: نعود إليكم بعرض سعر.',
+   'Tell us the shape, size and quantity you need: we come back to you with a quote.',
+   null, '[]', 'published', false, 130, now()),
+  ('d0000000-0000-4000-8000-000000000004', 'a0000000-0000-4000-8000-000000000001',
+   'Impression de documents', 'طباعة الوثائق', 'Document printing', 'impression-de-documents', 'impression-de-documents', 'document-printing',
+   'Impression et reproduction de documents en volume.',
+   'طباعة الوثائق ونسخها بكميات.',
+   'Document printing and reproduction in volume.',
+   'Rapports, supports de formation, dossiers : envoyez vos fichiers et le nombre d''exemplaires, nous vous répondons avec un devis.',
+   'تقارير ووسائط تكوين وملفات: أرسلوا ملفاتكم وعدد النسخ، ونرد عليكم بعرض سعر.',
+   'Reports, training materials, files: send your documents and the number of copies, and we reply with a quote.',
+   null, '[]', 'published', false, 140, now()),
+  -- Custom apparel & personalized products
+  ('d0000000-0000-4000-8000-000000000005', 'a0000000-0000-4000-8000-000000000002',
+   'T-shirts personnalisés', 'قمصان مخصصة', 'Custom T-shirts', 't-shirts-personnalises', 't-shirts-personnalises', 'custom-t-shirts',
+   'T-shirts à votre logo pour vos équipes, vos événements ou votre collection.',
+   'قمصان بشعاركم لفرقكم أو مناسباتكم أو مجموعتكم.',
+   'T-shirts with your logo for your teams, events or collection.',
+   'Préparez votre design dans le studio ou envoyez vos fichiers, avec les couleurs, les tailles et les quantités. Le support et la technique sont confirmés dans votre devis.',
+   'جهّزوا تصميمكم في الاستوديو أو أرسلوا ملفاتكم، مع الألوان والمقاسات والكميات. يُؤكَّد نوع القماش والتقنية في عرض السعر.',
+   'Prepare your design in the studio or send your files, with colours, sizes and quantities. The garment and technique are confirmed in your quote.',
+   null, '[]', 'published', true, 210, now()),
+  ('d0000000-0000-4000-8000-000000000006', 'a0000000-0000-4000-8000-000000000002',
+   'Sweats à capuche personnalisés', 'سترات بقلنسوة مخصصة', 'Custom hoodies', 'sweats-a-capuche-personnalises', 'sweats-a-capuche-personnalises', 'custom-hoodies',
+   'Sweats à capuche marqués devant et dos, pour vos équipes ou votre marque.',
+   'سترات بقلنسوة بطباعة أمامية وخلفية، لفرقكم أو لعلامتكم.',
+   'Hoodies printed front and back, for your teams or your brand.',
+   'Indiquez les emplacements du marquage, les couleurs, les tailles et les quantités. Le support et la technique sont confirmés dans votre devis.',
+   'حددوا أماكن الطباعة والألوان والمقاسات والكميات. يُؤكَّد نوع القماش والتقنية في عرض السعر.',
+   'Tell us where the print goes, the colours, sizes and quantities. The garment and technique are confirmed in your quote.',
+   null, '[]', 'published', true, 220, now()),
+  -- Corporate & promotional merchandise
+  ('d0000000-0000-4000-8000-000000000007', 'a0000000-0000-4000-8000-000000000003',
+   'Mugs personnalisés', 'أكواب مخصصة', 'Custom mugs', 'mugs-personnalises', 'mugs-personnalises', 'custom-mugs',
+   'Mugs à votre logo pour vos équipes, vos clients et vos événements.',
+   'أكواب بشعاركم لفرقكم وزبائنكم ومناسباتكم.',
+   'Mugs with your logo for your teams, clients and events.',
+   'Envoyez votre visuel et la quantité souhaitée : nous vous répondons avec un devis.',
+   'أرسلوا تصميمكم والكمية المطلوبة: نرد عليكم بعرض سعر.',
+   'Send your artwork and the quantity you need: we reply with a quote.',
+   null, '[]', 'published', true, 310, now()),
+  ('d0000000-0000-4000-8000-000000000008', 'a0000000-0000-4000-8000-000000000003',
+   'Tote bags personnalisés', 'حقائب قماشية مخصصة', 'Custom tote bags', 'tote-bags-personnalises', 'tote-bags-personnalises', 'custom-tote-bags',
+   'Tote bags à votre marque pour vos événements, salons et clients.',
+   'حقائب قماشية بعلامتكم لمناسباتكم ومعارضكم وزبائنكم.',
+   'Tote bags with your brand for your events, trade fairs and clients.',
+   'Indiquez la couleur du sac, l''emplacement du logo et la quantité. Le support et la technique sont confirmés dans votre devis.',
+   'حددوا لون الحقيبة ومكان الشعار والكمية. يُؤكَّد نوع القماش والتقنية في عرض السعر.',
+   'Tell us the bag colour, logo position and quantity. The material and technique are confirmed in your quote.',
+   null, '[]', 'published', false, 320, now()),
+  ('d0000000-0000-4000-8000-000000000009', 'a0000000-0000-4000-8000-000000000003',
+   'Kits d''entreprise', 'أطقم الشركات', 'Corporate kits', 'kits-d-entreprise', 'kits-d-entreprise', 'corporate-kits',
+   'Ensembles d''objets à votre identité pour l''accueil, les événements ou les équipes.',
+   'مجموعات منتجات بهويتكم للاستقبال أو المناسبات أو الفرق.',
+   'Sets of branded items for onboarding, events or teams.',
+   'Composez votre kit (sacs, carnets, stylos, gourdes…) et indiquez les quantités : nous vous proposons un devis.',
+   'كوّنوا طقمكم (حقائب، دفاتر، أقلام، قنينات…) وحددوا الكميات: نقترح عليكم عرض سعر.',
+   'Put your kit together (bags, notebooks, pens, bottles…) and tell us the quantities: we send you a quote.',
+   null, '[]', 'published', false, 330, now()),
+  -- Business stationery & office supplies
+  ('d0000000-0000-4000-8000-000000000010', 'a0000000-0000-4000-8000-000000000004',
+   'Papier à en-tête', 'ورق بترويسة', 'Letterhead', 'papier-a-en-tete', 'papier-a-en-tete', 'letterhead',
+   'Papier à en-tête à votre identité pour vos courriers et documents.',
+   'ورق بترويسة بهويتكم لمراسلاتكم ووثائقكم.',
+   'Letterhead in your identity for your letters and documents.',
+   'Envoyez votre charte ou votre modèle et la quantité : le papier est confirmé dans votre devis.',
+   'أرسلوا ميثاقكم البصري أو نموذجكم والكمية: يُؤكَّد الورق في عرض السعر.',
+   'Send your brand guidelines or template and the quantity: the paper is confirmed in your quote.',
+   null, '[]', 'published', false, 410, now()),
+  ('d0000000-0000-4000-8000-000000000011', 'a0000000-0000-4000-8000-000000000004',
+   'Carnets personnalisés', 'دفاتر مخصصة', 'Custom notebooks', 'carnets-personnalises', 'carnets-personnalises', 'custom-notebooks',
+   'Carnets à votre logo pour vos équipes, vos formations et vos événements.',
+   'دفاتر بشعاركم لفرقكم وتكويناتكم ومناسباتكم.',
+   'Notebooks with your logo for your teams, training sessions and events.',
+   'Indiquez la couverture souhaitée, le format et la quantité : nous revenons vers vous avec un devis.',
+   'حددوا الغلاف المطلوب والمقاس والكمية: نعود إليكم بعرض سعر.',
+   'Tell us the cover you want, the format and the quantity: we come back to you with a quote.',
+   null, '[]', 'published', false, 420, now()),
+  ('d0000000-0000-4000-8000-000000000012', 'a0000000-0000-4000-8000-000000000004',
+   'Fournitures de bureau', 'لوازم مكتبية', 'Office supplies', 'fournitures-de-bureau', 'fournitures-de-bureau', 'office-supplies',
+   'Articles et consommables de bureau pour équiper vos équipes, commandés en volume.',
+   'مواد ومستهلكات مكتبية لتجهيز فرقكم، تُطلب بكميات.',
+   'Office items and consumables to equip your teams, ordered in volume.',
+   'Envoyez votre liste d''articles et les quantités : nous vous répondons avec un devis.',
+   'أرسلوا قائمة المواد والكميات: نرد عليكم بعرض سعر.',
+   'Send your list of items and quantities: we reply with a quote.',
+   null, '[]', 'published', false, 430, now()),
+  -- Books, brochures & printed materials
+  ('d0000000-0000-4000-8000-000000000013', 'a0000000-0000-4000-8000-000000000005',
+   'Flyers', 'منشورات إعلانية', 'Flyers', 'flyers', 'flyers', 'flyers',
+   'Flyers pour vos lancements, promotions et événements.',
+   'منشورات إعلانية لإطلاقاتكم وعروضكم ومناسباتكم.',
+   'Flyers for your launches, promotions and events.',
+   'Envoyez vos fichiers avec le format et la quantité : le papier et les finitions sont confirmés dans votre devis.',
+   'أرسلوا ملفاتكم مع المقاس والكمية: يُؤكَّد الورق واللمسات النهائية في عرض السعر.',
+   'Send your files with the format and quantity: paper and finishes are confirmed in your quote.',
+   null, '[]', 'published', true, 510, now()),
+  ('d0000000-0000-4000-8000-000000000014', 'a0000000-0000-4000-8000-000000000005',
+   'Dépliants', 'مطويات', 'Leaflets', 'depliants', 'depliants', 'leaflets',
+   'Dépliants pour présenter vos offres, services et programmes.',
+   'مطويات لتقديم عروضكم وخدماتكم وبرامجكم.',
+   'Leaflets to present your offers, services and programmes.',
+   'Indiquez le format, le pliage et la quantité, et joignez vos fichiers : nous vous répondons avec un devis.',
+   'حددوا المقاس وطريقة الطي والكمية وأرفقوا ملفاتكم: نرد عليكم بعرض سعر.',
+   'Tell us the format, fold and quantity and attach your files: we reply with a quote.',
+   null, '[]', 'published', false, 520, now()),
+  ('d0000000-0000-4000-8000-000000000015', 'a0000000-0000-4000-8000-000000000005',
+   'Brochures & catalogues', 'كتيبات وكتالوجات', 'Brochures & catalogs', 'brochures-catalogues', 'brochures-catalogues', 'brochures-catalogs',
+   'Brochures et catalogues pour présenter votre entreprise et vos produits.',
+   'كتيبات وكتالوجات لتقديم شركتكم ومنتجاتكم.',
+   'Brochures and catalogs to present your company and products.',
+   'Précisez le nombre de pages, le format, la reliure souhaitée et la quantité : tout est confirmé dans votre devis.',
+   'حددوا عدد الصفحات والمقاس والتجليد المطلوب والكمية: يُؤكَّد كل شيء في عرض السعر.',
+   'Tell us the page count, format, binding and quantity: everything is confirmed in your quote.',
+   null, '[]', 'published', false, 530, now()),
+  ('d0000000-0000-4000-8000-000000000016', 'a0000000-0000-4000-8000-000000000005',
+   'Livres', 'كتب', 'Books', 'livres', 'livres', 'books',
+   'Livres et ouvrages imprimés en quantité pour les établissements, les organisations et les auteurs.',
+   'كتب ومؤلفات تُطبع بكميات للمؤسسات والهيئات والمؤلفين.',
+   'Books printed in quantity for schools, organizations and authors.',
+   'Envoyez votre fichier, le format, le nombre de pages et le tirage souhaité : nous vous répondons avec un devis.',
+   'أرسلوا ملفكم والمقاس وعدد الصفحات وعدد النسخ المطلوب: نرد عليكم بعرض سعر.',
+   'Send your file, format, page count and print run: we reply with a quote.',
+   null, '[]', 'published', false, 540, now()),
+  -- Custom packaging & bulk production
+  ('d0000000-0000-4000-8000-000000000017', 'a0000000-0000-4000-8000-000000000006',
+   'Boîtes d''expédition personnalisées', 'علب شحن مخصصة', 'Custom mailer boxes', 'boites-d-expedition-personnalisees', 'boites-d-expedition-personnalisees', 'custom-mailer-boxes',
+   'Boîtes d''expédition à votre logo pour vos envois et vos colis.',
+   'علب شحن بشعاركم لإرسالياتكم وطرودكم.',
+   'Mailer boxes with your logo for your shipments and parcels.',
+   'Indiquez les dimensions, le marquage et la quantité : le carton et l''impression sont confirmés dans votre devis.',
+   'حددوا الأبعاد والطباعة والكمية: يُؤكَّد نوع الكرتون والطباعة في عرض السعر.',
+   'Tell us the dimensions, branding and quantity: board and printing are confirmed in your quote.',
+   null, '[]', 'published', true, 610, now()),
+  ('d0000000-0000-4000-8000-000000000018', 'a0000000-0000-4000-8000-000000000006',
+   'Sacs en papier personnalisés', 'أكياس ورقية مخصصة', 'Custom paper bags', 'sacs-en-papier-personnalises', 'sacs-en-papier-personnalises', 'custom-paper-bags',
+   'Sacs en papier à votre identité pour vos boutiques et événements.',
+   'أكياس ورقية بهويتكم لمتاجركم ومناسباتكم.',
+   'Paper bags in your identity for your shops and events.',
+   'Indiquez la taille, la couleur, le marquage et la quantité : nous vous répondons avec un devis.',
+   'حددوا الحجم واللون والطباعة والكمية: نرد عليكم بعرض سعر.',
+   'Tell us the size, colour, branding and quantity: we reply with a quote.',
+   null, '[]', 'published', false, 620, now())
 on conflict (id) do update set
   category_id = excluded.category_id,
   name_fr = excluded.name_fr, name_ar = excluded.name_ar, name_en = excluded.name_en,
   slug_fr = excluded.slug_fr, slug_ar = excluded.slug_ar, slug_en = excluded.slug_en,
-  short_description_fr = null, short_description_ar = null, short_description_en = null,
-  description_fr = null, description_ar = null, description_en = null,
-  sku = null, specifications = '[]', status = excluded.status,
-  is_featured = excluded.is_featured, sort_order = excluded.sort_order;
+  short_description_fr = excluded.short_description_fr, short_description_ar = excluded.short_description_ar, short_description_en = excluded.short_description_en,
+  description_fr = excluded.description_fr, description_ar = excluded.description_ar, description_en = excluded.description_en,
+  sku = null, specifications = '[]', min_order_quantity = null, status = excluded.status,
+  is_featured = excluded.is_featured, sort_order = excluded.sort_order,
+  published_at = coalesce(public.products.published_at, excluded.published_at);
 
--- Former development-only draft (not a real product).
-delete from public.products where id = 'b0000000-0000-4000-8000-000000000006';
+-- Photos, served from public/catalog/products/: MSLAB's own, plus two free Unsplash photos
+-- (document printing, office supplies; credits in public/catalog/CREDITS.md). Product 0013
+-- (flyers) has none yet: it shows its drawing until a photo is added.
+insert into public.product_images (product_id, storage_path, alt_fr, alt_ar, alt_en, width, height, sort_order, is_primary)
+values
+  ('d0000000-0000-4000-8000-000000000001', '/catalog/products/business-cards.webp', 'Pile de cartes de visite', 'رزمة من بطاقات الزيارة', 'Stack of business cards', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000002', '/catalog/products/posters.webp', 'Trois affiches MSLAB encadrées sur un mur', 'ثلاثة ملصقات حائطية لـMSLAB في إطارات على جدار', 'Three framed MSLAB posters on a wall', 1200, 1200, 0, true),
+  ('d0000000-0000-4000-8000-000000000003', '/catalog/products/stickers.webp', 'Sticker rond à décoller', 'ملصق دائري قابل للنزع', 'Round peel-off sticker', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000004', '/catalog/products/document-printing.webp', 'Pile de classeurs de documents imprimés', 'رزمة من ملفات الوثائق المطبوعة', 'Stack of binders of printed documents', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000005', '/catalog/products/custom-t-shirts.webp', 'T-shirt blanc', 'قميص أبيض', 'White T-shirt', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000006', '/catalog/products/custom-hoodies.webp', 'Sweat à capuche noir, vue de face', 'سترة سوداء بقلنسوة، من الأمام', 'Black hoodie, front view', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000006', '/catalog/products/custom-hoodies-back.webp', 'Sweat à capuche noir, vue de dos', 'سترة سوداء بقلنسوة، من الخلف', 'Black hoodie, back view', 1200, 900, 1, false),
+  ('d0000000-0000-4000-8000-000000000007', '/catalog/products/custom-mugs.webp', 'Mug blanc', 'كوب أبيض', 'White mug', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000008', '/catalog/products/custom-tote-bags.webp', 'Tote bags et documents au logo MSLAB préparés pour un événement', 'حقائب قماشية ووثائق بشعار MSLAB مُعدّة لمناسبة', 'Tote bags and documents with the MSLAB logo prepared for an event', 735, 1226, 0, true),
+  ('d0000000-0000-4000-8000-000000000009', '/catalog/products/corporate-kits.webp', 'Kit d''entreprise personnalisé : gourdes, tote bags, tours de cou, badges, carnets et stylos', 'طقم شركة مخصص: قنينات وحقائب قماشية وأشرطة عنق وشارات ودفاتر وأقلام', 'Custom corporate kit: bottles, tote bags, lanyards, badges, notebooks and pens', 736, 736, 0, true),
+  ('d0000000-0000-4000-8000-000000000010', '/catalog/products/letterhead.webp', 'Pile de feuilles A4', 'رزمة من أوراق A4', 'Stack of A4 sheets', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000011', '/catalog/products/custom-notebooks.webp', 'Carnet à spirale', 'دفتر حلزوني', 'Spiral notebook', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000012', '/catalog/products/office-supplies.webp', 'Carnet, stylo et trombones sur un bureau blanc', 'دفتر وقلم ومشابك ورق على مكتب أبيض', 'Notebook, pen and paper clips on a white desk', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000014', '/catalog/products/leaflets.webp', 'Dépliant à trois volets', 'مطوية من ثلاث طيات', 'Tri-fold leaflet', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000015', '/catalog/products/brochures-catalogs.webp', 'Pile de brochures agrafées', 'رزمة من الكتيبات المدبّسة', 'Stack of stapled brochures', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000016', '/catalog/products/books.webp', 'Livre avec le logo MSLAB sur la couverture', 'كتاب بشعار MSLAB على الغلاف', 'Book with the MSLAB logo on the cover', 736, 946, 0, true),
+  ('d0000000-0000-4000-8000-000000000017', '/catalog/products/custom-mailer-boxes.webp', 'Boîte d''expédition kraft', 'علبة شحن من الكرتون', 'Kraft mailer box', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000018', '/catalog/products/custom-paper-bags.webp', 'Sac en papier blanc', 'كيس ورقي أبيض', 'White paper bag', 1200, 900, 0, true)
+on conflict (storage_path) do update set
+  product_id = excluded.product_id,
+  alt_fr = excluded.alt_fr, alt_ar = excluded.alt_ar, alt_en = excluded.alt_en,
+  width = excluded.width, height = excluded.height,
+  sort_order = excluded.sort_order, is_primary = excluded.is_primary;
 
 commit;

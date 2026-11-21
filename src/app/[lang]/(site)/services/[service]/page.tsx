@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
 import { ServiceCard } from "@/components/catalog/service-card";
-import { PRINT_ON_DEMAND_SLUG, SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
+import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG, SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
 import { RichText } from "@/components/content/rich-text";
 import { ButtonLink } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -13,6 +13,7 @@ import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, type RouteKey, quoteFormHref } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
+import { DigitalSolutionsPage } from "./digital-solutions";
 import { PrintOnDemandPage } from "./print-on-demand";
 
 /** Placeholder keeps the build valid (Cache Components needs ≥ 1 param) when no service is published. */
@@ -61,6 +62,7 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
   const others = all.filter((s) => s.id !== service.id).slice(0, 3);
 
   if (service.slugs.fr === PRINT_ON_DEMAND_SLUG) return <PrintOnDemandPage locale={locale} dict={dict} service={service} />;
+  if (service.slugs.fr === DIGITAL_SOLUTIONS_SLUG) return <DigitalSolutionsPage locale={locale} dict={dict} service={service} />;
 
   return (
     <>

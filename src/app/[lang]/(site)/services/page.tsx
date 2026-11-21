@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { ProductionIndex } from "@/components/catalog/production-index";
-import { PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
+import { DigitalSolutionsSection } from "@/components/digital/digital-solutions-section";
+import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button";
 import { Container, Heading, Section } from "@/components/ui/layout";
 import { PHOTOS } from "@/config/photos";
 import { listServices } from "@/features/services/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { localizedPath, quoteFormHref } from "@/i18n/routes";
+import { digitalQuoteHref, localizedPath, quoteFormHref } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,6 +28,7 @@ export default async function ServicesPage() {
   // Production first (docs/POSITIONING.md §6): the five lines lead to the production page.
   const production = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
   const productionHref = production ? localizedPath(locale, { route: "service", slug: production.slug }) : null;
+  const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
   return (
     <>
       <PageHeader title={dict.pages.services.title} lead={dict.pages.services.description} photo={{ src: PHOTOS.shoppingBag, alt: dict.photos.shoppingBag }} />
@@ -51,6 +53,12 @@ export default async function ServicesPage() {
         </Container>
       </Section>
 
+      {/* Digital Solutions: separate division, after the production lines. */}
+      <DigitalSolutionsSection
+        dict={dict}
+        pageHref={digital ? localizedPath(locale, { route: "service", slug: digital.slug }) : null}
+        quoteHref={digitalQuoteHref(locale)}
+      />
     </>
   );
 }

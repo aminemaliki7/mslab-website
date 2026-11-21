@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { watchConsole } from "./helpers";
+import { firstProductPath, watchConsole } from "./helpers";
 
 /**
  * JavaScript form flows (the no-JS path is covered by tests/http). Desktop only, to keep the
@@ -11,18 +11,27 @@ test.beforeEach(({}, testInfo) => {
   test.skip(Boolean(process.env.E2E_SKIP_SUBMISSIONS), "E2E_SKIP_SUBMISSIONS is set");
 });
 
+/** Product pages linked from the catalog (real published products; none are seeded). */
+async function productPaths(page: import("@playwright/test").Page, count: number) {
+  await page.goto("/fr/catalogue");
+  const hrefs = await page.locator('main a[href^="/fr/produits/"]').evaluateAll((links) => links.map((a) => a.getAttribute("href") ?? ""));
+  return [...new Set(hrefs)].slice(0, count);
+}
+
 // The server rejects forms filled in under 3 s (anti-spam): wait like a human would.
 const humanPause = (page: import("@playwright/test").Page) => page.waitForTimeout(3_200);
 
 test("multi-product quote: add from product pages, custom item, submit, list cleared", async ({ page }) => {
+  const products = await productPaths(page, 2);
+  test.skip(products.length < 2, "needs two published products");
   const problems = watchConsole(page);
 
-  await page.goto("/fr/produits/cahier");
+  await page.goto(products[0]);
   await page.getByRole("button", { name: "Ajouter à ma demande de devis" }).click();
   await expect(page.getByRole("button", { name: "Ajouté à votre demande" })).toBeDisabled();
   await expect(page.getByRole("link", { name: "Voir ma demande (1)" })).toBeVisible();
 
-  await page.goto("/fr/produits/livre");
+  await page.goto(products[1]);
   await page.getByRole("button", { name: "Ajouter à ma demande de devis" }).click();
   await page.getByRole("link", { name: "Voir ma demande (2)" }).click();
   await expect(page).toHaveURL(/\/fr\/devis$/);
@@ -56,7 +65,11 @@ test("multi-product quote: add from product pages, custom item, submit, list cle
 });
 
 test("quote list: remove a row", async ({ page }) => {
-  await page.goto("/fr/devis?product=b0000000-0000-4000-8000-000000000003");
+  const product = await firstProductPath(page, "/fr/catalogue");
+  test.skip(!product, "no published product yet");
+  await page.goto(product!);
+  await page.getByRole("button", { name: "Ajouter à ma demande de devis" }).click();
+  await page.goto("/fr/devis");
   const rows = page.locator("form ol > li");
   await expect(rows).toHaveCount(1);
   await rows.first().getByRole("button", { name: "Retirer" }).click();

@@ -1,4 +1,5 @@
 import { ProductionIndex } from "@/components/catalog/production-index";
+import { ProjectJourney } from "@/components/home/project-journey";
 import { CustomRequestForm } from "@/components/print-on-demand/custom-request-form";
 import { StudioEditor } from "@/components/print-on-demand/studio/studio-editor";
 import { HeroMockups } from "@/components/print-on-demand/pod-showcase";
@@ -33,12 +34,6 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
   const trackingHref = localizedPath(locale, { route: "track" });
   const pagePath = localizedPath(locale, { route: "service", slug: service.slug });
   const hasStudio = mockups.length > 0;
-
-  const steps = [
-    { title: t.step1Title, body: t.step1Body },
-    { title: t.step2Title, body: t.step2Body },
-    { title: t.step3Title, body: t.step3Body },
-  ];
 
   return (
     <>
@@ -100,21 +95,11 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
 
       {/* ─── How it works ─────────────────────────────────────────────────── */}
       <section aria-labelledby="pod-steps-heading" className="bg-ink-900 text-white">
-        <Container className="grid gap-10 py-16 lg:grid-cols-12 lg:gap-12 lg:py-24">
-          <h2 id="pod-steps-heading" className="type-display text-2xl text-balance sm:text-3xl lg:col-span-4">
+        <Container className="py-16 lg:py-24">
+          <h2 id="pod-steps-heading" className="type-display max-w-xl text-2xl text-balance sm:text-3xl">
             {t.stepsTitle}
           </h2>
-          <ol className="grid gap-8 sm:grid-cols-3 lg:col-span-8">
-            {steps.map((step, index) => (
-              <li key={step.title} className="border-t border-white/25 pt-5">
-                <span className="type-poster text-cyan-300 block text-5xl" dir="ltr">
-                  {index + 1}
-                </span>
-                <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 leading-relaxed text-white/75">{step.body}</p>
-              </li>
-            ))}
-          </ol>
+          <ProjectJourney steps={t.workflow} background="var(--color-ink-900)" className="mt-12 lg:mt-16" />
         </Container>
       </section>
 

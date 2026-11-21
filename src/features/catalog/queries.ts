@@ -87,8 +87,9 @@ function toImage(image: ImagePick, locale: Locale, fallbackAlt: string): Product
   };
 }
 
+/** Usable images only (a row without a storage path would render an empty frame), primary first. */
 function sortImages(images: ImagePick[]): ImagePick[] {
-  return [...images].sort((a, b) => Number(b.is_primary) - Number(a.is_primary) || a.sort_order - b.sort_order);
+  return images.filter((image) => image.storage_path?.trim()).sort((a, b) => Number(b.is_primary) - Number(a.is_primary) || a.sort_order - b.sort_order);
 }
 
 type ProductSummaryRow = Pick<ProductRow, "id" | "name_fr" | "name_ar" | "name_en" | "slug_fr" | "slug_ar" | "slug_en" | "sku" | "min_order_quantity" | "short_description_fr" | "short_description_ar" | "short_description_en" | "category_id" | "is_featured"> & {

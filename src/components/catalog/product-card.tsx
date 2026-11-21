@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ProductArt } from "@/components/illustrations/product-art";
 import type { ProductSummary } from "@/features/catalog/queries";
-import { resolveProductVisual } from "@/features/catalog/visual";
+import { resolveProductVisual, resolveVisualKey } from "@/features/catalog/visual";
+import { CatalogPhoto } from "./catalog-photo";
 import { format } from "@/i18n/format";
 
 type Labels = { sku: string; noImage: string; /** "Min. {count} unités" */ moq: string };
@@ -13,6 +13,13 @@ type Labels = { sku: string; noImage: string; /** "Min. {count} unités" */ moq:
  */
 export function ProductCard({ product, href, labels }: { product: ProductSummary; href: string; labels: Labels }) {
   const visual = resolveProductVisual(product);
+  // No photo yet (or the photo fails to load): a drawing of the kind of object, so the card still shows what it is.
+  const drawing = (
+    <span className="absolute inset-0 grid place-items-center px-3 pt-3 pb-1 sm:px-6 sm:pt-4 sm:pb-2">
+      <ProductArt kind={resolveVisualKey(product)} className="w-full max-w-[13rem] transition-transform duration-300 group-hover:-translate-y-1" />
+      <span className="sr-only">{labels.noImage}</span>
+    </span>
+  );
   return (
     <Link
       href={href}
@@ -20,19 +27,16 @@ export function ProductCard({ product, href, labels }: { product: ProductSummary
     >
       <div className="bg-paper-100 relative aspect-[4/3] overflow-hidden rounded-[var(--radius-card)] transition-colors duration-300 group-hover:bg-sand-200">
         {visual.kind === "photo" ? (
-          <Image
+          <CatalogPhoto
             src={visual.image.url}
             alt={visual.image.alt}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
             className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.02]"
+            fallback={drawing}
           />
         ) : (
-          // No photo yet: a drawing of the kind of object, so the card still shows what it is.
-          <span className="absolute inset-0 grid place-items-center px-3 pt-3 pb-1 sm:px-6 sm:pt-4 sm:pb-2">
-            <ProductArt kind={visual.key} className="w-full max-w-[13rem] transition-transform duration-300 group-hover:-translate-y-1" />
-            <span className="sr-only">{labels.noImage}</span>
-          </span>
+          drawing
         )}
       </div>
       <div className="flex flex-1 flex-col px-1 pt-3">

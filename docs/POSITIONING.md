@@ -1,33 +1,49 @@
 # MSLAB — Positioning & website direction
 
-_Decided 2026-11-19 with the owner. Source of truth for copy, page priorities and CTAs._
+_Decided 2026-11-19 with the owner; revised 2026-11-21 (printing-first, three audiences, six core services). Source of truth for copy, page priorities and CTAs._
 
 ## 1. Positioning statement
-MSLAB is a **custom production partner**: it manufactures customized products **in quantity**
-for businesses, organizations, brands and creators — textile and apparel, promotional
-merchandise, printing and stationery, packaging, and private-label collections.
+MSLAB is a **Moroccan printing, reprographics and custom-production company** serving
+**businesses, institutions and individuals**: a reliable production partner for custom printing,
+personalized products and corporate orders.
 
 - **Promise:** Votre idée. Votre design. Notre production. / Your idea. Your design. Our production.
-- **Supporting line:** Production sur mesure, en série. / Custom production. Built at scale.
-- **Hard constraint:** bulk orders only. MSLAB does not sell single customized items, gifts or
-  retail products. No cart, no "buy now", no unit prices. Every journey ends in a quote.
+- **Supporting line:** Impression & production sur mesure. / Printing & custom production.
+- **Hard constraint:** bulk orders only, quoted per project. MSLAB does not sell single
+  customized items or retail products. No cart, no "buy now", no unit prices. Every journey
+  ends in a quote.
 
-## 2. Owner-confirmed capabilities (2026-11-19)
-Available now, in bulk: textile & apparel · promotional / corporate merchandise · printing &
-stationery · packaging & branded products · private-label & creator collections.
-Secondary (verified resale activity, kept below production): office supplies, school
-stationery, books — framed as supplies for organizations, ordered in volume.
+## 2. Core services (owner-confirmed; `src/config/production-lines.ts`)
+1. Printing & reprographics.
+2. Custom apparel & personalized products (including collections under the customer's brand).
+3. Corporate & promotional merchandise.
+4. Business stationery & office supplies.
+5. Books, brochures, flyers & printed materials.
+6. Custom packaging & bulk production.
 
-Not known, never invented: minimum order quantities, prices, lead times, capacity, equipment.
-MOQ is an optional per-product field (`products.min_order_quantity`), shown only when set.
+The same six lines appear, in this order, on the homepage, Services, the production page, About
+and the footer, in French, Arabic and English.
+
+**Digital Solutions (separate division, owner request 2026-11-21).** Corporate websites, e-commerce
+websites, custom web applications, business management platforms, UI/UX design, website
+maintenance and support. Own landing page (`/fr/services/solutions-digitales`,
+`/en/services/digital-solutions`; service record in `supabase/seed/positioning_content.sql`),
+its own tinted band on the homepage and Services page, quote-based like everything else. Not a
+production line and not in the catalogue. No portfolio, clients, prices or delivery times until
+MSLAB provides real ones.
+
+Not offered (owner, 2026-11-19): 3D printing and signage.
+Not known, never invented: minimum order quantities, prices, lead times, capacity, equipment,
+certifications. MOQ is an optional per-product field (`products.min_order_quantity`), shown
+only when set.
 
 ## 3. Customer profiles
 | Journey | Who | Typical need | Entry CTA → destination |
 |---|---|---|---|
-| **For businesses** (B2B) | Companies, administrations, schools, agencies, hotels, restaurants, associations | Corporate merch, uniforms, printed matter, packaging, recurring orders, supplies | « Demander un devis entreprise » → `/devis` |
-| **For brands & creators** (B2C, project-based) | Independent fashion brands, entrepreneurs launching a range, artists/creators doing merch, organizers of large events | A collection or merch run under their own brand | « Démarrer un projet de production » → production page form |
+| **Businesses & institutions** | Companies, administrations, schools, hotels, agencies, associations | Printed matter, uniforms, merchandise, stationery, packaging, recurring orders | « Demander un devis entreprise » → `/devis` |
+| **Individuals & creators** (project-based) | Individuals, brands and entrepreneurs, artists/creators, event and group projects | A print run, collection, merch or event order in quantity | « Démarrer un projet de production » → production page form |
 
-B2C here means a person **with a production project**, never an individual buying one item.
+Individuals are served **in quantity, on quotation** — never one item bought online.
 
 ## 4. Problems solved
 1. One production partner for several product types instead of coordinating many suppliers.
@@ -35,14 +51,14 @@ B2C here means a person **with a production project**, never an individual buyin
 3. From an idea and specifications to finished products: quote, validation, production, tracking.
 
 ## 5. Homepage narrative (five-second test)
-1. Hero — promise + "custom production, in quantity" lead naming the product families and
-   the two audiences + "bulk orders only" note + CTAs (production quote / capabilities).
-2. Two journeys — For businesses / For brands & creators.
-3. Production capabilities — the five lines.
-4. How a production project works — brief → quote → production & tracking.
-5. What MSLAB simplifies — the three problems above.
-6. Supplies for organizations — catalogue (secondary).
-7. About, client logos, closing CTA.
+1. Hero — promise + lead naming the product families and the three audiences (businesses,
+   institutions, individuals) + "bulk orders only, quoted" note + CTAs (production quote / services).
+2. How your project comes to life — animated six-stage journey (quote request → review &
+   quotation → approval → production → packaging → delivery), right after the hero.
+3. What we print and produce — the six core services.
+   Then the Digital Solutions band (web division).
+4. What MSLAB simplifies — the three problems above.
+5. About, client logos.
 
 ## 6. Changes by page
 | Page | Change |

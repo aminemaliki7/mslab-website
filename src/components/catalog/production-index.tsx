@@ -12,11 +12,15 @@ export function ProductionIndex({ dict, href, className }: { dict: Dictionary; h
     <ServiceIndex
       className={className}
       rows={PRODUCTION_LINES.map((line) => ({
-        slugFr: `production-${line.key}`,
+        // A line without a fitting photo shows its service drawing (looked up by French slug).
+        slugFr: "serviceArt" in line ? line.serviceArt : `production-${line.key}`,
         name: dict.productionLines[line.key].name,
         summary: dict.productionLines[line.key].summary,
         href,
-        photo: { src: PHOTOS[line.photo], alt: dict.photos[line.photo], contain: CONTAIN_PHOTOS.has(line.photo) },
+        photo:
+          "photo" in line
+            ? { src: PHOTOS[line.photo], alt: dict.photos[line.photo], contain: CONTAIN_PHOTOS.has(line.photo) }
+            : undefined,
       }))}
     />
   );

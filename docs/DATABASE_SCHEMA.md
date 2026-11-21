@@ -99,7 +99,7 @@ Public bucket (objects served by public URL), 5 MB limit, MIME allowlist `jpeg/p
 ## 6. Seed strategy
 | File | Use |
 |---|---|
-| `supabase/seed/initial_catalog.sql` | **Real content** (confirmed by MSLAB 2026-11-15): 3 categories, 5 products, names only (fr/ar/en). No descriptions, SKUs, specs, prices or stock until MSLAB adds them in the admin. Idempotent; replaced the former `exemple-*` sample data in place (same UUIDs). Applied to `mslab-dev`; run once on production at setup. |
+| `supabase/seed/initial_catalog.sql` | Catalogue set-up (revised 2026-11-21 with the owner): 6 categories = the six core services, 18 published product types with names and descriptions in fr/ar/en (no prices, sizes, techniques or MOQ) and 16 photos supplied by MSLAB, served from `public/catalog/products/` (`storage_path` starting with "/" = site file, `src/lib/supabase/storage.ts`). Deletes the former sample products by fixed UUID. Idempotent. Applied to `mslab-dev`; run once on production at setup. |
 | `supabase/seed/remove_sample_catalog.sql` | Removes all sample rows (quote snapshots survive). |
 | `supabase/seed/remove_test_submissions.sql` | Removes rows created by integration tests. |
 
@@ -128,6 +128,7 @@ Production starts **empty**; real categories, products, services and settings ar
 | `quotation_requests.kind` (`catalog` \| `custom`) | A print-on-demand request is a quotation request of kind `custom` | as before (admin only) |
 | `quotation_status` + `in_production`, `ready`, `delivered` | Production stages for order tracking | — |
 | `custom_request_details` (1:1) | Project type, description, quantity, dimensions + unit, material and finishes (French-name snapshots), deadline | admin read |
+| `digital_request_details` (1:1, kind `digital`) | Digital Solutions web project (migration `20261121120000_digital_requests.sql`): project types and features as keys (CHECK allow-lists), description, current website (http/https), indicative budget (free text), launch date. Written only by `submit_digital_request` (submission key, idempotent, 5 / 10 min per IP hash); one `quotation_items` row "Solutions digitales" × 1 keeps lists and e-mails working | admin read |
 | `quotation_files` | Files attached to a request (`custom-uploads` object paths, name, MIME, size) | admin read |
 | `quotation_status_events` | Status history, written by trigger on insert/status change | admin read; customers via `track_quotation` |
 | `production_options` (`material` \| `finishing`) | Lists offered in the form, fr/ar/en names | public reads active rows; admin manages |

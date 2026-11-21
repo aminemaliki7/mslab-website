@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/layout";
+import { DIGITAL_SOLUTIONS_SLUG } from "@/components/illustrations/service-art";
+import { listServices } from "@/features/services/queries";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, quoteFormHref } from "@/i18n/routes";
@@ -12,10 +14,14 @@ import { Wordmark } from "./wordmark";
 
 export async function Header() {
   const locale = await getLocale();
-  const [dict, { enabledLocales }] = await Promise.all([getDictionary(locale), getSiteSettings()]);
+  const [dict, { enabledLocales }, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
+  // Digital Solutions: separate division, its own link (shown once the service is published).
+  const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
+  const digitalHref = digital ? localizedPath(locale, { route: "service", slug: digital.slug }) : null;
 
   const items: NavItem[] = [
     { section: "services", href: localizedPath(locale, { route: "services" }), label: dict.nav.services },
+    ...(digitalHref ? [{ section: "digital", href: digitalHref, label: dict.digital.title, match: digitalHref }] : []),
     { section: "catalog", href: localizedPath(locale, { route: "catalog" }), label: dict.nav.catalog },
     { section: "about", href: localizedPath(locale, { route: "about" }), label: dict.nav.about },
     { section: "contact", href: localizedPath(locale, { route: "contact" }), label: dict.nav.contact },
@@ -32,20 +38,20 @@ export async function Header() {
       </a>
       <header className="bg-bg/95 header-lift sticky top-0 z-40 backdrop-blur-sm">
         {/* A hairline under the bar, inside the page margins (docs/DESIGN_SYSTEM.md §0). */}
-        <Container className="relative flex h-[4.5rem] items-center justify-between gap-6 after:absolute after:inset-x-4 after:bottom-0 after:h-px after:bg-fg/80 sm:after:inset-x-6 lg:h-20 lg:after:inset-x-8">
+        <Container className="relative flex h-[4.5rem] items-center justify-between gap-6 after:absolute after:inset-x-4 after:bottom-0 after:h-px after:bg-fg/80 sm:after:inset-x-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:h-20 lg:after:inset-x-8">
           <Link href={localizedPath(locale, { route: "home" })} className="shrink-0" aria-label={`MSLAB — ${dict.nav.home}`}>
             <Wordmark intro />
           </Link>
 
           {/* Path-aware client parts are wrapped in Suspense: on routes whose URL is only known
               at request time (catch-all 404, future dynamic slugs) the static fallback renders. */}
-          <nav aria-label={dict.common.mainNavigation} className="hidden lg:block">
+          <nav aria-label={dict.common.mainNavigation} className="hidden lg:block lg:-translate-x-12">
             <Suspense fallback={<NavList items={items} active={null} />}>
               <NavLinks items={items} />
             </Suspense>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 lg:justify-self-end">
             <Suspense
               fallback={
                 <LanguageLinks available={enabledLocales} current={locale} label={dict.common.language} pathname={null} className="hidden sm:block" />

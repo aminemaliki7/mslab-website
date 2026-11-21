@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ArrowLink } from "@/components/ui/arrow-link";
 import { Skeleton } from "@/components/ui/layout";
 import { listProducts, type CategorySummary } from "@/features/catalog/queries";
 import { catalogHref, parseCatalogQuery } from "@/features/catalog/search-params";
@@ -8,6 +7,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
 import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { CatalogSearchForm } from "./catalog-search-form";
+import { CatalogEmptyState } from "./empty-state";
 import { Pagination } from "./pagination";
 import { ProductCard } from "./product-card";
 
@@ -66,7 +66,8 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
         ) : (
           <span />
         )}
-        <p className="text-fg-muted text-sm">{format(dict.catalog.resultsCount, { count: result.total })}</p>
+        {/* No "0 product(s)" line above the empty state. */}
+        {result.total > 0 ? <p className="text-fg-muted text-sm">{format(dict.catalog.resultsCount, { count: result.total })}</p> : null}
       </div>
 
       {result.items.length > 0 ? (
@@ -82,13 +83,16 @@ export async function ProductListing({ locale, dict, basePath, searchParams, cat
           ))}
         </ul>
       ) : (
-        <div className="border-line mt-5 rounded-[var(--radius-card)] border border-dashed p-8">
-          <p className="text-fg font-medium">{isFiltered ? dict.catalog.noResults : dict.catalog.emptyCatalog}</p>
-          {isFiltered ? <p className="text-fg-muted mt-2 text-sm">{dict.catalog.noResultsHint}</p> : null}
-          <ArrowLink href={quoteFormHref(locale)} className="mt-4">
-            {dict.common.requestQuote}
-          </ArrowLink>
-        </div>
+        <CatalogEmptyState
+          message={isFiltered ? dict.catalog.noResults : fixedCategory ? dict.catalog.emptyCategory : dict.catalog.emptyCatalog}
+          hint={isFiltered ? dict.catalog.noResultsHint : undefined}
+          action={{ href: quoteFormHref(locale), label: dict.common.requestQuote }}
+          secondary={
+            fixedCategory || isFiltered
+              ? { href: localizedPath(locale, { route: "catalog" }), label: dict.sections.allProducts }
+              : undefined
+          }
+        />
       )}
 
       <Pagination

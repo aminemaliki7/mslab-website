@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CONTACT_METHODS, common, consent, email, optionalText, requiredPhone, text } from "@/features/inquiries/schema";
+import { CONTACT_METHODS, common, consent, deadline, email, optionalText, requiredPhone, text } from "@/features/inquiries/schema";
 
 /**
  * Print-on-demand request (custom production). Pure module shared by the server action and unit
@@ -48,24 +48,6 @@ const uuidOrNull = z
     if (!value) return null;
     if (!z.uuid().safeParse(value).success) {
       ctx.addIssue({ code: "custom", message: "invalid_option" });
-      return z.NEVER;
-    }
-    return value;
-  });
-
-const deadline = z
-  .string()
-  .trim()
-  .optional()
-  .transform((value, ctx) => {
-    if (!value) return null;
-    const date = /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T00:00:00Z`) : null;
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-    const max = new Date(today);
-    max.setUTCFullYear(max.getUTCFullYear() + 2);
-    if (!date || Number.isNaN(date.getTime()) || date < today || date > max) {
-      ctx.addIssue({ code: "custom", message: "invalid_date" });
       return z.NEVER;
     }
     return value;

@@ -1,7 +1,7 @@
 {
   "meta": {
     "siteName": "MSLAB",
-    "defaultDescription": "MSLAB, a custom production partner in Morocco: apparel, promotional merchandise, printing, packaging and private-label collections, manufactured in quantity for businesses, brands and creators. Quotes on request."
+    "defaultDescription": "MSLAB is a Moroccan printing, reprographics and custom-production company: printed materials, books and brochures, custom apparel and personalized products, business stationery and packaging for businesses, institutions and individuals. Bulk orders, quoted per project."
   },
   "common": {
     "skipToContent": "Skip to content",
@@ -20,26 +20,19 @@
     "catalog": "Catalog",
     "contact": "Contact"
   },
-  "businessAreas": {
-    "printing": "Printing & reprographics",
-    "office": "Office supplies",
-    "school": "Stationery & school supplies",
-    "books": "Books & publications"
-  },
   "footer": {
-    "about": "MSLAB manufactures customized products in quantity for businesses, brands and creators: apparel, objects, print and packaging.",
-    "activities": "Supplies",
+    "about": "MSLAB is a Moroccan printing, reprographics and custom-production company serving businesses, institutions and individuals. Bulk orders, quoted per project.",
     "navigation": "Navigation",
     "contact": "Contact",
     "rights": "All rights reserved.",
     "tracking": "Order tracking",
     "legalInfo": "Legal & information",
     "cookieSettings": "Manage cookies",
-    "production": "Production"
+    "production": "Our services"
   },
   "whatsapp": {
     "label": "Contact MSLAB on WhatsApp",
-    "prefill": "Hello MSLAB, I would like to discuss a production project."
+    "prefill": "Hello MSLAB, I would like a quote for a printing or production project."
   },
   "notFound": {
     "title": "Page not found",
@@ -60,27 +53,27 @@
     "ctaTitle": "Planning a production run?",
     "ctaBody": "Send the product, quantities and files: we reply with a quote.",
     "ctaWhatsApp": "Message us on WhatsApp",
-    "heroLead": "Apparel, objects, print and packaging with your brand, made in quantity for businesses, brands and creators.",
+    "heroLead": "Print, apparel, personalized products, stationery and packaging, produced in quantity for businesses, institutions and individuals.",
     "clientsTitle": "They trust us.",
     "clientsSubtitle": "Institutions and organizations.",
     "proofLabel": "Type your brand name",
     "proofPlaceholder": "Your brand",
     "proofCta": "Continue in the studio",
     "proofNote": "Indicative preview.",
-    "servicesTitle": "Production capabilities",
+    "servicesTitle": "What we print and produce",
     "processCta": "Start a production project",
     "catalogTitle": "Supplies for organizations",
     "ctaDiscuss": "Discuss your project",
-    "tagline": "Custom production. Built at scale.",
-    "bulkNote": "Bulk orders only.",
-    "capabilitiesCta": "Explore production capabilities",
-    "capabilitiesLead": "Five production lines, one quote.",
+    "tagline": "Printing & custom production",
+    "bulkNote": "Bulk orders only, quoted per project.",
+    "capabilitiesCta": "See our services",
+    "capabilitiesLead": "Six services, one contact, one quote.",
     "catalogLead": "Office supplies, stationery and books, in volume.",
     "painTitle": "What MSLAB takes off your plate",
     "painPoints": [
       {
         "title": "One partner",
-        "body": "Apparel, objects, print and packaging with a single contact."
+        "body": "Print, apparel, objects, stationery and packaging with a single contact."
       },
       {
         "title": "A consistent identity",
@@ -144,6 +137,7 @@
     "noResults": "No product matches your search.",
     "noResultsHint": "Try another term, or describe your need in a quotation request.",
     "emptyCatalog": "Our online catalog is growing. Describe your needs in a quotation request and we will reply with the available products.",
+    "emptyCategory": "No product is published in this category yet. Describe your needs in a quotation request and we will reply with the available products.",
     "pagination": "Pagination",
     "previous": "Previous",
     "next": "Next",
@@ -199,7 +193,8 @@
       "invalid_number": "Invalid value (positive number).",
       "invalid_date": "Invalid date (today or later).",
       "invalid_option": "A selected option is no longer available. Reload the page and try again.",
-      "below_moq": "Quantity below this product's minimum order."
+      "below_moq": "Quantity below this product's minimum order.",
+      "invalid_url": "Invalid website address (e.g. https://example.com)."
     },
     "quickPick": "Quick pick",
     "choose": "Choose…",
@@ -211,6 +206,7 @@
       "printing": "Printing & reprographics",
       "supplies": "Office supplies",
       "books": "Books & publications",
+      "digital": "Digital solutions",
       "tracking": "Order tracking",
       "other": "Other question"
     }
@@ -224,11 +220,11 @@
     "sendAnother": "Send another message",
     "detailsTitle": "Contact details",
     "whatsappCta": "Message us on WhatsApp",
-    "quoteCta": "A production project? Use the detailed quotation request."
+    "quoteCta": "A printing or production project? Use the detailed quotation request."
   },
   "quotePage": {
     "itemsTitle": "Products and requirements",
-    "itemsHint": "Add products from the catalog or describe a production need (apparel, objects, print, packaging…), with quantities.",
+    "itemsHint": "Add products from the catalog or describe your need (print, apparel, objects, stationery, packaging…), with quantities.",
     "emptyList": "Your request doesn't contain any item yet.",
     "browseCatalog": "Browse the catalog",
     "addCustom": "Add a production requirement",
@@ -249,7 +245,7 @@
     "addedToQuote": "Added to your request",
     "viewQuote": "View my request ({count})",
     "moqHint": "Minimum: {min}",
-    "heroLead": "Tell us what you want produced and how many. MSLAB reviews your request and gets back to you with a quote.",
+    "heroLead": "Tell us what you want printed or produced, and how many. MSLAB reviews your request and gets back to you with a quote.",
     "pointSteps": "2 steps, a few fields",
     "pointOneNeed": "One product is enough to start",
     "pointReply": "MSLAB gets back to you with a quote",
@@ -258,32 +254,39 @@
     "addDetails": "Add details (size, colours, deadline…)",
     "addMessage": "Add a message",
     "addAnother": "Add another product",
-    "submitNote": "You will fine-tune the details with MSLAB after sending."
+    "submitNote": "You will fine-tune the details with MSLAB after sending.",
+    "typeLabel": "Type of request",
+    "tabProducts": "Products & printing",
+    "tabDigital": "Web project",
+    "digitalLead": "Tell us about your idea and the features you need: we come back to you with a proposal and a quote.",
+    "digitalPointIdea": "Your idea in a few lines",
+    "digitalPointFeatures": "The features you need",
+    "digitalPointReply": "A tailored proposal and quote"
   },
   "pages": {
     "home": {
-      "title": "Custom production at scale: apparel, merchandise, print, packaging",
-      "description": "MSLAB, a custom production partner in Morocco: apparel, promotional merchandise, printing, packaging and private-label collections, manufactured in quantity for businesses, brands and creators. Quotes on request."
+      "title": "Printing, reprographics and custom production in Morocco",
+      "description": "MSLAB is a Moroccan printing, reprographics and custom-production company: printed materials, books and brochures, custom apparel and personalized products, business stationery and packaging for businesses, institutions and individuals. Bulk orders, quoted per project."
     },
     "about": {
       "title": "About MSLAB",
-      "description": "MSLAB, a Moroccan custom production company: we manufacture customized products in quantity for businesses, organizations, brands and creators."
+      "description": "MSLAB is a Moroccan printing, reprographics and custom-production company: we print and produce in quantity for businesses, institutions and individuals."
     },
     "services": {
       "title": "Services",
-      "description": "Apparel, promotional merchandise, printing, packaging and private label: MSLAB's production capabilities for bulk orders, plus supplies for organizations."
+      "description": "Printing and reprographics, custom apparel and personalized products, corporate merchandise, stationery and office supplies, books and printed materials, packaging, and a digital division: MSLAB's services, quoted per project."
     },
     "catalog": {
       "title": "Catalog",
-      "description": "Customizable products and supplies for organizations, ordered in volume: browse the MSLAB catalog and request a quote."
+      "description": "Customizable products, stationery and office supplies, ordered in quantity: browse the MSLAB catalog and request a quote."
     },
     "contact": {
       "title": "Contact",
-      "description": "A production project, a corporate order or a question? Write to MSLAB and our team will reply."
+      "description": "A printing or production project, a corporate order or a question? Write to MSLAB and our team will reply."
     },
     "quote": {
       "title": "Quotation request",
-      "description": "Describe your production project or select catalog products, with quantities: MSLAB reviews your request and gets back to you with a quote."
+      "description": "Describe your printing or production project, or select catalog products, with quantities: MSLAB reviews your request and gets back to you with a quote."
     },
     "tracking": {
       "title": "Order tracking",
@@ -293,7 +296,7 @@
   "printOnDemand": {
     "eyebrow": "Custom production",
     "heroTitle": "Your idea. Your design. Our production.",
-    "heroLead": "Apparel, objects, print, packaging and private label, made in quantity from your designs.",
+    "heroLead": "Apparel, objects, print, stationery and packaging, made in quantity from your designs.",
     "startCta": "Start a production project",
     "trackCta": "Track my order",
     "heroPoints": [
@@ -306,19 +309,39 @@
     "productsTitle": "Choose your product",
     "productsLead": "Apparel, objects, packaging or stationery: pick a product and place your logo or text on it.",
     "customize": "Preview",
-    "stepsTitle": "How a production project works",
-    "step1Title": "Your brief",
-    "step1Body": "Product, quantities, deadline and files.",
-    "step2Title": "Quote and approval",
-    "step2Body": "A clear quote. Nothing is made without your approval.",
-    "step3Title": "Production run",
-    "step3Body": "Made in quantity, tracked online.",
+    "stepsTitle": "How your project comes to life",
+    "workflow": [
+      {
+        "title": "Request a quote",
+        "body": "Product, quantities and files."
+      },
+      {
+        "title": "Review & quotation",
+        "body": "We review and price your project."
+      },
+      {
+        "title": "Customer approval",
+        "body": "Nothing is made without your approval."
+      },
+      {
+        "title": "Production",
+        "body": "Made in quantity, tracked online."
+      },
+      {
+        "title": "Packaging",
+        "body": "Your order is packed."
+      },
+      {
+        "title": "Delivery",
+        "body": "Your products are delivered or handed over."
+      }
+    ],
     "galleryTitle": "Our work",
     "faqTitle": "Frequently asked questions",
     "faq": [
       {
         "q": "Do you produce single items?",
-        "a": "No. MSLAB only produces in quantity: corporate orders, collections or runs for an event. The minimum quantity depends on the product and technique; it is shown on the product page when defined, otherwise confirmed in your quote."
+        "a": "No. MSLAB only produces in quantity, for businesses, institutions and individuals alike: corporate orders, collections, runs for an event. The minimum quantity depends on the product and technique; it is shown on the product page when defined, otherwise confirmed in your quote."
       },
       {
         "q": "Can you produce under my own brand?",
@@ -531,7 +554,7 @@
           "label": "Type of project",
           "options": {
             "business": "Corporate order",
-            "merch": "Merchandise / corporate gifts",
+            "merch": "Merchandise / corporate items",
             "event": "Event",
             "collection": "Brand collection",
             "privateLabel": "Private label",
@@ -631,52 +654,130 @@
     "save": "Save my choices",
     "close": "Close"
   },
-  "journeys": {
-    "title": "Two ways to work with MSLAB",
-    "business": {
-      "eyebrow": "For businesses",
-      "title": "Corporate and organizational orders",
-      "body": "Merch, uniforms, print and packaging for your teams and clients.",
-      "points": [
-        "Companies and administrations",
-        "Hotels, agencies, associations",
-        "One-off or recurring orders"
-      ],
-      "cta": "Request a business quote"
-    },
-    "brands": {
-      "eyebrow": "For brands & creators",
-      "title": "Collections and private label",
-      "body": "Your collection, made in quantity under your label.",
-      "points": [
-        "Fashion brands and entrepreneurs",
-        "Artists and creators",
-        "Large events"
-      ],
-      "cta": "Start a production project"
-    }
-  },
   "productionLines": {
+    "print": {
+      "name": "Printing & reprographics",
+      "summary": "Documents, business cards, posters and stamps, printed in volume."
+    },
     "textile": {
-      "name": "Apparel & textile",
-      "summary": "T-shirts, hoodies, tote bags, workwear."
+      "name": "Custom apparel & personalized products",
+      "summary": "T-shirts, hoodies, workwear and collections under your brand."
     },
     "merch": {
       "name": "Corporate & promotional merchandise",
-      "summary": "Mugs, notebooks, stickers and branded items."
+      "summary": "Mugs, tote bags, stickers and branded kits."
     },
-    "print": {
-      "name": "Printing & stationery",
-      "summary": "Business cards, flyers, posters, stamps."
+    "stationery": {
+      "name": "Business stationery & office supplies",
+      "summary": "Letterheads, notebooks and supplies for your teams."
+    },
+    "publishing": {
+      "name": "Books, brochures & printed materials",
+      "summary": "Books, brochures, catalogs, flyers and leaflets."
     },
     "packaging": {
-      "name": "Packaging & branded products",
-      "summary": "Boxes and packaging in your identity."
-    },
-    "privateLabel": {
-      "name": "Private label & collections",
-      "summary": "Your collection, under your label."
+      "name": "Custom packaging & bulk production",
+      "summary": "Boxes, bags and packaging in your identity, made in volume."
     }
+  },
+  "digital": {
+    "eyebrow": "Digital division",
+    "title": "Digital solutions",
+    "lead": "Corporate websites, e-commerce, web applications and management platforms: MSLAB designs, builds and maintains your business's digital tools.",
+    "heroTitle": "Web solutions built for your business",
+    "discoverCta": "Explore our digital solutions",
+    "quoteNote": "Every project is reviewed and quoted individually, based on your needs.",
+    "servicesTitle": "Our digital services",
+    "services": [
+      {
+        "title": "Corporate websites",
+        "body": "A clear website to present your company, your services and your contact details."
+      },
+      {
+        "title": "E-commerce websites",
+        "body": "An online store to showcase and sell your products."
+      },
+      {
+        "title": "Custom web applications",
+        "body": "Web tools built around your processes."
+      },
+      {
+        "title": "Business management platforms",
+        "body": "Quotes, orders, customers or stock: your data brought together in one tool."
+      },
+      {
+        "title": "UI/UX design",
+        "body": "Mockups and user journeys designed for your users, approved before development."
+      },
+      {
+        "title": "Maintenance & support",
+        "body": "Updates, fixes and improvements after launch."
+      }
+    ],
+    "processTitle": "How a web project works",
+    "process": [
+      {
+        "title": "Your needs",
+        "body": "Goals, content, features and deadline."
+      },
+      {
+        "title": "Proposal & quote",
+        "body": "A clear scope and a detailed quote."
+      },
+      {
+        "title": "Design",
+        "body": "Mockups approved with you."
+      },
+      {
+        "title": "Development",
+        "body": "Development and testing, with your feedback."
+      },
+      {
+        "title": "Launch & follow-up",
+        "body": "Go-live, handover and maintenance."
+      }
+    ]
+  },
+  "digitalForm": {
+    "title": "Describe your web project",
+    "lead": "A few details are enough: we come back to you with a proposal and a quote.",
+    "projectSection": "Your project",
+    "projectTypesLabel": "Type of project",
+    "projectTypesHint": "Several choices possible.",
+    "projectTypes": {
+      "corporate": "Corporate website",
+      "ecommerce": "E-commerce website",
+      "webapp": "Custom web application",
+      "platform": "Business management platform",
+      "uiux": "UI/UX design",
+      "maintenance": "Maintenance & support"
+    },
+    "description": "Your idea",
+    "descriptionPlaceholder": "What you want to build, for whom and why. Key pages or features, websites you like…",
+    "featuresLabel": "Desired features",
+    "featuresHint": "Optional, several choices possible.",
+    "features": {
+      "multilingual": "Several languages",
+      "payment": "Online payment",
+      "accounts": "Customer accounts",
+      "booking": "Booking / appointments",
+      "content": "Blog / news",
+      "backoffice": "Admin area",
+      "integrations": "Integrations (ERP, CRM, existing tools)",
+      "seo": "Search engine optimisation (SEO)"
+    },
+    "existingWebsite": "Current website",
+    "existingWebsiteHint": "If you already have one.",
+    "budget": "Indicative budget",
+    "budgetHint": "A range helps us suggest the right solution.",
+    "deadline": "Desired launch date",
+    "contactSection": "Your contact details",
+    "submit": "Send my request",
+    "successTitle": "Request sent",
+    "successBody": "Thank you! Your web project has been received. MSLAB will review it and come back to you with a proposal.",
+    "successReference": "Reference: {reference}",
+    "successTrack": "Keep this reference: it lets you track your request.",
+    "newRequest": "New request"
   },
   "photos": {
     "heatPress": "Heat press printing the MSLAB logo on a blue sweatshirt",

@@ -12,14 +12,16 @@ test("page explains the service and links to the form and tracking", async ({ pa
   const problems = watchConsole(page);
   await page.goto("/fr/services/impression-a-la-demande");
   await expect(page.locator("main h1")).toHaveText("Votre idée. Votre design. Notre production.");
-  await expect(page.getByRole("heading", { name: "Comment ça marche" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Comment votre projet prend vie" })).toBeVisible();
+  // Bulk-only, quote-based ordering is stated in the hero (docs/POSITIONING.md).
+  await expect(page.getByText("Commandes en quantité uniquement, sur devis.")).toBeVisible();
   // Hero CTA jumps to the studio; the closing band jumps to the form. Wait until the page is
   // interactive (as a visitor would): a click during hydration has its #hash reset by the router.
   await page.waitForLoadState("networkidle");
-  await expect(page.getByRole("link", { name: "Créer mon aperçu" })).toHaveAttribute("href", "#studio");
-  await page.getByRole("link", { name: "Démarrer mon projet" }).click();
+  await expect(page.getByRole("link", { name: "Visualiser mon design" })).toHaveAttribute("href", "#studio");
+  await page.getByRole("link", { name: "Démarrer un projet de production" }).last().click();
   await expect(page).toHaveURL(/#demande$/);
-  await expect(page.getByRole("heading", { name: "Décrivez votre projet" })).toBeInViewport();
+  await expect(page.getByRole("heading", { name: "Décrivez votre projet de production" })).toBeInViewport();
   await expect(page.getByRole("link", { name: "Suivre ma commande" }).first()).toHaveAttribute("href", "/fr/suivi-commande");
   expect(problems).toEqual([]);
 });
@@ -126,13 +128,13 @@ test("studio: layers, text, undo/redo and keyboard nudging", async ({ page }) =>
   await page.keyboard.press("ArrowRight");
   await expect(horizontal).toHaveValue("52");
 
-  // Rotation, then the drawn business card can be recoloured; the layer follows the product.
+  // Rotation, then another product: the layer follows it. Every placeholder is a photo mockup
+  // (2026-11-20), so no colour swatch is offered until MSLAB configures colours in the admin.
   await studio.getByLabel("Rotation").fill("30");
   await expect(studio.getByLabel("Rotation")).toHaveValue("30");
-  await studio.getByRole("button", { name: /Carte de visite/ }).click();
-  await studio.getByRole("button", { name: "Bleu nuit" }).click();
-  await expect(studio.getByRole("button", { name: "Bleu nuit" })).toHaveAttribute("aria-pressed", "true");
+  await studio.getByRole("button", { name: /Boîte \/ packaging/ }).click();
   await expect(studio.getByRole("application")).toContainText("ATELIER");
+  await expect(studio.getByText("Visuel d'illustration : les couleurs, tailles et techniques de ce produit sont confirmées avec votre devis.")).toBeVisible();
   expect(problems).toEqual([]);
 });
 
