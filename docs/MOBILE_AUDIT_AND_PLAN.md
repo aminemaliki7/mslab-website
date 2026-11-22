@@ -13,7 +13,7 @@ _Audit date: 2026-11-15 · Branch `feat/catalog-architecture` · Read-only: no c
 **Public routes (fr/ar/en, localized URLs):** home · about · services index · service detail ×4 · print on demand · catalogue · category · search results (`?q=`) · product · contact · quote · order tracking · legal notice · privacy · 404 (catch-all) · `loading`/`error` states.
 **Admin routes (French only):** login · dashboard · products (list, new, edit + images) · categories (list, edit) · services (list, new, edit) · quotations (list, detail) · inquiries (list, detail) · print on demand (options, mockups, portfolio + edit) · settings.
 
-**Shared components touched by mobile work:** `layout/header`, `mobile-nav`, `language-switcher`, `footer`, `whatsapp-button`, `page-header`, `cta-band`, `ui/breadcrumbs`, `ui/button`, `ui/form`, `forms/*` (contact, quote, consent), `catalog/*` (category-nav, search form, listing, card, gallery, pagination), `print-on-demand/*` (studio, showcase, request form, uploader, tracking), `content/client-logos`, `admin/ui` (`DataTable`), `admin/admin-nav`, admin forms.
+**Shared components touched by mobile work:** `layout/header`, `mobile-nav`, `language-switcher`, `footer`, `whatsapp-button`, `page-header`, `cta-band`, `ui/breadcrumbs`, `ui/button`, `ui/form`, `forms/*` (contact, quote, consent), `catalog/*` (category-nav, search form, listing, card, gallery, pagination), `print-on-demand/*` (studio, showcase, request form, uploader, tracking), `admin/ui` (`DataTable`), `admin/admin-nav`, admin forms.
 
 ## 3. What already works (keep)
 | Area | Evidence |

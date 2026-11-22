@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { ProductionIndex } from "@/components/catalog/production-index";
 import { DigitalSolutionsSection } from "@/components/digital/digital-solutions-section";
-import { ClientLogos } from "@/components/content/client-logos";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
 import { ProofCollage, ProofField } from "@/components/home/live-proof";
@@ -12,7 +11,6 @@ import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illus
 import { ArrowLink } from "@/components/ui/arrow-link";
 import { ButtonLink } from "@/components/ui/button";
 import { Container, Heading, Section } from "@/components/ui/layout";
-import { CLIENT_LOGOS } from "@/config/client-logos";
 import { PHOTOS } from "@/config/photos";
 import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
 import { listMockupProducts } from "@/features/print-on-demand/queries";
@@ -158,8 +156,6 @@ export default async function HomePage() {
           </Container>
         </Section>
       ) : null}
-
-      <ClientLogos locale={locale} title={dict.sections.clientsTitle} subtitle={dict.sections.clientsSubtitle} logos={CLIENT_LOGOS} />
 
     </>
   );

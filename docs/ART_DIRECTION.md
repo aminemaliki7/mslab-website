@@ -37,8 +37,7 @@ Every print job passes through a proof: a sheet with trim marks and a color cont
 3. **Comment ça marche** — ink band, three numbered steps, button to the studio.
 4. **Le catalogue** — category links, featured product cards (unchanged).
 5. **Qui sommes-nous / Pourquoi MSLAB** — owner-managed text; hidden while empty.
-6. **Ils nous font confiance** — authorized logos only.
-7. **Contact band.**
+6. **Contact band.**
 
 Files: `src/app/[lang]/(site)/page.tsx`, `src/components/home/live-proof.tsx`, `src/components/home/control-strip.tsx`, `src/components/print-on-demand/proof-text.ts`, `.type-display` and process colors in `globals.css`, `src/lib/fonts.ts`.
 

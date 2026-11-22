@@ -54,7 +54,6 @@ Nothing below may be invented. Each item is needed from MSLAB:
 | Delivery zones / lead times / minimum quantities policy | Services, FAQ | Medium |
 | Pricing policy (show prices or not) | Catalog | Medium |
 | Social media profile URLs | Footer, `sameAs` | Low |
-| Real client references/testimonials (with permission) | Optional trust section | Low |
 | Legal documents: company identifiers (RC, ICE, registered office), CNDP reference, retention periods, payment/quote/BAT/delivery/claim/refund terms, email provider, competent court — full list in `LEGAL_CONTENT_CHECKLIST.md` | 8 legal pages (drafts, shown as « à compléter » markers) | High (before launch) |
 | Legal review of the 8 legal documents by a Moroccan lawyer, then status → `validated` | Legal pages indexing | High (before launch) |
 | Arabic register preference (MSA vs Darija) and numerals (Latin vs Arabic-Indic) | Arabic content | Medium |
