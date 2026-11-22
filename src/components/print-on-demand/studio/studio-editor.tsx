@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { Input, Select } from "@/components/ui/form";
+import { Dropdown } from "@/components/ui/dropdown";
+import { Input } from "@/components/ui/form";
 import { CloseIcon } from "@/components/ui/icons";
 import { EDITOR_FILE_TYPES, MAX_LAYERS, type DesignInput } from "@/features/print-on-demand/design";
 import { effectiveDpi, insideArea, layerBoxPx, layerMm } from "@/features/print-on-demand/design-geometry";
@@ -303,7 +304,8 @@ export function StudioEditor({ products, config, t, formId }: {
   const layerName = (l: EditorLayer) => (l.kind === "text" ? l.text : l.file.name);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-12">
+    // minmax(0,1fr): the swipeable product row must scroll, not widen the column.
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-12">
       {/* ─── Controls ─── */}
       <div className="space-y-6 lg:col-span-4">
         <div className="flex flex-wrap items-center gap-2">
@@ -407,13 +409,13 @@ export function StudioEditor({ products, config, t, formId }: {
                   <label htmlFor={`${uid}-font`} className="text-fg text-sm font-medium">
                     {e.font}
                   </label>
-                  <Select id={`${uid}-font`} className="mt-2" value={selected.font} onChange={(ev) => update({ font: ev.target.value as FontKey, aspect: textAspect(selected.text, ev.target.value as FontKey) }, "commit")}>
+                  <Dropdown id={`${uid}-font`} className="mt-2" value={selected.font} onChange={(ev) => update({ font: ev.target.value as FontKey, aspect: textAspect(selected.text, ev.target.value as FontKey) }, "commit")}>
                     {FONT_KEYS.map((k) => (
                       <option key={k} value={k}>
                         {STUDIO_FONTS[k].label}
                       </option>
                     ))}
-                  </Select>
+                  </Dropdown>
                 </div>
                 <fieldset>
                   <legend className="text-fg text-sm font-medium">{e.textColor}</legend>
@@ -489,14 +491,14 @@ export function StudioEditor({ products, config, t, formId }: {
                   <label htmlFor={`${uid}-${kind}`} className="text-fg text-sm font-medium">
                     {e.options[kind]}
                   </label>
-                  <Select id={`${uid}-${kind}`} className="mt-2" value={state.doc.options[kind] ?? ""} onChange={(ev) => dispatch({ type: "option", kind, id: ev.target.value || null })}>
+                  <Dropdown id={`${uid}-${kind}`} className="mt-2" value={state.doc.options[kind] ?? ""} onChange={(ev) => dispatch({ type: "option", kind, id: ev.target.value || null })}>
                     <option value="">{e.choose}</option>
                     {productConfig.options[kind].map((o) => (
                       <option key={o.id} value={o.id}>
                         {o.name}
                       </option>
                     ))}
-                  </Select>
+                  </Dropdown>
                 </div>
               ),
             )}
@@ -534,7 +536,7 @@ export function StudioEditor({ products, config, t, formId }: {
               {productName(product)}
               {views.length > 1 ? <span className="text-fg-muted font-normal"> · {e.viewNames[view.key]}</span> : null}
             </p>
-            <Button onClick={() => void submitDesign()} size="sm" disabled={busy || state.doc.layers.length === 0}>
+            <Button onClick={() => void submitDesign()} size="sm" disabled={busy || state.doc.layers.length === 0} className="max-sm:min-h-11 max-sm:w-full">
               {busy ? e.preparing : e.use}
             </Button>
           </div>
@@ -566,18 +568,19 @@ export function StudioEditor({ products, config, t, formId }: {
 
         <div className="mt-4">
           <p className="sr-only">{t.productsLabel}</p>
-          <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+          {/* Phones: one swipeable row (the cut-off last tile shows there is more), not a tall grid. */}
+          <ul className="flex snap-x snap-mandatory gap-2 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0 lg:grid-cols-6">
             {products.map((key) => {
               const Thumb = MOCKUPS[key];
               const active = key === product;
               return (
-                <li key={key}>
+                <li key={key} className="w-[6.5rem] shrink-0 snap-start sm:w-auto">
                   <button
                     type="button"
                     onClick={() => changeProduct(key)}
                     aria-pressed={active}
                     className={cn(
-                      "bg-bg flex w-full flex-col items-center gap-1 rounded-[var(--radius-control)] border p-1.5 text-center text-xs transition-colors",
+                      "bg-bg flex h-full w-full flex-col items-center gap-1 rounded-[var(--radius-control)] border p-1.5 text-center text-xs transition-colors active:scale-[0.97]",
                       active ? "border-accent ring-accent ring-1" : "border-line hover:border-line-strong",
                     )}
                   >

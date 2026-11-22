@@ -62,7 +62,7 @@ export function TrackingForm({ locale, t }: { locale: Locale; t: T }) {
             {(p) => <Input {...p} name="email" type="email" autoComplete="email" dir="ltr" maxLength={254} defaultValue={values.email} />}
           </Field>
         </div>
-        <Button type="submit" disabled={pending} aria-disabled={pending}>
+        <Button type="submit" size="lg" disabled={pending} aria-disabled={pending} className="w-full sm:w-auto">
           {pending ? t.forms.sending : t.tracking.submit}
         </Button>
       </form>

@@ -74,9 +74,9 @@ export function ConsentManager({ t, cookiePolicyHref, gtmId }: Props) {
       {undecided ? (
         <section
           aria-labelledby={titleId}
-          className="fixed inset-x-0 bottom-0 z-50 px-[max(1rem,env(safe-area-inset-left))] pb-[max(1rem,env(safe-area-inset-bottom))]"
+          className="consent-banner fixed inset-x-0 bottom-0 z-50 px-[max(1rem,env(safe-area-inset-left))] pb-[max(1rem,env(safe-area-inset-bottom))]"
         >
-          <div className="bg-bg border-line mx-auto max-w-3xl rounded-[var(--radius-card)] border p-5 shadow-[0_12px_40px_-12px_rgb(14_26_43/0.35)] sm:p-6">
+          <div className="bg-bg border-line mx-auto max-w-3xl rounded-[var(--radius-card)] border p-4 shadow-[0_12px_40px_-12px_rgb(14_26_43/0.35)] sm:p-6">
             <p id={titleId} className="text-fg font-semibold">
               {t.bannerTitle}
             </p>
@@ -86,15 +86,16 @@ export function ConsentManager({ t, cookiePolicyHref, gtmId }: Props) {
                 {t.policyLink}
               </Link>
             </p>
-            {/* Accept and reject carry the same visual weight on purpose. */}
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-              <button type="button" onClick={() => decide(false)} className={buttonClasses("secondary", "md", "sm:min-w-36")}>
+            {/* Accept and reject carry the same visual weight on purpose. Phones: side by side, so the
+                banner stays short and the page remains visible behind it. */}
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-wrap sm:items-center">
+              <button type="button" onClick={() => decide(false)} className={buttonClasses("secondary", "md", "max-sm:px-2 max-sm:text-xs max-sm:tracking-[0.04em] sm:min-w-36")}>
                 {t.reject}
               </button>
-              <button type="button" onClick={() => decide(true)} className={buttonClasses("secondary", "md", "sm:min-w-36")}>
+              <button type="button" onClick={() => decide(true)} className={buttonClasses("secondary", "md", "max-sm:px-2 max-sm:text-xs max-sm:tracking-[0.04em] sm:min-w-36")}>
                 {t.accept}
               </button>
-              <button type="button" onClick={customize} className={buttonClasses("ghost", "md", "sm:ms-auto")}>
+              <button type="button" onClick={customize} className={buttonClasses("ghost", "md", "col-span-2 sm:ms-auto")}>
                 {t.customize}
               </button>
             </div>

@@ -1,5 +1,5 @@
 import { ProductionIndex } from "@/components/catalog/production-index";
-import { ProjectJourney } from "@/components/home/project-journey";
+import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
 import { CustomRequestForm } from "@/components/print-on-demand/custom-request-form";
 import { StudioEditor } from "@/components/print-on-demand/studio/studio-editor";
 import { HeroMockups } from "@/components/print-on-demand/pod-showcase";
@@ -94,12 +94,12 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
       </Section>
 
       {/* ─── How it works ─────────────────────────────────────────────────── */}
-      <section aria-labelledby="pod-steps-heading" className="bg-ink-900 text-white">
-        <Container className="py-16 lg:py-24">
+      <section aria-labelledby="pod-steps-heading" className="text-white" style={{ backgroundColor: JOURNEY_BG }}>
+        <Container className="py-12 sm:py-16 lg:py-24">
           <h2 id="pod-steps-heading" className="type-display max-w-xl text-2xl text-balance sm:text-3xl">
             {t.stepsTitle}
           </h2>
-          <ProjectJourney steps={t.workflow} background="var(--color-ink-900)" className="mt-12 lg:mt-16" />
+          <ProjectJourney steps={t.workflow} background={JOURNEY_BG} className="mt-8 sm:mt-10 lg:mt-16" />
         </Container>
       </section>
 

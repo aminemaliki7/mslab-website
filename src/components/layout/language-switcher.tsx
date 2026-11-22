@@ -9,7 +9,15 @@ import { usePageAlternates } from "./page-alternates";
 
 const shortLabels: Record<Locale, string> = { fr: "FR", ar: "ع", en: "EN" };
 
-type Props = { current: Locale; label: string; className?: string; /** Languages enabled in site settings. */ available: readonly Locale[] };
+type Props = {
+  current: Locale;
+  label: string;
+  className?: string;
+  /** Languages enabled in site settings. */
+  available: readonly Locale[];
+  /** "touch": 44 px segments for the mobile menu; default: the compact desktop pill. */
+  size?: "compact" | "touch";
+};
 
 /**
  * Pure links (no hooks). With `pathname` null (Suspense fallback) each link targets the
@@ -22,12 +30,14 @@ export function LanguageLinks({
   className,
   pathname,
   alternates = null,
+  size = "compact",
 }: Props & { pathname: string | null; alternates?: Partial<Record<Locale, string>> | null }) {
   const shown = locales.filter((l) => available.includes(l));
   if (shown.length < 2) return null;
+  const touch = size === "touch";
   return (
     <nav aria-label={label} className={className}>
-      <ul className="border-line flex items-center rounded-full border p-0.5">
+      <ul className={cn("border-line flex items-center rounded-full border", touch ? "p-1" : "p-0.5")}>
         {shown.map((locale) => {
           const isCurrent = locale === current;
           return (
@@ -39,7 +49,11 @@ export function LanguageLinks({
                 aria-current={isCurrent ? "true" : undefined}
                 prefetch={false}
                 className={cn(
-                  "inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold transition-colors",
+                  "inline-flex items-center justify-center rounded-full font-semibold transition-colors",
+                  touch
+                    ? "h-11 min-w-12 px-3 text-sm active:scale-95"
+                    : // Touch tablets get a bigger target; mouse users keep the compact pill.
+                      "h-7 min-w-7 px-1.5 text-[11px] pointer-coarse:h-11 pointer-coarse:min-w-11 pointer-coarse:text-xs",
                   isCurrent ? "bg-primary text-on-primary" : "text-fg-muted hover:text-fg hover:bg-surface",
                   locale === "ar" && "font-[family-name:var(--font-arabic)]",
                 )}

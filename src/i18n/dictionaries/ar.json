@@ -11,7 +11,8 @@
     "closeMenu": "إغلاق القائمة",
     "language": "اللغة",
     "mainNavigation": "التنقل الرئيسي",
-    "requestProductionQuote": "اطلبوا عرض سعر للإنتاج"
+    "requestProductionQuote": "اطلبوا عرض سعر للإنتاج",
+    "call": "اتصلوا بنا"
   },
   "nav": {
     "home": "الرئيسية",
@@ -766,9 +767,28 @@
     },
     "existingWebsite": "الموقع الحالي",
     "existingWebsiteHint": "إن كان لديكم موقع.",
+    "existingWebsiteOptions": {
+      "none": "ليس لدينا موقع بعد",
+      "yes": "نعم، لدينا موقع"
+    },
+    "existingWebsiteUrl": "عنوان الموقع",
     "budget": "الميزانية التقديرية",
     "budgetHint": "يساعدنا نطاق تقريبي على اقتراح الحل المناسب.",
     "deadline": "تاريخ الإطلاق المرغوب",
+    "deadlines": {
+      "month": "خلال شهر",
+      "quarter": "خلال 3 أشهر",
+      "halfYear": "خلال 6 أشهر"
+    },
+    "budgets": {
+      "undecided": "يُحدَّد معاً",
+      "under10": "أقل من 10.000 درهم",
+      "from10to30": "10.000 – 30.000 درهم",
+      "from30to80": "30.000 – 80.000 درهم",
+      "over80": "أكثر من 80.000 درهم",
+      "other": "مبلغ آخر (حدّدوه)"
+    },
+    "budgetOtherPlaceholder": "ميزانيتكم أو المجال التقريبي",
     "contactSection": "معلومات الاتصال بكم",
     "submit": "إرسال طلبي",
     "successTitle": "تم إرسال الطلب",

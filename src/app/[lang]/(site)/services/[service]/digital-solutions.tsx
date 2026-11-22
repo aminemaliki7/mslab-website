@@ -1,5 +1,5 @@
 import { JsonLd } from "@/components/content/json-ld";
-import { ProjectJourney } from "@/components/home/project-journey";
+import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
 import { DigitalIcon, DigitalScene } from "@/components/illustrations/digital-art";
 import { DigitalRequestForm } from "@/components/digital/digital-request-form";
 import { DIGITAL_FORM_ID } from "@/features/digital/schema";
@@ -100,12 +100,12 @@ export function DigitalSolutionsPage({ locale, dict, service }: { locale: Locale
       </Section>
 
       {/* ─── How a web project works: animated journey (same as the production one) ─── */}
-      <section aria-labelledby="digital-process-heading" className="bg-ink-900 text-white">
-        <Container className="py-16 lg:py-24">
+      <section aria-labelledby="digital-process-heading" className="text-white" style={{ backgroundColor: JOURNEY_BG }}>
+        <Container className="py-12 sm:py-16 lg:py-24">
           <h2 id="digital-process-heading" className="type-display max-w-xl text-2xl text-balance sm:text-3xl">
             {d.processTitle}
           </h2>
-          <ProjectJourney steps={d.process} background="var(--color-ink-900)" variant="web" className="mt-12 lg:mt-16" />
+          <ProjectJourney steps={d.process} background={JOURNEY_BG} variant="web" className="mt-8 sm:mt-10 lg:mt-16" />
         </Container>
       </section>
 

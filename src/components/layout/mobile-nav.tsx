@@ -2,22 +2,28 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { buttonClasses } from "@/components/ui/button";
-import { CloseIcon, MenuIcon } from "@/components/ui/icons";
+import { ChevronIcon, CloseIcon, MenuIcon, PhoneIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import type { NavItem } from "./nav-links";
 import { useActiveItem } from "./nav-links";
+
+type QuickLink = { href: string; label: string };
 
 type Props = {
   items: NavItem[];
   cta: { href: string; label: string };
   labels: { open: string; close: string; navigation: string };
+  /** Smaller links under the main list (order tracking…). */
+  secondary?: QuickLink[];
+  /** One-tap contact actions, only when the number exists in site settings. */
+  contact?: { phone?: QuickLink; whatsapp?: QuickLink };
   children?: React.ReactNode;
 };
 
 const toggleClass =
-  "text-fg hover:bg-surface inline-flex size-11 items-center justify-center rounded-[var(--radius-control)]";
+  "text-fg hover:bg-surface active:bg-surface-strong inline-flex size-11 items-center justify-center rounded-[var(--radius-control)] transition-colors";
 
 /** Static stand-in rendered until the path-aware menu streams in. */
 export function MobileNavFallback({ label }: { label: string }) {
@@ -30,33 +36,56 @@ export function MobileNavFallback({ label }: { label: string }) {
   );
 }
 
-/** Mobile disclosure menu. Closes on Escape and automatically on navigation. */
-export function MobileNav({ items, cta, labels, children }: Props) {
+/**
+ * Full-screen mobile menu (below lg). It covers the page under the header, so nothing behind it
+ * can be tapped or scrolled; the primary action sits at the bottom, in the thumb zone.
+ * Closes on Escape, on navigation, and returns focus to the toggle.
+ */
+export function MobileNav({ items, cta, labels, secondary = [], contact, children }: Props) {
   const pathname = usePathname();
   // Store the path the menu was opened on: navigating elsewhere closes it without an effect.
   const [openedOn, setOpenedOn] = useState<string | null>(null);
   const open = openedOn === pathname;
   const panelId = useId();
   const active = useActiveItem(items);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
+    const root = document.documentElement;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenedOn(null);
+      if (event.key === "Escape") {
+        setOpenedOn(null);
+        toggleRef.current?.focus();
+      }
     };
+    // Close if the screen grows to the desktop layout while open (rotation, window resize).
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const onDesktop = () => desktop.matches && setOpenedOn(null);
     document.addEventListener("keydown", onKey);
-    // The page behind must not scroll while the menu is open.
-    const previousOverflow = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
+    desktop.addEventListener("change", onDesktop);
+    // The page behind must not scroll while the menu is open; data-menu-open hides floating buttons.
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
+    root.dataset.menuOpen = "";
+    panelRef.current?.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.documentElement.style.overflow = previousOverflow;
+      desktop.removeEventListener("change", onDesktop);
+      root.style.overflow = previousOverflow;
+      delete root.dataset.menuOpen;
     };
   }, [open]);
+
+  const quick = [contact?.phone && { ...contact.phone, icon: PhoneIcon }, contact?.whatsapp && { ...contact.whatsapp, icon: WhatsAppIcon }].filter(
+    (q): q is QuickLink & { icon: typeof PhoneIcon } => Boolean(q),
+  );
 
   return (
     <div className="lg:hidden">
       <button
+        ref={toggleRef}
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
@@ -68,33 +97,68 @@ export function MobileNav({ items, cta, labels, children }: Props) {
       </button>
 
       <div
+        ref={panelRef}
         id={panelId}
         hidden={!open}
-        // Never taller than the screen below the header (landscape phones): the panel scrolls instead.
-        className="bg-bg border-line absolute inset-x-0 top-full max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain border-b shadow-[0_12px_24px_-16px_rgb(14_26_43/0.25)]"
+        // Fills the screen below the 72 px header; scrolls on its own in landscape. Explicit height,
+        // not bottom-0: the header's backdrop-filter makes it the containing block of this panel.
+        className="bg-bg anim-sheet fixed inset-x-0 top-[4.5rem] z-40 h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain"
       >
-        <nav aria-label={labels.navigation} className="mx-auto max-w-[75rem] px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
+        <nav
+          aria-label={labels.navigation}
+          className="mx-auto flex min-h-full max-w-[75rem] flex-col ps-[max(1rem,env(safe-area-inset-left))] pe-[max(1rem,env(safe-area-inset-right))] pt-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:ps-6 sm:pe-6"
+        >
           <ul className="flex flex-col">
-            {items.map((item) => (
-              <li key={item.section}>
+            {items.map((item, index) => (
+              <li key={item.section} className="anim-sheet-item border-line border-b" style={{ "--i": index } as React.CSSProperties}>
                 <Link
                   href={item.href}
                   aria-current={active === item.section ? "page" : undefined}
                   className={cn(
-                    "border-line flex h-12 items-center border-b text-base font-medium",
+                    "active:bg-surface -mx-2 flex min-h-14 items-center justify-between gap-4 rounded-[var(--radius-control)] px-2 text-lg font-medium transition-colors",
                     active === item.section ? "text-accent" : "text-fg",
                   )}
                 >
                   {item.label}
+                  <ChevronIcon width={18} height={18} aria-hidden="true" className="text-fg-subtle shrink-0 rtl:-scale-x-100" />
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            {children}
-            <Link href={cta.href} className={buttonClasses("primary", "md")}>
+
+          {secondary.length > 0 ? (
+            <ul className="mt-2 flex flex-wrap gap-x-6">
+              {secondary.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-fg-muted hover:text-fg inline-flex min-h-11 items-center text-sm underline-offset-4 hover:underline">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+
+          {/* Bottom of the screen = within reach of the thumb. */}
+          <div className="mt-auto space-y-4 pt-8">
+            {quick.length > 0 ? (
+              <div className={cn("grid gap-3", quick.length > 1 && "grid-cols-2")}>
+                {quick.map(({ href, label, icon: Icon }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="border-line text-fg active:bg-surface flex min-h-12 items-center justify-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors"
+                  >
+                    <Icon width={18} height={18} aria-hidden="true" className="shrink-0" />
+                    <span className="truncate">{label}</span>
+                  </a>
+                ))}
+              </div>
+            ) : null}
+            <Link href={cta.href} className={buttonClasses("primary", "lg", "w-full")}>
               {cta.label}
             </Link>
+            {children ? <div className="flex justify-center">{children}</div> : null}
           </div>
         </nav>
       </div>

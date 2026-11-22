@@ -23,7 +23,8 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "min-h-9 px-4 py-1 text-xs",
+  // Touch screens: 44 px even for the small size (WCAG 2.5.5 target).
+  sm: "min-h-9 px-4 py-1 text-xs pointer-coarse:min-h-11",
   md: "min-h-11 px-6 py-2 text-[0.8125rem]",
   lg: "min-h-13 px-8 py-3 text-sm",
 };

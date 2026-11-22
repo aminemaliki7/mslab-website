@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import { ProductionIndex } from "@/components/catalog/production-index";
 import { DigitalSolutionsSection } from "@/components/digital/digital-solutions-section";
 import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
 import { ProofCollage, ProofField } from "@/components/home/live-proof";
-import { ProjectJourney } from "@/components/home/project-journey";
+import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
 import { HeroScene } from "@/components/illustrations/scenes";
 import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { ArrowLink } from "@/components/ui/arrow-link";
@@ -36,8 +36,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const CAPABILITIES_ID = "capacites";
-/** Dark band behind "How your project comes to life". */
-const PROCESS_BG = "#0E1A2B";
 
 /**
  * Homepage (docs/POSITIONING.md §5). Narrative: custom production in quantity (promise, bulk-only
@@ -76,17 +74,17 @@ export default async function HomePage() {
       />
 
       {/* ─── How your project comes to life (right after the hero) ───────────────── */}
-      <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: PROCESS_BG }}>
-        <Container className="py-16 lg:py-24">
-          <div className="reveal flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+      <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: JOURNEY_BG }}>
+        <Container className="py-12 sm:py-16 lg:py-24">
+          <div className="reveal flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
             <h2 id="process-heading" className="type-display max-w-xl text-2xl text-balance sm:text-3xl">
               {dict.printOnDemand.stepsTitle}
             </h2>
-            <ButtonLink href={productionRequestHref} variant="accent" size="lg">
+            <ButtonLink href={productionRequestHref} variant="accent" size="lg" className="w-full sm:w-auto">
               {dict.sections.processCta}
             </ButtonLink>
           </div>
-          <ProjectJourney steps={dict.printOnDemand.workflow} background={PROCESS_BG} className="mt-12 lg:mt-16" />
+          <ProjectJourney steps={dict.printOnDemand.workflow} background={JOURNEY_BG} className="mt-8 sm:mt-10 lg:mt-16" />
         </Container>
       </section>
 
@@ -193,9 +191,13 @@ function Hero({
           <p className="text-accent anim-rise text-sm tracking-wide">{dict.sections.tagline}</p>
           <h1 className="type-poster text-fg mt-3 text-[clamp(2.25rem,11vw,3.5rem)] [overflow-wrap:normal] lg:text-[clamp(2.75rem,4vw,3.75rem)]">
             {lines.map((line, index) => (
-              <span key={line} className="anim-line" style={{ "--d": index + 1 } as CSSProperties}>
-                <span>{line}</span>
-              </span>
+              <Fragment key={line}>
+                {/* Word space between the sentences for assistive tech and copy/paste. */}
+                {index > 0 ? " " : null}
+                <span className="anim-line" style={{ "--d": index + 1 } as CSSProperties}>
+                  <span>{line}</span>
+                </span>
+              </Fragment>
             ))}
           </h1>
           <p className="text-fg-muted anim-rise mt-5 max-w-lg text-base leading-relaxed text-pretty [--d:4] sm:text-[1.0625rem]">{dict.sections.heroLead}</p>

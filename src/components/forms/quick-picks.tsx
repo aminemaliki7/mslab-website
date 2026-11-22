@@ -10,8 +10,17 @@ export type QuickPick = {
 };
 
 /** Set a form control's value the way typing would, so React and validation see the change. */
+/** Local date `days` from today as YYYY-MM-DD (the value of an <input type="date">). */
+export function inDays(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function fillField(id: string, value: string) {
-  const el = document.getElementById(id);
+  let el = document.getElementById(id);
+  // A custom Dropdown gives its id to the visible button; the value lives in its native select.
+  if (el instanceof HTMLButtonElement && el.dataset.select) el = document.getElementById(el.dataset.select);
   if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement)) return;
   const proto = Object.getPrototypeOf(el) as HTMLInputElement;
   Object.getOwnPropertyDescriptor(proto, "value")?.set?.call(el, value);

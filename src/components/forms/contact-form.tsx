@@ -90,7 +90,7 @@ function ContactFormInner({ locale, sourcePath, privacyHref, t, onReset }: Props
         error={message("consent")}
       />
 
-      <Button type="submit" size="lg" disabled={pending} aria-disabled={pending}>
+      <Button type="submit" size="lg" disabled={pending} aria-disabled={pending} className="w-full sm:w-auto">
         {pending ? t.forms.sending : t.page.submit}
       </Button>
     </form>

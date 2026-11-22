@@ -34,8 +34,9 @@ export async function Footer() {
   }));
 
   const headingClass = "text-sm font-semibold text-white";
-  // Rows are 44 px tall on touch screens (padding, not font size).
-  const linkClass = "inline-flex min-h-11 items-center text-white/85 underline-offset-4 hover:text-white hover:underline md:min-h-8";
+  // Rows are 44 px tall on touch screens (padding, not font size); phones list links in two
+  // columns so the footer stays about one screen tall.
+  const linkClass = "inline-flex min-h-11 min-w-11 items-center py-1 leading-snug text-white/85 underline-offset-4 hover:text-white hover:underline lg:min-h-8";
 
   return (
     <footer className="mt-auto text-white" style={{ backgroundColor: "#0E1A2B" }}>
@@ -43,7 +44,7 @@ export async function Footer() {
       <Container>
         <div aria-hidden="true" className="h-px bg-white/20" />
       </Container>
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+      <Container className="grid gap-8 py-10 sm:grid-cols-2 sm:gap-10 sm:py-14 lg:grid-cols-12 lg:gap-8">
         <div className="sm:col-span-2 lg:col-span-3">
           <Wordmark inverted />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">{dict.footer.about}</p>
@@ -66,7 +67,7 @@ export async function Footer() {
 
         <div className="lg:col-span-2">
           <h2 className={headingClass}>{dict.footer.navigation}</h2>
-          <ul className="mt-2 text-sm">
+          <ul className="mt-2 grid grid-cols-2 gap-x-4 text-sm sm:block">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className={linkClass}>
@@ -81,7 +82,7 @@ export async function Footer() {
           <h2 id="footer-legal" className={headingClass}>
             {dict.footer.legalInfo}
           </h2>
-          <ul className="mt-2 text-sm">
+          <ul className="mt-2 grid grid-cols-2 gap-x-4 text-sm sm:block">
             {legalLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className={linkClass}>

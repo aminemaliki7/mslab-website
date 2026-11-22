@@ -58,7 +58,9 @@ test.describe("submission", () => {
     // Product type and quantity are suggestion fields (combobox): free text is still accepted.
     await page.getByRole("combobox", { name: "Type de produit", exact: true }).fill("Boîtes personnalisées");
     await page.locator("#quantity").fill("250");
-    await page.getByLabel("Couleurs d'impression").selectOption({ label: "1 couleur" });
+    // Custom drop-down (components/ui/dropdown.tsx): open it, then pick the option.
+    await page.getByRole("combobox", { name: "Couleurs d'impression" }).click();
+    await page.getByRole("option", { name: "1 couleur", exact: true }).click();
     await page.getByLabel("Autres précisions (facultatif)").fill("Boîtes kraft avec un logo imprimé sur le dessus.");
     await page.getByLabel("Largeur").fill("20");
     await page.getByLabel("Hauteur").fill("12,5");

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
+import { ProductActionBar } from "@/components/catalog/product-action-bar";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductArt } from "@/components/illustrations/product-art";
@@ -109,11 +110,11 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
         }}
       />
 
-      <Section className="pt-8 pb-16 lg:pt-10 lg:pb-24">
+      <Section className="pt-4 pb-14 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-24">
         <Container>
           <Breadcrumbs label={dict.sections.breadcrumb} items={crumbs} />
 
-          <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
+          <div className="mt-4 grid gap-8 sm:mt-8 sm:gap-10 lg:grid-cols-2 lg:gap-14">
             <ProductGallery
               images={product.images}
               thumbLabelTemplate={dict.product.imageNumber}
@@ -148,7 +149,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
                 )}
               </div>
 
-              <div className="border-line mt-4 space-y-4 border-t pt-6">
+              <div id="product-actions" className="border-line mt-4 space-y-4 border-t pt-6">
                 <ButtonLink href={quoteHref} size="lg" className="w-full sm:w-auto">
                   {dict.product.requestQuote}
                 </ButtonLink>
@@ -185,6 +186,8 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
           ) : null}
         </Container>
       </Section>
+
+      <ProductActionBar targetId="product-actions" productName={product.name} href={quoteHref} label={dict.common.requestQuote} />
 
       {related.length > 0 ? (
         <Section aria-labelledby="related-heading">

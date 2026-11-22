@@ -61,7 +61,7 @@ function LegalDocumentsNav({ current, locale, label, className }: { current: Leg
                 href={localizedPath(locale, { route: doc.key })}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "-mx-3 flex min-h-10 items-center rounded-[var(--radius-control)] px-3 py-1.5 transition-colors",
+                  "-mx-3 flex min-h-11 items-center rounded-[var(--radius-control)] px-3 py-1.5 transition-colors",
                   active ? "bg-accent-soft text-accent-hover font-medium" : "text-fg-muted hover:bg-surface hover:text-fg",
                 )}
               >

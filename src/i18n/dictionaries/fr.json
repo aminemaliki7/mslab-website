@@ -11,7 +11,8 @@
     "closeMenu": "Fermer le menu",
     "language": "Langue",
     "mainNavigation": "Navigation principale",
-    "requestProductionQuote": "Demander un devis de production"
+    "requestProductionQuote": "Demander un devis de production",
+    "call": "Appeler"
   },
   "nav": {
     "home": "Accueil",
@@ -766,9 +767,28 @@
     },
     "existingWebsite": "Site actuel",
     "existingWebsiteHint": "Si vous en avez déjà un.",
+    "existingWebsiteOptions": {
+      "none": "Pas encore de site",
+      "yes": "Oui, j’ai déjà un site"
+    },
+    "existingWebsiteUrl": "Adresse du site",
     "budget": "Budget indicatif",
     "budgetHint": "Une fourchette nous aide à proposer la solution adaptée.",
     "deadline": "Mise en ligne souhaitée",
+    "deadlines": {
+      "month": "Dans 1 mois",
+      "quarter": "Dans 3 mois",
+      "halfYear": "Dans 6 mois"
+    },
+    "budgets": {
+      "undecided": "À définir ensemble",
+      "under10": "Moins de 10 000 MAD",
+      "from10to30": "10 000 – 30 000 MAD",
+      "from30to80": "30 000 – 80 000 MAD",
+      "over80": "Plus de 80 000 MAD",
+      "other": "Autre montant (préciser)"
+    },
+    "budgetOtherPlaceholder": "Votre budget ou fourchette",
     "contactSection": "Vos coordonnées",
     "submit": "Envoyer ma demande",
     "successTitle": "Demande envoyée",

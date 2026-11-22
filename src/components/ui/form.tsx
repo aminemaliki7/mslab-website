@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const control =
+export const control =
   "w-full rounded-[var(--radius-control)] border border-line-strong bg-bg px-3 text-fg " +
   "placeholder:text-fg-subtle transition-colors duration-150 hover:border-slate-500 " +
   "focus-visible:border-focus focus-visible:outline-2 focus-visible:outline-offset-0 " +
@@ -58,7 +58,8 @@ export function Field({ id, label, required, requiredLabel = "*", hint, error, d
 }
 
 export function Input({ className, ...props }: ComponentProps<"input">) {
-  return <input className={cn(control, "h-11", className)} {...props} />;
+  // 48 px on phones (thumb-sized), 44 px from sm.
+  return <input className={cn(control, "h-12 sm:h-11", className)} {...props} />;
 }
 
 export function Textarea({ className, rows = 5, ...props }: ComponentProps<"textarea">) {
@@ -66,7 +67,8 @@ export function Textarea({ className, rows = 5, ...props }: ComponentProps<"text
 }
 
 export function Select({ className, ...props }: ComponentProps<"select">) {
-  return <select className={cn(control, "h-11 pe-8", className)} {...props} />;
+  // select-control (globals.css): one chevron style for every select, same as the comboboxes.
+  return <select className={cn(control, "select-control h-12 pe-10 sm:h-11", className)} {...props} />;
 }
 
 export function Checkbox({ className, ...props }: Omit<ComponentProps<"input">, "type">) {

@@ -109,3 +109,30 @@ Each phase ends with: lint, typecheck, unit tests, the new mobile test suite (B0
 1. **Catalogue on phones: 2 products per row** (recommended — faster browsing, same card design) or keep 1 per row?
 2. **Sticky "Demander un devis" bar on product pages** (recommended) — yes/no?
 3. **Admin test account** for the signed-in mobile checks (set `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` locally; never shared in chat).
+
+## 7. Implementation — 2026-11-22
+
+Re-audit at 360 / 375 / 390 / 412 / 430 / 768 px (16 routes, fr/ar/en, Playwright with touch emulation) found the
+earlier foundation (safe areas, `dvh`, 2-column catalogue) in place, plus new issues. Fixed:
+
+| Area | Change | Files |
+|---|---|---|
+| Forms (critical) | Fields render at **16 px** on phones and touch tablets (`(pointer: coarse)`), so iOS Safari no longer zooms on focus; 48 px fields below `sm`; one chevron style for native selects (`.select-control`, RTL-aware); full-width submit buttons on phones | `globals.css`, `ui/form.tsx`, `project-options.tsx`, contact / digital / production / tracking forms |
+| Drop-downs | One custom drop-down for every public `<select>` (`ui/dropdown.tsx`, drop-in: same props and `<option>` children): a list under the field (above it when there is no room), 44 px options, check on the chosen one, keyboard (↑↓ Home End Enter Esc, type-ahead), RTL. The native select stays in the form as the source of truth and is the control without JavaScript; the button takes its id (`fillField` follows `data-select`). Multi-choice sibling `ui/multi-dropdown.tsx` (checkbox list in a drop-down; real named checkboxes, a plain list without JavaScript) — used by the production form's guide and the web form's project types and features. Web form: "Site actuel" as a No / Yes drop-down revealing the address field, deadline timeframe drop-down (fills the date) and budget ranges with "Other amount" → text field (sent as text; ranges `TODO(content)` for MSLAB to confirm). Admin keeps native selects | `ui/dropdown.tsx`, public forms, `forms/quick-picks.tsx` |
+| Mobile menu | Full-screen sheet under the header (nothing behind it is tappable); 56 px rows; quote CTA, Call / WhatsApp (only when set in site settings) and a 44 px language switch at the bottom, in thumb reach; order tracking link; focus moves in and returns to the toggle; closes on Escape, navigation, or growing to desktop | `layout/mobile-nav.tsx`, `header.tsx`, `language-switcher.tsx` (`size="touch"`) |
+| Product page | Sticky bottom **"Demander un devis" bar** below `lg`, shown while the page's own buttons are off screen, hidden near the footer (decision §6.2) | `catalog/product-action-bar.tsx`, `products/[product]/page.tsx` |
+| Floating buttons | WhatsApp rises above the action bar, steps aside while the menu is open or a field has focus (keyboard up); cookie banner steps aside while the menu is open | `globals.css` (`.fab-float`, `.consent-banner`) |
+| Cookie banner | Accept / reject side by side on phones (same weight), ~40 % shorter | `consent-manager.tsx` |
+| Breadcrumbs | Phones show one "‹ parent" back link (44 px); full trail from `sm` | `ui/breadcrumbs.tsx` |
+| Touch targets | Logo link, About chips, contact/about phone links, legal sidebar, footer links (two columns on phones), small buttons on touch screens — all ≥ 44 px | various |
+| Studio | Product picker is one swipeable row on phones instead of a ~700 px grid | `studio/studio-editor.tsx` |
+| Project journeys | "How your project comes to life" / "How a web project works" (and the production page's steps) have their own phone/tablet design: step cards in a two-column "snake" (01 02 / 04 03 / 05 06) joined by connectors with arrowheads, so the line follows the steps; each connector fills as the journey moves on and the next card lights up; large Anton numerals; an odd last step spans both columns; DOM order stays 1…n. Desktop keeps the single animated row. All three journey bands share one navy (`JOURNEY_BG`, #0E1A2B) | `home/project-journey.tsx` |
+| Hero | Title lines keep their breaks and word spaces with reduced motion | `(site)/page.tsx`, `globals.css` |
+| Feedback | Press state on cards for touch (`.lift:active`), `touch-action: manipulation` on controls | `globals.css` |
+| Performance | Product card `sizes` matches the 2-column phone grid: catalogue images on a phone 260 KB → 141 KB | `catalog/product-card.tsx` |
+
+Result: 0 horizontal overflow, 0 JS errors, no target < 44 px and no input < 16 px at every phone/tablet width;
+desktop (pointer: fine, ≥ 1024 px) unchanged. Lint, typecheck, unit tests, build and the read-only E2E suites pass.
+Known: `forms.spec.ts › quote list: remove a row` expects an empty list, but the form has re-added an empty row
+since `2f91136` (`quoteList.ensureOne()`) — the test is stale, not a regression. Still open: signed-in admin
+mobile pass (§6.3) and a real-device check (§5 Phase F).

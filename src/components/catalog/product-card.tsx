@@ -31,7 +31,7 @@ export function ProductCard({ product, href, labels }: { product: ProductSummary
             src={visual.image.url}
             alt={visual.image.alt}
             fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, 50vw"
             className="object-contain p-4 transition-transform duration-300 group-hover:scale-[1.02]"
             fallback={drawing}
           />

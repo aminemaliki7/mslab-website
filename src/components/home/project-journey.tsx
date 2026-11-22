@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
  * - CSS only (no JavaScript, no dependency): every animation of a journey shares one 15 s cycle,
  *   so all parts stay in sync; keyframes are generated below from one timing table, scoped per
  *   variant (`.jr-v-<variant>`) so two journeys can never interfere.
- * - Horizontal from `lg`, vertical below; in Arabic the journey runs right to left (the truck
- *   faces left). Motion uses transform/opacity (plus small stroke draws) — no layout work.
+ * - Below `lg`: step cards in a two-column grid under a progress bar; from `lg`: one row. In Arabic
+ *   the journey runs right to left (the truck faces left). Motion uses transform/opacity (plus small stroke draws) — no layout work.
  * - prefers-reduced-motion: nothing moves; the finished journey is shown (every stage lit).
  * - The list is plain text for assistive technologies; the drawings are decorative.
  */
@@ -137,19 +137,46 @@ function buildCss(variant: Variant) {
   };
 
   const css: string[] = [];
-  // Layout: vertical (nodes at the inline start) below lg, horizontal from lg.
+  // Layout. Below lg: step cards in a two-column "snake" (01 02 / 04 03 / 05 06) joined by short
+  // connectors with arrowheads, so the line follows the order of the steps. From lg: one row, the
+  // track running through the stage circles (--jr-half = half a 56 px circle). Both mirror in Arabic.
+  // --jr-gap = the grid gap the connectors span; --jr-pad + --jr-r = centre of a card's circle
+  // (32 px circles on phones, 40 px from sm).
+  const snake = Array.from({ length: stages }, (_, i) => {
+    const row = Math.floor(i / 2);
+    const lastAlone = i === stages - 1 && i % 2 === 0;
+    const col = lastAlone ? "1 / -1" : String(row % 2 === 0 ? (i % 2) + 1 : 2 - (i % 2));
+    return `${v} .jr-s${i}{grid-row:${row + 1};grid-column:${col}}`;
+  }).join("");
+  const linkY = "calc(var(--jr-pad) + var(--jr-r) - 1px)";
   css.push(
-    `.jr{--jx:0;--jy:1}`,
-    `${v} .jr-track{position:absolute;top:1.75rem;bottom:calc(100% / ${stages} - 1.75rem);inset-inline-start:calc(1.75rem - 1px);width:2px}`,
+    `.jr{--jx:1;--jy:0;--jr-half:1.75rem;--jr-dot:14px;--jr-gap:1rem;--jr-pad:0.625rem;--jr-r:1rem}[dir="rtl"] .jr{--jx:-1}`,
+    `@media (min-width:40rem){.jr{--jr-gap:1.25rem;--jr-pad:0.875rem;--jr-r:1.25rem}}`,
+    `@media (max-width:63.999rem){.jr-track{display:none}${snake}}`,
+    `@media (min-width:64rem){.jr-link{display:none}}`,
+    `.jr-link{position:absolute;z-index:1;border-radius:2px;background:rgb(255 255 255 / 0.16);pointer-events:none}`,
+    `.jr-link-fill{position:absolute;inset:0;border-radius:inherit;background:#5ba7bc}`,
+    `.jr-link::after{content:"";position:absolute;width:6px;height:6px;border-top:2px solid #5ba7bc;border-right:2px solid #5ba7bc}`,
+    `.jr-link-end,.jr-link-start{top:${linkY};height:2px;width:var(--jr-gap)}`,
+    `.jr-link-end{inset-inline-start:100%}.jr-link-start{inset-inline-end:100%}`,
+    `.jr-link-down{top:100%;height:var(--jr-gap);width:2px;inset-inline-start:${linkY}}`,
+    // Arrowheads at the far end of each connector (chevron = top + right border, rotated).
+    `.jr-link-end::after{inset-inline-end:1px;top:50%;transform:translateY(-50%) rotate(45deg)}`,
+    `.jr-link-start::after{inset-inline-start:1px;top:50%;transform:translateY(-50%) rotate(-135deg)}`,
+    `[dir="rtl"] .jr-link-end::after{transform:translateY(-50%) rotate(-135deg)}[dir="rtl"] .jr-link-start::after{transform:translateY(-50%) rotate(45deg)}`,
+    `.jr-link-down::after{bottom:1px;left:50%;transform:translateX(-50%) rotate(135deg)}`,
+    // Fills grow from the card they leave.
+    `.jr-link-end .jr-link-fill{transform-origin:left center}[dir="rtl"] .jr-link-end .jr-link-fill{transform-origin:right center}`,
+    `.jr-link-start .jr-link-fill{transform-origin:right center}[dir="rtl"] .jr-link-start .jr-link-fill{transform-origin:left center}`,
+    `.jr-link-down .jr-link-fill{transform-origin:center top}`,
+    `${v} .jr-track{position:absolute;top:calc(var(--jr-half) - 1px);height:2px;inset-inline:calc(100% / ${stages * 2})}`,
     `.jr-rail{overflow:hidden;border-radius:2px;background:rgb(255 255 255 / 0.14)}`,
     `.jr-fill,.jr-runner{position:absolute;inset:0}`,
     `.jr-runner{opacity:0}`, // the dot only shows while it travels
     `.jr-fill{background:#5ba7bc}`,
-    `.jr-dot{position:absolute;left:50%;bottom:0;width:14px;height:14px;border-radius:999px;background:#fff;transform:translate(-50%,50%);box-shadow:0 0 0 4px rgb(91 167 188 / 0.35),0 0 18px 4px rgb(91 167 188 / 0.7)}`,
+    `.jr-dot{position:absolute;top:50%;inset-inline-end:0;width:var(--jr-dot);height:var(--jr-dot);border-radius:999px;background:#fff;transform:translate(50%,-50%);box-shadow:0 0 0 4px rgb(91 167 188 / 0.35),0 0 18px 4px rgb(91 167 188 / 0.7)}`,
+    `[dir="rtl"] .jr-dot{transform:translate(-50%,-50%)}`,
     `.jr-dot::after{content:"";position:absolute;inset:-7px;border-radius:inherit;border:1px solid rgb(91 167 188 / 0.7);opacity:0}`,
-    `@media (min-width:64rem){.jr{--jx:1;--jy:0}[dir="rtl"] .jr{--jx:-1}` +
-      `${v} .jr-track{top:calc(1.75rem - 1px);bottom:auto;height:2px;width:auto;inset-inline:calc(100% / ${stages * 2})}` +
-      `.jr-dot{left:auto;bottom:auto;top:50%;inset-inline-end:0;transform:translate(50%,-50%)}[dir="rtl"] .jr-dot{transform:translate(-50%,-50%)}}`,
     `.jr-ring,.jr-burst{opacity:0}`,
     `.jr svg .jr-fx{transform-box:fill-box;transform-origin:center}`,
     `.jr svg .jr-line{transform-origin:left center}`,
@@ -159,7 +186,7 @@ function buildCss(variant: Variant) {
   // Motion only for visitors who accept it.
   const motion: string[] = [];
   motion.push(
-    `.jr-fill,.jr-runner,.jr-lit,.jr-icon,.jr-ring,.jr-burst,.jr-done,.jr .jr-fx{animation-duration:${CYCLE_S}s;animation-iteration-count:infinite;animation-timing-function:ease-in-out}`,
+    `.jr-fill,.jr-runner,.jr-lit,.jr-icon,.jr-ring,.jr-burst,.jr-done,.jr-link-fill,.jr .jr-fx{animation-duration:${CYCLE_S}s;animation-iteration-count:infinite;animation-timing-function:ease-in-out}`,
     keyframes(k("fill"), runFrames(1)),
     keyframes(k("run"), runFrames(0)),
     // The runner is as large as the track, so its translate percentages are track lengths.
@@ -176,6 +203,16 @@ function buildCss(variant: Variant) {
       keyframes(k(`ring-${i}`), [[0, "transform:scale(1);opacity:0"], [a, "transform:scale(0.9);opacity:0.8"], [a + 6, "transform:scale(1.7);opacity:0"], [100, "transform:scale(1.7);opacity:0"]]),
       `${v} .jr-s${i} .jr-lit{animation-name:${k(`lit-${i}`)}}${v} .jr-s${i} .jr-icon{animation-name:${k(`icon-${i}`)}}${v} .jr-s${i} .jr-ring{animation-name:${k(`ring-${i}`)}}`,
     );
+    // Phones: the connector to the next card fills while the journey travels there.
+    if (i < stages - 1) {
+      // Even steps link sideways to the next card, odd steps link down (see `snake`).
+      const s = (n: 0 | 1) => `transform:scale${i % 2 === 0 ? "X" : "Y"}(${n})`;
+      const leave = a + HOLD;
+      motion.push(
+        keyframes(k(`link-${i}`), [[0, `${s(0)};opacity:1`], [leave, `${s(0)};opacity:1`], [arrive(i + 1), `${s(1)};opacity:1`], [SUCCESS_UNTIL, `${s(1)};opacity:1`], [FADED, `${s(1)};opacity:0`], [FADED + 0.5, `${s(0)};opacity:0`], [100, `${s(0)};opacity:1`]]),
+        `${v} .jr-s${i} .jr-link-fill{animation-name:${k(`link-${i}`)}}`,
+      );
+    }
     fx[i].forEach((effect, n) => {
       const frames: Array<[number, string]> = [[0, effect.rest], [a - 0.01, effect.rest]];
       for (const [at, decl] of effect.frames) frames.push([a + at * (stageEnd - a), decl]);
@@ -301,6 +338,9 @@ const ICONS: Record<Variant, ReactNode[]> = {
 
 /** The last stage's drawing is mirrored in Arabic when it has a direction (the truck). */
 const MIRROR_LAST: Record<Variant, boolean> = { production: true, web: false };
+/** Dark navy band behind every project journey (home, production page, Digital Solutions). */
+export const JOURNEY_BG = "#0E1A2B";
+
 /** Static class names (Tailwind only generates classes it can read in the source). */
 const DESKTOP_COLUMNS: Record<number, string> = { 5: "lg:grid-cols-5", 6: "lg:grid-cols-6" };
 
@@ -308,6 +348,13 @@ const DESKTOP_COLUMNS: Record<number, string> = { 5: "lg:grid-cols-5", 6: "lg:gr
  * `background` is the colour of the band the journey sits on: the stage circles are filled with
  * it so the timeline passes behind them. `steps` must have as many items as the variant has
  * drawings (production: 6, web: 5).
+ *
+ * Phones and tablets get their own layout, not the desktop row squeezed: every step is a card in
+ * a two-column "snake" (01 02 / 04 03 / 05 06: all readable at once, no swiping) and each card is
+ * joined to the next by a connector with an arrowhead, so the line follows the steps. A connector
+ * fills as the journey moves on, then the next card lights up; an odd last step spans both
+ * columns as the finale. The DOM order stays 1…n for assistive technologies. From lg: the single
+ * animated row.
  */
 export function ProjectJourney({
   steps,
@@ -328,7 +375,7 @@ export function ProjectJourney({
       <style href={`mslab-project-journey-${variant}`} precedence="default">
         {JOURNEY_CSS[variant]}
       </style>
-      {/* Timeline: rail + fill, and the travelling dot (decorative). */}
+      {/* Desktop timeline: rail + fill, and the travelling dot (decorative). */}
       <div aria-hidden="true">
         <span className="jr-track jr-rail">
           <span className="jr-fill" />
@@ -339,39 +386,66 @@ export function ProjectJourney({
           </span>
         </span>
       </div>
-      <ol className={cn("relative grid auto-rows-fr lg:auto-rows-auto", DESKTOP_COLUMNS[icons.length])}>
-        {items.map((step, i) => (
-          <li
-            key={step.title}
-            className={cn(
-              `jr-s${i}`,
-              "relative grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 pb-8 lg:flex lg:flex-col lg:items-center lg:px-3 lg:pb-0 lg:text-center",
-            )}
-          >
-            <span aria-hidden="true" className="relative grid size-14 place-items-center rounded-full border border-white/20 bg-[var(--jr-bg)] text-white">
-              <span className="jr-ring absolute inset-0 rounded-full border border-cyan-300" />
-              {i === items.length - 1 ? <span className="jr-burst absolute inset-0 rounded-full border border-cyan-300" /> : null}
-              <span className="jr-lit absolute inset-0 rounded-full border border-cyan-300 bg-cyan-700 shadow-[0_0_24px_rgb(91_167_188/0.45)]" />
-              <svg {...svgProps} className={cn("jr-icon relative size-7", i === items.length - 1 && MIRROR_LAST[variant] && "rtl:-scale-x-100")}>
-                {icons[i]}
-              </svg>
-              {i === items.length - 1 ? (
-                <span className="jr-done absolute -end-1 -top-1 grid size-5 place-items-center rounded-full bg-white text-[var(--jr-bg)] shadow">
-                  <svg {...svgProps} strokeWidth={3} className="size-3">
-                    <path d="M5 12.5l4.5 4.5L19 7.5" />
-                  </svg>
+      {/* gap = --jr-gap, the length of the connectors. */}
+      <ol className={cn("relative grid grid-cols-2 gap-4 sm:gap-5 lg:gap-0", DESKTOP_COLUMNS[icons.length])}>
+        {items.map((step, i) => {
+          const last = i === items.length - 1;
+          const number = String(i + 1).padStart(2, "0");
+          // Snake: the first card of a row links sideways (towards the end on rows 1, 3…, towards
+          // the start on rows 2, 4…), the second links down to the row below.
+          const link = last ? null : i % 2 === 1 ? "down" : Math.floor(i / 2) % 2 === 0 ? "end" : "start";
+          return (
+            <li
+              key={step.title}
+              className={cn(
+                `jr-s${i}`,
+                // Card (below lg) …
+                "relative flex flex-col rounded-[var(--radius-card)] border border-white/10 bg-white/[0.04] p-2.5 sm:p-3.5",
+                // … plain column on desktop.
+                "lg:items-center lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:px-3 lg:text-center",
+              )}
+            >
+              {link ? (
+                <span aria-hidden="true" className={`jr-link jr-link-${link} lg:hidden`}>
+                  <span className="jr-link-fill" />
                 </span>
               ) : null}
-            </span>
-            <div className="pt-1 lg:mt-5 lg:pt-0">
-              <span className="text-cyan-300 block text-xs font-semibold tracking-wide" dir="ltr">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-1 text-base font-semibold text-balance">{step.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-white/75 text-pretty">{step.body}</p>
-            </div>
-          </li>
-        ))}
+              {/* Card highlight while this step is active (same animation as the circle). */}
+              <span aria-hidden="true" className="jr-lit pointer-events-none absolute inset-0 rounded-[inherit] border border-cyan-300/60 bg-cyan-700/15 lg:hidden" />
+
+              <div className="relative flex items-start justify-between gap-2 lg:block">
+                <span aria-hidden="true" className="relative grid size-8 shrink-0 place-items-center rounded-full border border-white/20 bg-[var(--jr-bg)] text-white sm:size-10 lg:size-14">
+                  <span className="jr-ring absolute inset-0 rounded-full border border-cyan-300" />
+                  {last ? <span className="jr-burst absolute inset-0 rounded-full border border-cyan-300" /> : null}
+                  <span className="jr-lit absolute inset-0 rounded-full border border-cyan-300 bg-cyan-700 shadow-[0_0_24px_rgb(91_167_188/0.45)]" />
+                  <svg {...svgProps} className={cn("jr-icon relative size-4 sm:size-5 lg:size-7", last && MIRROR_LAST[variant] && "rtl:-scale-x-100")}>
+                    {icons[i]}
+                  </svg>
+                  {last ? (
+                    <span className="jr-done absolute -end-1.5 -top-1.5 grid size-3.5 place-items-center sm:size-4 rounded-full bg-white text-[var(--jr-bg)] shadow lg:-end-1 lg:-top-1 lg:size-5">
+                      <svg {...svgProps} strokeWidth={3} className="size-2 sm:size-2.5 lg:size-3">
+                        <path d="M5 12.5l4.5 4.5L19 7.5" />
+                      </svg>
+                    </span>
+                  ) : null}
+                </span>
+                {/* Phones: the step number as a large brand numeral in the card corner. Decorative and drawn
+                    as generated content (the list already gives the order; faint on purpose). */}
+                <span aria-hidden="true" data-n={number} className="type-poster text-[1.375rem] leading-none text-white/20 sm:text-[1.75rem] before:content-[attr(data-n)] lg:hidden" dir="ltr" />
+              </div>
+
+              <div className="relative mt-2 sm:mt-3 lg:mt-5">
+                <span className="text-cyan-300 hidden text-xs font-semibold tracking-wide lg:block" dir="ltr">
+                  {number}
+                </span>
+                <h3 className="text-sm leading-snug font-semibold text-balance sm:text-[0.9375rem] lg:mt-1 lg:text-base">{step.title}</h3>
+                <p className="mt-0.5 text-xs leading-snug text-white/70 text-pretty sm:mt-1 sm:text-[0.8125rem] lg:mt-1.5 lg:text-sm lg:leading-relaxed lg:text-white/75">
+                  {step.body}
+                </p>
+              </div>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );

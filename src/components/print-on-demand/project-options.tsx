@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import { Field, Select, Textarea } from "@/components/ui/form";
+import { useState } from "react";
+import { Dropdown } from "@/components/ui/dropdown";
+import { Field, Textarea } from "@/components/ui/form";
+import { MultiDropdown } from "@/components/ui/multi-dropdown";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { cn } from "@/lib/utils";
 
 type Guide = Dictionary["printOnDemand"]["guide"];
 type GroupKey = keyof Guide["groups"];
@@ -20,10 +21,6 @@ const SWATCH: Record<string, string> = {
   red: "#C8443A",
   natural: "#E9DDC7",
 };
-
-const Swatch = ({ hex }: { hex: string }) => (
-  <span aria-hidden="true" className="border-line-strong size-4 shrink-0 rounded-full border" style={{ backgroundColor: hex }} />
-);
 
 /**
  * Project description by choices instead of free writing: one compact drop-down per question
@@ -64,23 +61,23 @@ export function ProjectOptions({
           SINGLE.includes(key) ? (
             <Field key={key} id={`guide-${key}`} label={group.label}>
               {(p) => (
-                <Select {...p} value={picked[key]?.[0] ?? ""} onChange={(e) => setPicked((c) => ({ ...c, [key]: e.target.value ? [e.target.value] : [] }))}>
+                <Dropdown {...p} value={picked[key]?.[0] ?? ""} onChange={(e) => setPicked((c) => ({ ...c, [key]: e.target.value ? [e.target.value] : [] }))}>
                   <option value="">{choose}</option>
                   {Object.entries(group.options).map(([option, label]) => (
                     <option key={option} value={option}>
                       {label}
                     </option>
                   ))}
-                </Select>
+                </Dropdown>
               )}
             </Field>
           ) : (
-            <MultiChoice
+            <MultiDropdown
               key={key}
               label={group.label}
               placeholder={choose}
               options={Object.entries(group.options).map(([value, label]) => ({ value, label, swatch: key === "productColor" ? SWATCH[value] : undefined }))}
-              selected={picked[key] ?? []}
+              value={picked[key] ?? []}
               onChange={(next) => setPicked((c) => ({ ...c, [key]: next }))}
             />
           ),
@@ -103,91 +100,5 @@ export function ProjectOptions({
         )}
       </Field>
     </fieldset>
-  );
-}
-
-type Option = { value: string; label: string; swatch?: string };
-
-/**
- * Several-answers drop-down: a field-like button that opens a list of checkboxes. Closes on
- * Esc, on a click outside, or when focus tabs out of it. The button shows the choices made.
- */
-function MultiChoice({ label, placeholder, options, selected, onChange }: { label: string; placeholder: string; options: Option[]; selected: string[]; onChange: (next: string[]) => void }) {
-  const id = useId();
-  const [open, setOpen] = useState(false);
-  const box = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const outside = (e: PointerEvent) => {
-      if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("pointerdown", outside);
-    return () => document.removeEventListener("pointerdown", outside);
-  }, [open]);
-
-  const chosen = options.filter((o) => selected.includes(o.value));
-  const toggle = (value: string) => onChange(selected.includes(value) ? selected.filter((v) => v !== value) : [...selected, value]);
-
-  return (
-    <div
-      ref={box}
-      className="relative flex flex-col gap-1.5"
-      onKeyDown={(e) => {
-        if (e.key === "Escape" && open) {
-          e.preventDefault();
-          setOpen(false);
-          document.getElementById(`${id}-button`)?.focus();
-        }
-      }}
-      // Tabbing away closes it. The panel is focusable (tabIndex -1) so a click on an option's
-      // text keeps focus inside instead of falling to <main>, which would close it mid-click.
-      onBlur={(e) => {
-        const next = e.relatedTarget as Node | null;
-        if (next && !e.currentTarget.contains(next)) setOpen(false);
-      }}
-    >
-      <span id={`${id}-label`} className="text-fg text-sm font-medium">
-        {label}
-      </span>
-      <button
-        id={`${id}-button`}
-        type="button"
-        aria-haspopup="true"
-        aria-expanded={open}
-        aria-controls={`${id}-panel`}
-        aria-labelledby={`${id}-label ${id}-button`}
-        onClick={() => setOpen((o) => !o)}
-        className="border-line-strong bg-bg text-fg focus-visible:border-focus flex h-11 w-full items-center gap-2 rounded-[var(--radius-control)] border ps-3 pe-2 text-start transition-colors hover:border-slate-500 focus-visible:outline-2 focus-visible:outline-offset-0"
-      >
-        {chosen.length === 0 ? (
-          <span className="text-fg-subtle flex-1 truncate">{placeholder}</span>
-        ) : (
-          <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate">
-            {chosen.map((o) => (o.swatch ? <Swatch key={o.value} hex={o.swatch} /> : null))}
-            <span className="truncate">{chosen.map((o) => o.label).join(", ")}</span>
-          </span>
-        )}
-        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={cn("text-fg-muted shrink-0 transition-transform duration-200", open && "rotate-180")}>
-          <path d="m5 8 5 5 5-5" />
-        </svg>
-      </button>
-      <div
-        id={`${id}-panel`}
-        role="group"
-        aria-labelledby={`${id}-label`}
-        tabIndex={-1}
-        hidden={!open}
-        className="border-line-strong bg-bg absolute outline-none inset-x-0 top-full z-30 mt-1 max-h-72 overflow-auto overscroll-contain rounded-[var(--radius-control)] border py-1 shadow-[0_14px_32px_-18px_rgb(14_26_43/0.5)]"
-      >
-        {options.map((o) => (
-          <label key={o.value} className="hover:bg-surface text-fg flex min-h-11 cursor-pointer items-center gap-3 px-3 text-sm">
-            <input type="checkbox" className="accent-accent size-5 shrink-0" checked={selected.includes(o.value)} onChange={() => toggle(o.value)} />
-            {o.swatch ? <Swatch hex={o.swatch} /> : null}
-            {o.label}
-          </label>
-        ))}
-      </div>
-    </div>
   );
 }

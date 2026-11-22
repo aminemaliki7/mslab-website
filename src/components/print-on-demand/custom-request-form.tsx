@@ -6,13 +6,14 @@ import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "@/components
 import { ReferenceNotice } from "@/components/forms/reference-notice";
 import { useEnhancedForm, useFocusFirstError } from "@/components/forms/use-enhanced-form";
 import { Button } from "@/components/ui/button";
-import { Checkbox, Field, Input, Select } from "@/components/ui/form";
+import { Dropdown } from "@/components/ui/dropdown";
+import { Checkbox, Field, Input } from "@/components/ui/form";
 import { submitCustomRequest, type CustomRequestState } from "@/features/print-on-demand/actions";
 import type { ProductionOption } from "@/features/print-on-demand/queries";
 import { DIMENSION_UNITS } from "@/features/print-on-demand/schema";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { fillField } from "@/components/forms/quick-picks";
+import { fillField, inDays } from "@/components/forms/quick-picks";
 import { Combobox } from "@/components/ui/combobox";
 import { FileUploader } from "./file-uploader";
 import { ProjectOptions } from "./project-options";
@@ -46,13 +47,6 @@ const FORMATS = [
   { key: "a2", width: "420", height: "594", unit: "mm" },
   { key: "rollup", width: "85", height: "200", unit: "cm" },
 ] as const;
-
-/** Local date `days` from today as YYYY-MM-DD (the value of an <input type="date">). */
-function inDays(days: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
 
 export function CustomRequestForm(props: Props) {
   const [instance, setInstance] = useState(0);
@@ -162,7 +156,7 @@ function CustomRequestFormInner({
             {t.pod.dimensions} <span className="text-fg-muted font-normal">({t.forms.optional})</span>
           </legend>
           {/* A standard format fills width, height and unit; the fields stay editable. */}
-          <Select
+          <Dropdown
             aria-label={t.pod.formatsLabel}
             defaultValue=""
             className="mb-4 sm:max-w-xs"
@@ -181,7 +175,7 @@ function CustomRequestFormInner({
                 {t.pod.formats[f.key]}
               </option>
             ))}
-          </Select>
+          </Dropdown>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {(["width", "height", "depth"] as const).map((name) => (
               <Field key={name} id={name} label={t.pod[name]} error={message(name)}>
@@ -190,13 +184,13 @@ function CustomRequestFormInner({
             ))}
             <Field id="dimensionUnit" label={t.pod.unit}>
               {(p) => (
-                <Select {...p} name="dimensionUnit" defaultValue={values.dimensionUnit ?? "cm"}>
+                <Dropdown {...p} name="dimensionUnit" defaultValue={values.dimensionUnit ?? "cm"}>
                   {DIMENSION_UNITS.map((unit) => (
                     <option key={unit} value={unit}>
                       {unit}
                     </option>
                   ))}
-                </Select>
+                </Dropdown>
               )}
             </Field>
           </div>
@@ -206,7 +200,7 @@ function CustomRequestFormInner({
           {materials.length > 0 ? (
             <Field id="materialOptionId" label={`${t.pod.material} (${t.forms.optional})`} error={message("materialOptionId")}>
               {(p) => (
-                <Select {...p} name={material === OTHER ? undefined : "materialOptionId"} value={material} onChange={(e) => setMaterial(e.target.value)}>
+                <Dropdown {...p} name={material === OTHER ? undefined : "materialOptionId"} value={material} onChange={(e) => setMaterial(e.target.value)}>
                   <option value="">{t.pod.materialAdvice}</option>
                   {materials.map((m) => (
                     <option key={m.id} value={m.id}>
@@ -214,7 +208,7 @@ function CustomRequestFormInner({
                     </option>
                   ))}
                   <option value={OTHER}>{t.pod.materialOther}</option>
-                </Select>
+                </Dropdown>
               )}
             </Field>
           ) : null}
@@ -231,7 +225,7 @@ function CustomRequestFormInner({
             {(p) => (
               <div className="grid grid-cols-2 gap-3">
                 {/* A timeframe fills the date; an exact date can still be picked. */}
-                <Select
+                <Dropdown
                   aria-label={`${t.pod.deadline} — ${t.forms.quickPick}`}
                   defaultValue=""
                   onChange={(e) => {
@@ -245,7 +239,7 @@ function CustomRequestFormInner({
                       {t.pod.deadlines[key]}
                     </option>
                   ))}
-                </Select>
+                </Dropdown>
                 <Input {...p} name="deadline" type="date" dir="ltr" defaultValue={values.deadline} />
               </div>
             )}
@@ -302,18 +296,18 @@ function CustomRequestFormInner({
         </div>
         <Field id="preferredContact" label={t.forms.preferredContact} className="sm:max-w-xs">
           {(p) => (
-            <Select {...p} name="preferredContact" defaultValue={values.preferredContact ?? "email"}>
+            <Dropdown {...p} name="preferredContact" defaultValue={values.preferredContact ?? "email"}>
               <option value="email">{t.forms.contactMethods.email}</option>
               <option value="phone">{t.forms.contactMethods.phone}</option>
               <option value="whatsapp">{t.forms.contactMethods.whatsapp}</option>
-            </Select>
+            </Dropdown>
           )}
         </Field>
         <ConsentField label={t.forms.consent} privacyHref={privacyHref} privacyLabel={t.forms.privacyLink} error={message("consent")} />
       </fieldset>
 
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" size="lg" disabled={pending || uploading} aria-disabled={pending || uploading}>
+        <Button type="submit" size="lg" disabled={pending || uploading} aria-disabled={pending || uploading} className="w-full sm:w-auto">
           {pending ? t.forms.sending : t.pod.submit}
         </Button>
         {uploading ? <p className="text-fg-muted text-sm">{t.pod.filesPending}</p> : null}

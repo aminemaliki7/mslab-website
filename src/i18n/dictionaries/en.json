@@ -11,7 +11,8 @@
     "closeMenu": "Close menu",
     "language": "Language",
     "mainNavigation": "Main navigation",
-    "requestProductionQuote": "Request a production quote"
+    "requestProductionQuote": "Request a production quote",
+    "call": "Call us"
   },
   "nav": {
     "home": "Home",
@@ -766,9 +767,28 @@
     },
     "existingWebsite": "Current website",
     "existingWebsiteHint": "If you already have one.",
+    "existingWebsiteOptions": {
+      "none": "No website yet",
+      "yes": "Yes, I already have one"
+    },
+    "existingWebsiteUrl": "Website address",
     "budget": "Indicative budget",
     "budgetHint": "A range helps us suggest the right solution.",
     "deadline": "Desired launch date",
+    "deadlines": {
+      "month": "Within 1 month",
+      "quarter": "Within 3 months",
+      "halfYear": "Within 6 months"
+    },
+    "budgets": {
+      "undecided": "To be defined together",
+      "under10": "Under MAD 10,000",
+      "from10to30": "MAD 10,000 – 30,000",
+      "from30to80": "MAD 30,000 – 80,000",
+      "over80": "Over MAD 80,000",
+      "other": "Other amount (specify)"
+    },
+    "budgetOtherPlaceholder": "Your budget or range",
     "contactSection": "Your contact details",
     "submit": "Send my request",
     "successTitle": "Request sent",

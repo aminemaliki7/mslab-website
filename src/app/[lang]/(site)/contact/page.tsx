@@ -61,7 +61,7 @@ export default async function ContactPage() {
                     {settings.phone ? (
                       <li className="flex gap-3">
                         <PhoneIcon className="text-fg-muted mt-0.5 shrink-0" />
-                        <a href={`tel:${settings.phone}`} className="hover:text-accent">
+                        <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center">
                           <bdi dir="ltr">{settings.phone}</bdi>
                         </a>
                       </li>
@@ -69,7 +69,7 @@ export default async function ContactPage() {
                     {settings.email ? (
                       <li className="flex gap-3">
                         <MailIcon className="text-fg-muted mt-0.5 shrink-0" />
-                        <a href={`mailto:${settings.email}`} className="hover:text-accent break-all">
+                        <a href={`mailto:${settings.email}`} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center break-all">
                           <bdi dir="ltr">{settings.email}</bdi>
                         </a>
                       </li>

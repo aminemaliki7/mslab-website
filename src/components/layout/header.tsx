@@ -10,11 +10,18 @@ import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { LanguageLinks, LanguageSwitcher } from "./language-switcher";
 import { MobileNav, MobileNavFallback } from "./mobile-nav";
 import { NavLinks, NavList, type NavItem } from "./nav-links";
+import { whatsappHref } from "./whatsapp-button";
 import { Wordmark } from "./wordmark";
 
 export async function Header() {
   const locale = await getLocale();
-  const [dict, { enabledLocales }, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
+  const [dict, settings, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
+  const { enabledLocales } = settings;
+  // One-tap contact in the mobile menu — only numbers MSLAB has verified in site settings.
+  const contact = {
+    phone: settings.phone ? { href: `tel:${settings.phone.replace(/\s+/g, "")}`, label: dict.common.call } : undefined,
+    whatsapp: settings.whatsappNumber ? { href: whatsappHref(settings.whatsappNumber, dict.whatsapp.prefill), label: "WhatsApp" } : undefined,
+  };
   // Digital Solutions: separate division, its own link (shown once the service is published).
   const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
   const digitalHref = digital ? localizedPath(locale, { route: "service", slug: digital.slug }) : null;
@@ -39,7 +46,11 @@ export async function Header() {
       <header className="bg-bg/95 header-lift sticky top-0 z-40 backdrop-blur-sm">
         {/* A hairline under the bar, inside the page margins (docs/DESIGN_SYSTEM.md §0). */}
         <Container className="relative flex h-[4.5rem] items-center justify-between gap-6 after:absolute after:inset-x-4 after:bottom-0 after:h-px after:bg-fg/80 sm:after:inset-x-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:h-20 lg:after:inset-x-8">
-          <Link href={localizedPath(locale, { route: "home" })} className="shrink-0" aria-label={`MSLAB — ${dict.nav.home}`}>
+          <Link
+            href={localizedPath(locale, { route: "home" })}
+            className="-my-1.5 inline-flex min-h-11 shrink-0 items-center py-1.5"
+            aria-label={`MSLAB — ${dict.nav.home}`}
+          >
             <Wordmark intro />
           </Link>
 
@@ -70,8 +81,10 @@ export async function Header() {
                 items={items}
                 cta={cta}
                 labels={{ open: dict.common.openMenu, close: dict.common.closeMenu, navigation: dict.common.mainNavigation }}
+                secondary={[{ href: localizedPath(locale, { route: "track" }), label: dict.footer.tracking }]}
+                contact={contact}
               >
-                <LanguageSwitcher available={enabledLocales} current={locale} label={dict.common.language} className="sm:hidden" />
+                <LanguageSwitcher available={enabledLocales} current={locale} label={dict.common.language} size="touch" className="sm:hidden" />
               </MobileNav>
             </Suspense>
           </div>

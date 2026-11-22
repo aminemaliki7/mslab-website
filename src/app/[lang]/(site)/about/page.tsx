@@ -45,7 +45,7 @@ export default async function AboutPage() {
     settings.phone && {
       label: dict.about.phone,
       value: (
-        <a href={`tel:${settings.phone}`} className="hover:text-accent">
+        <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center">
           <bdi dir="ltr">{settings.phone}</bdi>
         </a>
       ),
@@ -120,7 +120,7 @@ export default async function AboutPage() {
                     <li key={service.id}>
                       <Link
                         href={localizedPath(locale, { route: "service", slug: service.slug })}
-                        className="border-line hover:border-accent hover:text-accent inline-flex rounded-full border px-3.5 py-1.5 text-sm transition-colors"
+                        className="border-line hover:border-accent hover:text-accent inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm transition-colors active:bg-surface"
                       >
                         {service.name}
                       </Link>
