@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import { hasLocale, type Locale } from "@/i18n/config";
+import { hasLocale, localeFromHreflang, type Locale } from "@/i18n/config";
 
 /**
  * Per-locale URLs of the current page, read from the <link rel="alternate" hreflang> tags that
@@ -30,11 +30,13 @@ function parse(snapshot: string): Alternates {
   if (!snapshot) return null;
   const result: Partial<Record<Locale, string>> = {};
   for (const line of snapshot.split("\n")) {
-    const [lang, href] = line.split("|");
-    if (!hasLocale(lang) || !href) continue;
+    const [hreflang, href] = line.split("|");
+    // hreflang values are region-tagged ("fr-MA"): map them back to the site locale.
+    const locale = hreflang ? (hasLocale(hreflang) ? hreflang : localeFromHreflang(hreflang)) : null;
+    if (!locale || !href) continue;
     try {
       const url = new URL(href);
-      result[lang] = `${url.pathname}${url.search}`;
+      result[locale] = `${url.pathname}${url.search}`;
     } catch {
       // ignore malformed hrefs
     }

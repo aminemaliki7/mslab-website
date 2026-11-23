@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { isLegalDocumentIndexable, orderedLegalDocuments } from "@/content/legal";
 import { listSitemapEntities } from "@/features/catalog/queries";
 import { getSiteSettings } from "@/features/settings/queries";
-import { defaultLocale, type Locale } from "@/i18n/config";
+import { defaultLocale, localeMeta, type Locale } from "@/i18n/config";
 import { localizedPath, type RouteKey } from "@/i18n/routes";
 import { siteUrl } from "@/lib/env";
 
@@ -16,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entry = (routes: Partial<Record<Locale, RouteKey>>, lastModified?: string): MetadataRoute.Sitemap => {
     const languages = Object.fromEntries(
-      enabled.filter((l) => routes[l]).map((l) => [l, `${siteUrl}${localizedPath(l, routes[l]!)}`]),
+      enabled.filter((l) => routes[l]).map((l) => [localeMeta[l].hreflang, `${siteUrl}${localizedPath(l, routes[l]!)}`]),
     ) as Record<string, string>;
     if (routes[defaultLocale]) languages["x-default"] = `${siteUrl}${localizedPath(defaultLocale, routes[defaultLocale]!)}`;
     return enabled

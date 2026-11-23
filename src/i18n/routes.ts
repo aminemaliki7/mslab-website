@@ -109,6 +109,28 @@ export function resolveLocalizedPath(locale: Locale, rest: string[]): ResolvedPa
   return { kind: "pass" };
 }
 
+/** Entity routes whose last segment is a database slug (validated in proxy.ts). */
+export type EntityRoute = "category" | "product" | "service";
+const entitySections = { catalog: "category", products: "product", services: "service" } as const;
+
+/**
+ * `/fr/produits/<slug>` → { route: "product", slug }. Only exact two-segment entity paths
+ * (section + slug), written with the locale's own section segment.
+ */
+export function entityFromPath(locale: Locale, rest: string[]): { route: EntityRoute; slug: string } | null {
+  if (rest.length !== 2) return null;
+  const [first, slug] = rest;
+  const section = sectionFromLocalized(locale, first);
+  if (!section || !(section in entitySections)) return null;
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(slug);
+  } catch {
+    return null;
+  }
+  return { route: entitySections[section as keyof typeof entitySections], slug: decoded };
+}
+
 /** Split a pathname into its locale and the remaining segments. */
 export function splitLocale(pathname: string): { locale: Locale | null; rest: string[] } {
   const segments = pathname.split("/").filter(Boolean);
@@ -127,8 +149,11 @@ export function sectionOfPath(pathname: string): Section | "home" | null {
 }
 
 /**
- * Path of the same page in another locale. Section segments are translated; entity slugs
- * are kept as-is (pages with per-locale slugs pass explicit alternates instead — M4).
+ * Path of the same page in another locale, used only until the language switcher has read the
+ * page's hreflang links (components/layout/page-alternates.tsx). Section segments are
+ * translated. Entity slugs differ per locale and cannot be derived from the URL, so an entity
+ * page falls back to its section in the target locale: guessing the slug produced links to
+ * redirects and 404s in the server-rendered HTML that crawlers read.
  */
 export function switchLocalePath(pathname: string, target: Locale): string {
   const { locale, rest } = splitLocale(pathname);
@@ -137,6 +162,11 @@ export function switchLocalePath(pathname: string, target: Locale): string {
   if (!first) return `/${target}`;
   const section = sectionFromLocalized(locale, first) ?? (isSection(first) ? first : null);
   if (!section) return `/${target}`;
+  if (tail.length && section in entitySections) {
+    // Products have no index page of their own: their section is the catalog.
+    const index = section === "products" ? "catalog" : section;
+    return `/${target}/${sections[index][target]}`;
+  }
   const suffix = tail.length ? `/${tail.join("/")}` : "";
   return `/${target}/${sections[section][target]}${suffix}`;
 }

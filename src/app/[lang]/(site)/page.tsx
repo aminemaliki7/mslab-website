@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Fragment, type CSSProperties } from "react";
 import { ProductionIndex } from "@/components/catalog/production-index";
 import { DigitalSolutionsSection } from "@/components/digital/digital-solutions-section";
-import { OrganizationJsonLd } from "@/components/content/organization-json-ld";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
 import { ProofCollage, ProofField } from "@/components/home/live-proof";
 import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale,
       route: { route: "home" },
       title: dict.pages.home.title,
-      description: dict.pages.home.description,
+      description: dict.seo.homeDescription,
     })),
     title: { absolute: `MSLAB — ${dict.pages.home.title}` },
   };
@@ -66,6 +66,7 @@ export default async function HomePage() {
   return (
     <>
       <OrganizationJsonLd locale={locale} />
+      <WebSiteJsonLd locale={locale} />
       <Hero
         dict={dict}
         mockups={mockups}

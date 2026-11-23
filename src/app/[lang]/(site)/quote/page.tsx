@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     locale,
     route: { route: "quote" },
     title: dict.pages.quote.title,
-    description: dict.pages.quote.description,
+    description: dict.seo.quoteDescription,
   });
 }
 

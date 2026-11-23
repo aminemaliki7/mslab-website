@@ -45,7 +45,9 @@ export function ProductGallery({ images: allImages, thumbLabelTemplate, noImageL
           src={current.url}
           alt={current.alt}
           fill
-          priority={index === 0}
+          // Main product photo is the page LCP: fetch it first (Next 16: `priority` is deprecated).
+          loading="eager"
+          fetchPriority="high"
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-contain p-6"
           onError={() => markFailed(current.url)}

@@ -4,6 +4,8 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
 import { ServiceCard } from "@/components/catalog/service-card";
 import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG, SERVICE_ART, ServiceArt } from "@/components/illustrations/service-art";
+import { JsonLd } from "@/components/content/json-ld";
+import { ORGANIZATION_ID } from "@/components/content/organization-json-ld";
 import { RichText } from "@/components/content/rich-text";
 import { ButtonLink } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -11,7 +13,9 @@ import { Container, Heading, Lead, Section } from "@/components/ui/layout";
 import { getServiceBySlug, listServices, type ServiceDetail } from "@/features/services/queries";
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
+import { format } from "@/i18n/format";
 import { localizedPath, type RouteKey, quoteFormHref } from "@/i18n/routes";
+import { siteUrl } from "@/lib/env";
 import { buildPageMetadata } from "@/lib/seo";
 import { DigitalSolutionsPage } from "./digital-solutions";
 import { PrintOnDemandPage } from "./print-on-demand";
@@ -51,7 +55,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/services/[
   return buildPageMetadata({
     locale,
     route: routesFor(service),
-    title: service.name,
+    title: format(dict.seo.serviceTitle, { name: service.name }),
     description: service.summary ?? dict.pages.services.description,
   });
 }
@@ -61,12 +65,33 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
   const [dict, all] = await Promise.all([getDictionary(locale), listServices(locale)]);
   const others = all.filter((s) => s.id !== service.id).slice(0, 3);
 
-  if (service.slugs.fr === PRINT_ON_DEMAND_SLUG) return <PrintOnDemandPage locale={locale} dict={dict} service={service} />;
+  // Verified fields only (no offers, prices or ratings). Digital Solutions renders its own, richer Service.
+  const serviceJsonLd = (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: service.name,
+        ...(service.summary ? { description: service.summary } : {}),
+        provider: { "@type": "Organization", "@id": ORGANIZATION_ID, name: "MSLAB", url: siteUrl },
+        areaServed: { "@type": "Country", name: "Morocco" },
+        url: `${siteUrl}${localizedPath(locale, { route: "service", slug: service.slug })}`,
+      }}
+    />
+  );
+
+  if (service.slugs.fr === PRINT_ON_DEMAND_SLUG)
+    return (
+      <>
+        {serviceJsonLd}
+        <PrintOnDemandPage locale={locale} dict={dict} service={service} />
+      </>
+    );
   if (service.slugs.fr === DIGITAL_SOLUTIONS_SLUG) return <DigitalSolutionsPage locale={locale} dict={dict} service={service} />;
 
   return (
     <>
-
+      {serviceJsonLd}
       <div className="overflow-hidden">
         <Container className="grid items-center gap-8 py-10 md:grid-cols-12 lg:py-14">
           <div className="md:col-span-7">

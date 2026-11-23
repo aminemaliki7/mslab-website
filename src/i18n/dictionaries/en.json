@@ -3,6 +3,17 @@
     "siteName": "MSLAB",
     "defaultDescription": "MSLAB is a Moroccan printing, reprographics and custom-production company: printed materials, books and brochures, custom apparel and personalized products, business stationery and packaging for businesses, institutions and individuals. Bulk orders, quoted per project."
   },
+  "seo": {
+    "homeDescription": "Printing, reprographics and custom production in Morocco: print, books, custom apparel and merchandise, stationery and packaging. Bulk orders, quoted per project.",
+    "servicesTitle": "Printing and custom production services",
+    "servicesDescription": "Printing and reprographics, custom apparel and merchandise, stationery, books, packaging and digital solutions: MSLAB’s services in Morocco, quoted per project.",
+    "catalogTitle": "Catalog of customizable products",
+    "aboutDescription": "MSLAB is a Moroccan printing and custom-production company: we print and produce in quantity for businesses, institutions and individuals.",
+    "contactTitle": "Contact MSLAB",
+    "quoteDescription": "Describe your printing or production project with quantities, or pick catalog products: MSLAB reviews your request and replies with a quote.",
+    "categoryTitle": "{name} — catalog",
+    "serviceTitle": "{name} in Morocco"
+  },
   "common": {
     "skipToContent": "Skip to content",
     "requestQuote": "Request a quote",

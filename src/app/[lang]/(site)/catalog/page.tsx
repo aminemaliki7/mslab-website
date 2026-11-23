@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     route: { route: "catalog" },
-    title: dict.pages.catalog.title,
+    title: dict.seo.catalogTitle,
     description: dict.pages.catalog.description,
   });
 }

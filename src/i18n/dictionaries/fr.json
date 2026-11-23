@@ -3,6 +3,17 @@
     "siteName": "MSLAB",
     "defaultDescription": "MSLAB, entreprise marocaine d'impression, de reprographie et de production sur mesure : imprimés, livres et brochures, vêtements et objets personnalisés, papeterie d'entreprise et packaging, pour les entreprises, les institutions et les particuliers. Commandes en quantité, sur devis."
   },
+  "seo": {
+    "homeDescription": "Impression, reprographie et production sur mesure au Maroc : imprimés, livres, textile et objets personnalisés, papeterie et packaging. En quantité, sur devis.",
+    "servicesTitle": "Services d’impression et de production sur mesure",
+    "servicesDescription": "Impression et reprographie, textile et objets personnalisés, papeterie, livres, packaging et solutions digitales : les services de MSLAB au Maroc, sur devis.",
+    "catalogTitle": "Catalogue de produits personnalisables",
+    "aboutDescription": "MSLAB, entreprise marocaine d’impression et de production sur mesure, imprime et produit en quantité pour les entreprises, les institutions et les particuliers.",
+    "contactTitle": "Contacter MSLAB",
+    "quoteDescription": "Décrivez votre projet d’impression ou de production avec les quantités, ou choisissez des produits du catalogue : MSLAB vous répond avec un devis.",
+    "categoryTitle": "{name} — catalogue",
+    "serviceTitle": "{name} au Maroc"
+  },
   "common": {
     "skipToContent": "Aller au contenu",
     "requestQuote": "Demander un devis",

@@ -10,7 +10,8 @@ export default function robots(): MetadataRoute.Robots {
   if (!isProduction) return { rules: [{ userAgent: "*", disallow: "/" }] };
   return {
     rules: [{ userAgent: "*", allow: "/", disallow: ["/admin", "/api"] }],
+    // No `host`: it is a Yandex-only directive that Googlebot flags as an ignored rule.
+    // The preferred domain comes from the canonical URLs and the mslab.ma → www redirect.
     sitemap: `${siteUrl}/sitemap.xml`,
-    host: siteUrl,
   };
 }

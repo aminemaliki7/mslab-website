@@ -81,7 +81,8 @@ type ImagePick = Pick<ImageRow, "storage_path" | "alt_fr" | "alt_ar" | "alt_en" 
 function toImage(image: ImagePick, locale: Locale, fallbackAlt: string): ProductImage {
   return {
     url: catalogImageUrl(image.storage_path),
-    alt: pick(image, "alt", locale) ?? fallbackAlt,
+    // `||`: an empty alt in the admin must still fall back to the product name.
+    alt: pick(image, "alt", locale) || fallbackAlt,
     width: image.width,
     height: image.height,
   };

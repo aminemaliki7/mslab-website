@@ -1,7 +1,30 @@
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
-import type { Locale } from "@/i18n/config";
+import { localeMeta, type Locale } from "@/i18n/config";
 import { siteUrl } from "@/lib/env";
 import { JsonLd } from "./json-ld";
+
+export const ORGANIZATION_ID = `${siteUrl}/#organization`;
+
+/**
+ * schema.org WebSite for the home pages: tells Google the site name to show in results
+ * ("MSLAB" rather than the bare domain). https://developers.google.com/search/docs/appearance/site-names
+ */
+export function WebSiteJsonLd({ locale }: { locale: Locale }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        name: "MSLAB",
+        alternateName: ["mslab.ma"],
+        url: `${siteUrl}/`,
+        inLanguage: localeMeta[locale].hreflang,
+        publisher: { "@id": ORGANIZATION_ID },
+      }}
+    />
+  );
+}
 
 /**
  * schema.org Organization built ONLY from verified site settings. Fields MSLAB has not
@@ -30,7 +53,9 @@ export async function OrganizationJsonLd({ locale }: { locale: Locale }) {
       data={{
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: settings.companyName ?? "MSLAB",
+        "@id": ORGANIZATION_ID,
+        // Brand name as written on the logo and in every title; the legal entity name stays in legalName.
+        name: "MSLAB",
         ...(settings.legalName ? { legalName: settings.legalName } : {}),
         url: siteUrl,
         logo: `${siteUrl}/brand/mslab-logo-512.png`,

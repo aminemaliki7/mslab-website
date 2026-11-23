@@ -23,7 +23,12 @@ type PageMetadataInput = {
 export async function buildPageMetadata({ locale, route, title, description, index = true }: PageMetadataInput): Promise<Metadata> {
   const { enabledLocales } = await getSiteSettings();
   const { languages: all, xDefault } = alternatePaths(route);
-  const languages = Object.fromEntries(Object.entries(all).filter(([l]) => enabledLocales.includes(l as Locale)));
+  // Keys are hreflang codes (fr-MA, ar-MA, en): the site targets Morocco for French and Arabic.
+  const languages = Object.fromEntries(
+    Object.entries(all)
+      .filter(([l]) => enabledLocales.includes(l as Locale))
+      .map(([l, path]) => [localeMeta[l as Locale].hreflang, path]),
+  );
   const canonical = "route" in route ? localizedPath(locale, route as RouteKey) : (all[locale] ?? xDefault);
 
   return {

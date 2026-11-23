@@ -41,7 +41,7 @@ export function PageHeader({
               photo.contain ? "border-line border bg-white" : "bg-paper-100",
             )}
           >
-            <Image src={photo.src} alt={photo.alt} fill sizes="224px" className={photo.contain ? "object-contain p-3" : "object-cover"} priority />
+            <Image src={photo.src} alt={photo.alt} fill sizes="224px" className={photo.contain ? "object-contain p-3" : "object-cover"} loading="eager" fetchPriority="high" />
           </div>
         ) : illustration ? (
           <div className="bg-paper-100 hidden size-48 shrink-0 place-items-center rounded-[var(--radius-tile)] p-6 md:grid lg:size-56">{illustration}</div>

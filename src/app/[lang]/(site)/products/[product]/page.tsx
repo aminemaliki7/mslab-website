@@ -97,18 +97,6 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
           url: productUrl,
         }}
       />
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: crumbs.map((crumb, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: crumb.label,
-            ...(crumb.href ? { item: `${siteUrl}${crumb.href}` } : {}),
-          })),
-        }}
-      />
 
       <Section className="pt-4 pb-14 sm:pt-8 sm:pb-16 lg:pt-10 lg:pb-24">
         <Container>

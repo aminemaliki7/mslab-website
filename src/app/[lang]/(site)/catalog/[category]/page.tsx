@@ -9,6 +9,7 @@ import { Container, Heading, Lead } from "@/components/ui/layout";
 import { getCategoryBySlug, listCategories, type CategorySummary } from "@/features/catalog/queries";
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
+import { format } from "@/i18n/format";
 import { localizedPath, type RouteKey } from "@/i18n/routes";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/catalog/[c
   return buildPageMetadata({
     locale,
     route: routesFor(category),
-    title: category.name,
+    title: format(dict.seo.categoryTitle, { name: category.name }),
     description: category.description ?? dict.pages.catalog.description,
   });
 }

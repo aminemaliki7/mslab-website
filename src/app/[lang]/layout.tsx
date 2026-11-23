@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: { default: `MSLAB — ${dict.pages.home.title}`, template: "%s | MSLAB" },
-    description: dict.meta.defaultDescription,
+    description: dict.seo.homeDescription,
     applicationName: "MSLAB",
     // Google Search Console ownership (HTML-file method also in public/google0519d0a50076684c.html).
     verification: { google: "MV6KHRXbTHF9L1n9Bx74wyJ0UvEB7NGaaREnD_-tJxg" },

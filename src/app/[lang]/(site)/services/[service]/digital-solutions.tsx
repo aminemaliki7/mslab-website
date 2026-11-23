@@ -1,4 +1,5 @@
 import { JsonLd } from "@/components/content/json-ld";
+import { ORGANIZATION_ID } from "@/components/content/organization-json-ld";
 import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
 import { DigitalIcon, DigitalScene } from "@/components/illustrations/digital-art";
 import { DigitalRequestForm } from "@/components/digital/digital-request-form";
@@ -35,7 +36,7 @@ export function DigitalSolutionsPage({ locale, dict, service }: { locale: Locale
           name: service.name,
           description: service.summary ?? d.lead,
           serviceType: d.services.map((s) => s.title),
-          provider: { "@type": "Organization", name: "MSLAB", url: siteUrl },
+          provider: { "@type": "Organization", "@id": ORGANIZATION_ID, name: "MSLAB", url: siteUrl },
           url: pageUrl,
         }}
       />

@@ -106,24 +106,32 @@ _Implemented in M4:_ `features/catalog/search-params.ts` (Zod, invalid values si
 ## 7. SEO per route
 | Route | Index | JSON-LD |
 |---|---|---|
-| home | ✅ | Organization (verified fields) |
-| about, services, service | ✅ | Organization / Service (later) |
-| catalog index, category | ✅ (if non-empty) | BreadcrumbList |
-| product | ✅ | Product + BreadcrumbList |
-| contact | ✅ | LocalBusiness (verified fields) |
-| quote | ✅ | — |
+| home | ✅ | Organization (`@id` …/#organization, verified fields) + WebSite (site name "MSLAB") |
+| about, services | ✅ | — |
+| service | ✅ | Service (provider → Organization `@id`) + BreadcrumbList |
+| catalog index | ✅ | — |
+| category | ✅ | BreadcrumbList |
+| product | ✅ | Product (no offers/ratings) + BreadcrumbList |
+| contact | ✅ | Organization (verified fields) |
+| quote (`?product=`, `?type=` canonical to the clean URL) | ✅ | — |
+| legal documents | ❌ until validated | — |
 | thank-you, search with `q` | ❌ | — |
 | `/admin/**` | ❌ (+ disallow in robots) | — |
 
-Every indexable page: canonical + `alternates.languages` (fr, ar, en, x-default→fr).
+BreadcrumbList is emitted by `components/ui/breadcrumbs.tsx` itself, so it always matches the visible trail. Every indexable page: canonical + `alternates.languages` (fr-MA, ar-MA, en, x-default→fr). Meta titles/descriptions that differ from on-page copy live in the `seo` block of the dictionaries (categories "{name} — catalogue", services "{name} au Maroc").
 
 ## 8. Redirects & errors
 - Slug change on a published entity → entry in `slug_redirects` (Phase 4) consulted by the entity page before `notFound()` → `permanentRedirect()`.
 - Unknown first segment (e.g. `/de`) is treated as an unprefixed path: one 307 to the negotiated locale, then a real 404 from the localized catch-all (`app/[lang]/(site)/[...rest]`). Proxy cannot tell a mistyped locale from a legitimate unprefixed link such as `/contact`.
 - URLs outside every root layout fall back to `app/global-not-found.tsx` (`experimental.globalNotFound`).
-- **Entity pages (services, later products/categories)** prerender every published slug (`generateStaticParams`; a `__none__` placeholder keeps the build valid when none exist). Slugs created after the build render on first request. For those runtime renders Next.js has already started streaming, so:
-  - unknown slug → localized not-found UI + `noindex`, but HTTP **200** (documented Next.js behavior);
-  - another locale's slug (e.g. `/en/services/<french-slug>`) → `permanentRedirect` delivered as client redirect + `<meta http-equiv="refresh" content="0">`, HTTP 200.
-  Prebuilt slugs get real status codes. Revisit in M8 if crawl reports show issues.
-- **Language switcher** reads the page's own `<link rel="alternate" hreflang>` tags, so entity pages with per-locale slugs switch to the correct translated URL without extra wiring.
+- **Entity pages (categories, products, services)** prerender published slugs (`generateStaticParams`; a `__none__` placeholder keeps the build valid when none exist). With Cache Components a request-time `notFound()`/`permanentRedirect()` inside the page runs after the 200 shell has been sent (soft 404 / meta-refresh redirect, see `node_modules/next/dist/docs/01-app/02-guides/streaming.md` → "The HTTP contract"). Crawls of production (Nov 2026) showed these soft responses on first hits, so **proxy.ts decides the status before rendering** (`src/lib/entity-slug-index.ts`, in-memory slug index per instance, 5 min TTL, forced refresh before answering 404):
+  - slug of this locale → page renders (200);
+  - slug of another locale (e.g. `/fr/produits/business-cards`) → **308** to this locale's slug, combined with the section fix in one hop (`/fr/catalog/<en-slug>` → `/fr/catalogue/<fr-slug>`);
+  - unknown slug → rewrite to `/{locale}/__missing` (catch-all) → real **404** with the localized not-found page;
+  - index unavailable (Supabase error) → fail open: the page validates as before.
+- **Language switcher** reads the page's own `<link rel="alternate" hreflang>` tags after hydration, so entity pages switch to the exact translated URL. Before hydration (and in the raw HTML crawlers read) entity pages link to the section index of the target locale (`switchLocalePath`; products → catalog): slugs differ per locale and must never be guessed.
+
+## 9. hreflang
+- Codes: `fr-MA`, `ar-MA`, `en` + `x-default` → French (`localeMeta[locale].hreflang`, used by `lib/seo.ts`, `sitemap.ts` and mapped back by `components/layout/page-alternates.tsx`).
+- Every indexable page lists all enabled locales including itself; translations are reciprocal by construction (same route key per entity). `<html lang>` stays `fr` / `ar` / `en`.
 - Localized `not-found.tsx` with links to catalog and contact.
