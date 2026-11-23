@@ -1,15 +1,15 @@
--- Hoodies (0006): front view from the grey heather hoodie photo supplied by the owner on
--- 2026-11-23, centre-chest MSLAB print, transparent background. Data only, idempotent.
+-- Hoodies (0006): front view of the navy hoodie photo supplied by the owner on 2026-11-23.
+-- Data only, idempotent.
 
 begin;
 
 update public.product_images
-set storage_path = '/catalog/mockups/apparel/hoodies/hoodies-front-print-cutout.webp',
-    alt_fr = 'Sweat à capuche gris chiné imprimé du logo MSLAB sur la poitrine',
-    alt_ar = 'سترة رمادية بقلنسوة مطبوع على صدرها شعار MSLAB',
-    alt_en = 'Grey heather hoodie printed with the MSLAB logo on the chest',
-    width = 1200, height = 900
-where storage_path = '/catalog/mockups/apparel/hoodies/hoodies-front-embroidery-cutout.webp';
+set storage_path = '/catalog/products/custom-hoodies-navy.jpg',
+    alt_fr = 'Sweat à capuche bleu marine à capuche',
+    alt_ar = 'سترة زرقاء داكنة بقلنسوة',
+    alt_en = 'Navy blue hooded sweatshirt',
+    width = 768, height = 1365
+where product_id = 'd0000000-0000-4000-8000-000000000006';
 
 commit;
 
