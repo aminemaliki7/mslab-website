@@ -139,3 +139,42 @@ export function applyMask(rgb, mask) {
   }
   return out;
 }
+
+/**
+ * Hand-traced silhouette, for photos whose backdrop is not uniform (sunlit wall, a small scene):
+ * the product is the union of `polygons` (2 × 2 supersampled edges); everything else becomes a
+ * soft synthetic drop shadow of the silhouette (blurred, offset), so these match the other
+ * cut-outs. Same shape as backgroundMask's result, for applyMask.
+ */
+export async function silhouetteMask(input, { polygons, shadow = { dx: 12, dy: 16, blur: 14, opacity: 0.22 } }) {
+  const { width: W, height: H } = await sharp(input).metadata();
+  const N = W * H;
+  const inside = (x, y) => polygons.some((poly) => {
+    let hit = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [xi, yi] = poly[i], [xj, yj] = poly[j];
+      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) hit = !hit;
+    }
+    return hit;
+  });
+  const cover = new Uint8Array(N);
+  const xs = polygons.flat().map((p) => p[0]), ys = polygons.flat().map((p) => p[1]);
+  for (let y = Math.max(0, Math.floor(Math.min(...ys))); y <= Math.min(H - 1, Math.ceil(Math.max(...ys))); y++)
+    for (let x = Math.max(0, Math.floor(Math.min(...xs))); x <= Math.min(W - 1, Math.ceil(Math.max(...xs))); x++) {
+      let n = 0;
+      for (const [ox, oy] of [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]]) if (inside(x + ox, y + oy)) n++;
+      cover[y * W + x] = Math.round((n / 4) * 255);
+    }
+  // Drop shadow: the silhouette, offset (here, in JS: sharp reorders extend/extract) and blurred.
+  const shifted = Buffer.alloc(N);
+  for (let y = shadow.dy; y < H; y++) for (let x = shadow.dx; x < W; x++) shifted[y * W + x] = cover[(y - shadow.dy) * W + (x - shadow.dx)];
+  const shadowRaw = await sharp(shifted, { raw: { width: W, height: H, channels: 1 } }).blur(shadow.blur).extractChannel(0).raw().toBuffer();
+  const alpha = new Uint8Array(N), isBackground = new Uint8Array(N);
+  for (let i = 0; i < N; i++) {
+    const a = cover[i] / 255, s = (shadowRaw[i] / 255) * shadow.opacity;
+    // Product over its shadow ("over" compositing of an opaque-ish product on a black shadow).
+    alpha[i] = Math.round(255 * (a + s * (1 - a)));
+    isBackground[i] = a === 0 ? 1 : 0;
+  }
+  return { alpha, isBackground, band: new Uint8Array(N), bgRGB: [255, 255, 255], width: W, height: H, bgLum: 1 };
+}

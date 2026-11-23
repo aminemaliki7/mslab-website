@@ -30,10 +30,12 @@ product keeps its own soft shadow and sits on the card tile, its hover tint and 
 gallery colour (owner request 2026-11-23). Per product, `cutout` options cover the hard cases:
 `seeds` (the hole inside the mug handle), `exclude` (areas the backdrop fill must not enter: the
 paper stacks, the glazed mug body), `minRel` (dark sides of the paper bag stay solid), `fadeZones`
-(the mailer box photo fades to white at its sides). The corporate kit and the tote are scenes
-(objects on a table, a bag on a wall) and keep their photo. The T-shirt uses the photo supplied by
-the owner on 2026-11-23 (`bases/tshirt-white-front-photo.webp`). Migration
-`20261123170000_catalogue_mockups_cutouts.sql` points the catalogue at the cut-outs.
+(the mailer box photo fades to white at its sides), `lighter` (the white outline around the hoodie
+photo). Where the backdrop is not uniform (the tote on a sunlit wall, the book in a small scene)
+the silhouette is traced by hand (`polygons`) and given a soft drop shadow. The corporate kit is a
+scene (objects on a table) and keeps its photo. The T-shirt and the hoodie use photos supplied by
+the owner on 2026-11-23 (`bases/`). Migrations `20261123170000`, `20261123180000` and
+`20261123190000` point the catalogue at the cut-outs.
 
 ## Rebuild
 

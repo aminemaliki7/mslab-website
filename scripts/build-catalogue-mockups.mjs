@@ -24,7 +24,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { ARTWORK } from "./catalogue-mockups/artwork.mjs";
 import { composite } from "./catalogue-mockups/compositor.mjs";
-import { applyMask, backgroundMask } from "./catalogue-mockups/cutout.mjs";
+import { applyMask, backgroundMask, silhouetteMask } from "./catalogue-mockups/cutout.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ART_DIR = resolve(ROOT, "design/catalogue-mockups/artwork");
@@ -174,9 +174,26 @@ export const MOCKUPS = [
   {
     // Canvas tote (blank supplied by the owner 2026-11-23, 832 × 1248), front panel below the hem.
     id: "custom-tote-bags",
+    // Sunlit wall (not a uniform backdrop): hand-traced silhouette — bag body, the fabric rising
+    // to the hook with the straps, and the wooden hook.
+    cutout: {
+      polygons: [
+        [[206, 486], [628, 489], [626, 928], [604, 932], [222, 930], [205, 922]],
+        [[395, 212], [440, 212], [470, 300], [510, 390], [552, 466], [560, 490], [318, 490], [330, 440], [355, 350], [380, 262]],
+        [[354, 184], [476, 184], [476, 218], [354, 218]],
+      ],
+    },
     out: "merchandise/tote-bags/tote-bags-canvas-print.webp",
     base: BASE("tote-bag-blank.webp"),
     layers: [{ svg: ART["mslab-tote-front"], quad: [[222, 540], [612, 535], [616, 905], [210, 915]], lumRange: [0.3, 1.01], displace: 0.5, opacity: 0.92, shadeMin: 0.5 }],
+  },
+  {
+    // Books: MSLAB's own photo (already carries the logo); the book is traced out of its scene.
+    id: "books",
+    cutout: { polygons: [[[195, 213], [230, 194], [538, 209], [568, 645], [225, 682], [213, 676]]] },
+    out: "printed-materials/books/books-mslab-cover.webp",
+    base: BLANK("books.webp"),
+    layers: [],
   },
   {
     id: "custom-paper-bags",
@@ -199,7 +216,7 @@ for (const m of MOCKUPS) {
   // to the white background and the fill leaks into it; the print adds the edges that stop it.
   const rgbPng = await sharp(data, { raw: { width, height, channels: 3 } }).png().toBuffer();
   const image = m.cutout
-    ? sharp(applyMask(data, await backgroundMask(rgbPng, m.cutout)), { raw: { width, height, channels: 4 } })
+    ? sharp(applyMask(data, await (m.cutout.polygons ? silhouetteMask(rgbPng, m.cutout) : backgroundMask(rgbPng, m.cutout))), { raw: { width, height, channels: 4 } })
     : sharp(rgbPng);
   const png = await image.png().toBuffer();
   await sharp(png).webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(file);
