@@ -124,12 +124,16 @@ export async function composite(basePath, layers) {
 
     let mapUV;
     if (layer.mapping === "cylinder") {
-      const { cx, radius, top, bottom, arc } = layer.cylinder; // arc: half-angle covered by the artwork (rad)
+      // arc: half-angle covered by the artwork (rad). ellipse: half minor axis of the rims when
+      // the object is seen from above (px) — horizontal lines of the print bow down at the front.
+      // top/bottom: print band at the front-centre of the object.
+      const { cx, radius, top, bottom, arc, ellipse = 0 } = layer.cylinder;
       mapUV = (x, y) => {
         const s = (x - cx) / radius;
         if (s <= -1 || s >= 1) return null;
         const theta = Math.asin(s);
-        return [(theta + arc) / (2 * arc), (y - top) / (bottom - top)];
+        const bow = ellipse * (Math.cos(theta) - 1);
+        return [(theta + arc) / (2 * arc), (y - bow - top) / (bottom - top)];
       };
     } else {
       const Hinv = invert3(squareToQuad(layer.quad));

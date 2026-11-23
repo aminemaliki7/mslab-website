@@ -300,4 +300,53 @@ export const ARTWORK = {
     `<rect x="440" y="840" width="120" height="5" fill="${C.tealLight}"/>`,
     `<text x="500" y="940" text-anchor="middle" font-family="Century Gothic" font-size="34" letter-spacing="10" fill="${C.tealLight}">ERRACHIDIA · MAROC</text>`,
   ].join("\n  ")),
+
+  // ── Corporate kit (bases/corporate-kit-blank.webp) ─────────────────────────
+  /** Large table flag: transparent ground (white fabric), logo + promise. The hand flag lies on
+   *  its top-left corner (x < 560, y < 470 here), so the content sits top-right and along the bottom. */
+  "mslab-kit-table-flag": () => svg(1500, 1000, "corporate kit, large table flag (transparent ground = white fabric)", [
+    logo(760, 90, 460, "color"),
+    `<g font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" fill="${C.ink}"><text x="150" y="640" font-size="100">VOTRE IDÉE. VOTRE DESIGN.</text><text x="150" y="750" font-size="100" fill="${C.teal}">NOTRE PRODUCTION.</text></g>`,
+    `<rect x="150" y="800" width="1200" height="6" fill="${C.teal}"/>`,
+    `<text x="150" y="880" font-family="Century Gothic" font-size="36" letter-spacing="5" fill="${C.ink}">${esc(FACTS.lineFr.toUpperCase())}</text>`,
+    cmykBar(1214, 850, 30, 9),
+  ].join("\n  ")),
+  /** Small hand flag. */
+  "mslab-kit-hand-flag": () => svg(1400, 1000, "corporate kit, small hand flag", [
+    logo(390, 250, 620, "color"),
+  ].join("\n  ")),
+  /** T-shirt chest print. */
+  "mslab-kit-tshirt": () => svg(880, 1000, "corporate kit, T-shirt chest print", [
+    logo(190, 260, 500, "color"),
+    `<text x="440" y="700" text-anchor="middle" font-family="Century Gothic" font-size="34" letter-spacing="6" fill="${C.ink}">${esc(FACTS.lineFr.toUpperCase())}</text>`,
+  ].join("\n  ")),
+  /** Bottle 1 (cap): logo, front ±57°. */
+  "mslab-kit-bottle-logo": () => svg(630, 1000, "corporate kit, bottle with logo (front 114°)", [
+    logo(95, 300, 440, "color"),
+    `<text x="315" y="720" text-anchor="middle" font-family="Century Gothic" font-size="40" letter-spacing="6" fill="${C.slate}">${FACTS.web.toUpperCase()}</text>`,
+  ].join("\n  ")),
+  /** Bottle 2 (steel cap): teal band around the bottle, white logo, ±89°. */
+  "mslab-kit-bottle-band": () => svg(1000, 1000, "corporate kit, bottle with a teal band (front 178°)", [
+    `<rect x="0" y="260" width="1000" height="480" fill="${C.teal}"/>`,
+    logo(330, 365, 340, "white"),
+  ].join("\n  ")),
+  /** Mug: logo + promise, front ±57°. */
+  "mslab-kit-mug": () => svg(950, 1000, "corporate kit, mug print (front 114°)", [
+    logo(225, 200, 500, "color"),
+    `<g font-family="Century Gothic" font-weight="bold" font-size="52" text-anchor="middle" fill="${C.ink}"><text x="475" y="690">Votre idée. Votre design.</text><text x="475" y="764" fill="${C.teal}">Notre production.</text></g>`,
+  ].join("\n  ")),
+  /** Pen barrel: pad print. */
+  "mslab-kit-pen": () => svg(1650, 200, "corporate kit, pen barrel pad print", [
+    mark(120, 45, 170, C.teal),
+    `<text x="330" y="140" font-family="Century Gothic" font-weight="bold" font-size="104" letter-spacing="10" fill="${C.ink}">MSLAB</text>`,
+    `<text x="830" y="136" font-family="Century Gothic" font-size="80" letter-spacing="4" fill="${C.slate}">${FACTS.web}</text>`,
+  ].join("\n  ")),
+
+  /** Canvas tote bag, front panel: two-colour screen print. */
+  "mslab-tote-front": () => svg(1040, 1000, "canvas tote bag, two-colour screen print", [
+    logo(240, 150, 560, "color"),
+    `<rect x="420" y="610" width="200" height="6" fill="${C.teal}"/>`,
+    `<text x="520" y="700" text-anchor="middle" font-family="Century Gothic" font-weight="bold" font-size="38" letter-spacing="3" fill="${C.ink}">${esc(FACTS.lineFr.toUpperCase())}</text>`,
+    `<text x="520" y="770" text-anchor="middle" font-family="Century Gothic" font-size="38" letter-spacing="8" fill="${C.teal}">${FACTS.web.toUpperCase()}</text>`,
+  ].join("\n  ")),
 };

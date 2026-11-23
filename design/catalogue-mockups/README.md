@@ -50,6 +50,10 @@ fonts are not installed for the SVG renderer; the logo itself is outlines.
 | Brochures & catalogues | `printed-materials/brochures-catalogs/brochures-catalogs-cover.webp` | Stapled catalogue cover |
 | Mailer boxes | `packaging/mailer-boxes/mailer-boxes-kraft-print.webp` | One-colour print on kraft under the tape |
 | Paper bags | `packaging/paper-bags/paper-bags-front.webp` | Front panel print |
+| Corporate kits | `merchandise/corporate-kits/corporate-kits-set.webp` | Bottles (logo; wrapped teal band), T-shirt, mug, pen, hand flag and table flag |
+| Tote bags | `merchandise/tote-bags/tote-bags-canvas-print.webp` | Two-colour screen print on natural canvas (the MSLAB event photo stays as a second view) |
 
-Posters, document printing, tote bags, corporate kits, office supplies and books already had
-finished photos and are unchanged.
+Corporate kits and tote bags use blanks supplied by the owner on 2026-11-23
+(`bases/corporate-kit-blank.webp`, `bases/tote-bag-blank.webp`; migration
+`20261123150000_catalogue_kit_tote_mockups.sql`). Posters, document printing, office supplies and
+books already had finished photos and are unchanged.

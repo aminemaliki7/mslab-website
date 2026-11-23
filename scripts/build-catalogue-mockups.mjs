@@ -136,6 +136,34 @@ export const MOCKUPS = [
     layers: [{ svg: ART["mslab-mailer-box-lid"], quad: [[585, 55], [997, 345], [548, 748], [109, 403]], lumRange: [0.42, 0.8], mode: "multiply", opacity: 0.9 }],
   },
   {
+    // Corporate kit (blank supplied by the owner 2026-11-23, 1200 × 1600): every item printed.
+    id: "corporate-kits",
+    out: "merchandise/corporate-kits/corporate-kits-set.webp",
+    base: BASE("corporate-kit-blank.webp"),
+    layers: [
+      // Large table flag: its top-left corner is under the hand flag and its pole.
+      {
+        svg: ART["mslab-kit-table-flag"], quad: [[248, 717], [1105, 915], [930, 1515], [30, 1260]],
+        exclude: [[[160, 688], [536, 774], [461, 1036], [94, 961]], [[152, 676], [198, 688], [26, 1288], [0, 1278]]],
+        lumRange: [0.5, 1.01], displace: 1.2, opacity: 0.95,
+      },
+      { svg: ART["mslab-kit-hand-flag"], quad: [[185, 712], [530, 780], [455, 1030], [105, 955]], lumRange: [0.85, 1.01], displace: 1.5, opacity: 0.95 },
+      { svg: ART["mslab-kit-tshirt"], quad: [[745, 185], [965, 175], [968, 425], [748, 435]], lumRange: [0.6, 1.01], displace: 1.4, opacity: 0.94, shadeMin: 0.55 },
+      // Bottles and mug are seen slightly from above: the print bows with the rims (ellipse).
+      { svg: ART["mslab-kit-bottle-logo"], polygon: [[117, 318], [261, 318], [261, 576], [117, 576]], mapping: "cylinder", cylinder: { cx: 188.5, radius: 72, top: 330, bottom: 560, arc: 1.0, ellipse: 6 }, lumRange: [0.5, 1.01], opacity: 0.96 },
+      { svg: ART["mslab-kit-bottle-band"], polygon: [[294, 338], [442, 338], [442, 604], [294, 604]], mapping: "cylinder", cylinder: { cx: 368, radius: 73.5, top: 362, bottom: 590, arc: 1.55, ellipse: 6 }, lumRange: [0.5, 1.01], gloss: 0.97, opacity: 0.97 },
+      { svg: ART["mslab-kit-mug"], polygon: [[517, 532], [707, 532], [707, 752], [517, 752]], mapping: "cylinder", cylinder: { cx: 611.5, radius: 94, top: 552, bottom: 738, arc: 1.0, ellipse: 16 }, lumRange: [0.5, 1.01], gloss: 0.975, opacity: 0.97 },
+      { svg: ART["mslab-kit-pen"], quad: [[900, 792], [1030, 818], [1027, 834], [897, 808]], lumRange: [0.55, 1.01], opacity: 0.95, rasterWidth: 1650 },
+    ],
+  },
+  {
+    // Canvas tote (blank supplied by the owner 2026-11-23, 832 × 1248), front panel below the hem.
+    id: "custom-tote-bags",
+    out: "merchandise/tote-bags/tote-bags-canvas-print.webp",
+    base: BASE("tote-bag-blank.webp"),
+    layers: [{ svg: ART["mslab-tote-front"], quad: [[222, 540], [612, 535], [616, 905], [210, 915]], lumRange: [0.3, 1.01], displace: 0.5, opacity: 0.92, shadeMin: 0.5 }],
+  },
+  {
     id: "custom-paper-bags",
     out: "packaging/paper-bags/paper-bags-front.webp",
     base: BLANK("custom-paper-bags.webp"),

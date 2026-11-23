@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1650" height="200" viewBox="0 0 1650 200">
+  <!-- MSLAB — corporate kit, pen barrel pad print -->
+  <g transform="translate(120 45) scale(0.4473684210526316) translate(-40 -54)"><path fill="#0B6E8A" d="M 44 218 L 44 114 A 56 56 0 0 1 156 114 L 156 154 A 13 13 0 0 0 182 154 L 182 114 A 56 56 0 0 1 294 114 L 294 218 L 246 218 L 246 114 A 8 8 0 0 0 230 114 L 230 156 A 61 61 0 0 1 108 156 L 108 114 A 8 8 0 0 0 92 114 L 92 218 Z"/><path fill="#0B6E8A" fill-rule="evenodd" d="M 304 114 A 56 56 0 0 1 416 114 L 416 162 A 56 56 0 0 1 304 162 Z M 416 110 L 362 110 A 8 8 0 0 0 362 126 L 416 126 Z M 304 150 L 358 150 A 8 8 0 0 1 358 166 L 304 166 Z"/></g>
+  <text x="330" y="140" font-family="Century Gothic" font-weight="bold" font-size="104" letter-spacing="10" fill="#0E1A2B">MSLAB</text>
+  <text x="830" y="136" font-family="Century Gothic" font-size="80" letter-spacing="4" fill="#5B6779">www.mslab.ma</text>
+</svg>
