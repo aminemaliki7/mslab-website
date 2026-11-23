@@ -16,12 +16,12 @@ import tshirtTechnicalSketch from "@/assets/production/tshirt-technical-sketch.j
 import whiteMug from "@/assets/production/white-mug.jpg";
 // Catalogue products printed with MSLAB’s identity (scripts/build-catalogue-mockups.mjs): the
 // square crops of the catalogue images, for small square slots (homepage production lines).
-import designedTshirt from "../../public/catalog/mockups/apparel/t-shirts/t-shirts-front-print-square.webp";
-import designedMug from "../../public/catalog/mockups/merchandise/mugs/mugs-wrap-print-square.webp";
-import designedMailerBox from "../../public/catalog/mockups/packaging/mailer-boxes/mailer-boxes-kraft-print-square.webp";
-import designedBrochure from "../../public/catalog/mockups/printed-materials/brochures-catalogs/brochures-catalogs-cover-square.webp";
-import designedBusinessCards from "../../public/catalog/mockups/printing/business-cards/business-cards-front-back-square.webp";
-import designedLetterhead from "../../public/catalog/mockups/stationery/letterhead/letterhead-a4-square.webp";
+import designedTshirt from "../../public/catalog/mockups/apparel/t-shirts/t-shirts-front-print-cutout-square.webp";
+import designedMug from "../../public/catalog/mockups/merchandise/mugs/mugs-wrap-print-cutout-square.webp";
+import designedMailerBox from "../../public/catalog/mockups/packaging/mailer-boxes/mailer-boxes-kraft-print-cutout-square.webp";
+import designedBrochure from "../../public/catalog/mockups/printed-materials/brochures-catalogs/brochures-catalogs-cover-cutout-square.webp";
+import designedBusinessCards from "../../public/catalog/mockups/printing/business-cards/business-cards-front-back-cutout-square.webp";
+import designedLetterhead from "../../public/catalog/mockups/stationery/letterhead/letterhead-a4-cutout-square.webp";
 
 /**
  * Product and production photos supplied by the owner (2026-11-19). Every image carries the

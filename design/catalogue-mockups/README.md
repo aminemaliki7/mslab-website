@@ -22,6 +22,19 @@ are read only and stay unchanged.
 | `public/catalog/mockups/…/*-square.webp` | 600 × 600 crops on the product, for small square slots: the homepage / Services "What we print and produce" lines (`src/config/photos.ts`, `src/config/production-lines.ts`) |
 | `supabase/migrations/20261123120000_catalogue_designed_mockups.sql` | Points `product_images` at the finished images (+ alt text fr/ar/en) |
 
+## Transparent backgrounds (cut-outs)
+
+Products photographed on a plain backdrop are exported as **transparent WebP** (`*-cutout.webp`,
+`*-cutout-square.webp`; `scripts/catalogue-mockups/cutout.mjs`): the backdrop is removed, the
+product keeps its own soft shadow and sits on the card tile, its hover tint and the product
+gallery colour (owner request 2026-11-23). Per product, `cutout` options cover the hard cases:
+`seeds` (the hole inside the mug handle), `exclude` (areas the backdrop fill must not enter: the
+paper stacks, the glazed mug body), `minRel` (dark sides of the paper bag stay solid), `fadeZones`
+(the mailer box photo fades to white at its sides). The corporate kit and the tote are scenes
+(objects on a table, a bag on a wall) and keep their photo. The T-shirt uses the photo supplied by
+the owner on 2026-11-23 (`bases/tshirt-white-front-photo.webp`). Migration
+`20261123170000_catalogue_mockups_cutouts.sql` points the catalogue at the cut-outs.
+
 ## Rebuild
 
 ```bash
@@ -41,7 +54,7 @@ fonts are not installed for the SVG renderer; the logo itself is outlines.
 | Business cards | `printing/business-cards/business-cards-front-back.webp` | Teal front with white logo, contact back on the stack |
 | Stickers | `printing/stickers/stickers-round-diecut.webp` | Round die-cut, ring text, peeled fold left blank |
 | T-shirts | `apparel/t-shirts/t-shirts-front-print.webp` | Screen print following the folds |
-| Hoodies | `apparel/hoodies/hoodies-front-embroidery.webp`, `hoodies-back-print.webp` | Left-chest embroidery; large back print |
+| Hoodies | `apparel/hoodies/hoodies-front-print-cutout.webp` | Grey heather hoodie (owner photo, 2026-11-23) with a centre-chest print |
 | Mugs | `merchandise/mugs/mugs-wrap-print.webp` | Cylinder wrap, glaze highlight kept |
 | Letterhead | `stationery/letterhead/letterhead-a4.webp` | A4 letterhead with a sample letter |
 | Notebooks | `stationery/notebooks/notebooks-spiral-notepad.webp` | Notepad sheet under the spiral |

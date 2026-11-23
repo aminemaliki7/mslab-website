@@ -288,17 +288,12 @@ export const ARTWORK = {
     cmykBar(395, 1080, 40, 14),
   ].join("\n  ")),
 
-  /** Hoodie left-chest embroidery (light thread on black). */
-  "mslab-hoodie-chest": () => svg(600, 400, "hoodie left-chest embroidery", logo(60, 15, 480, "inverted")),
-
-  /** Hoodie back print, light inks on black. */
-  "mslab-hoodie-back": () => svg(1000, 1240, "hoodie back print", [
-    mark(80, 60, 840, C.tealLight),
-    `<g font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" text-anchor="middle" fill="${C.white}"><text x="500" y="620" font-size="150" letter-spacing="10">MSLAB</text></g>`,
-    `<text x="500" y="720" text-anchor="middle" font-family="Century Gothic" font-size="40" letter-spacing="8" fill="${C.white}">IMPRESSION &amp; PRODUCTION</text>`,
-    `<text x="500" y="780" text-anchor="middle" font-family="Century Gothic" font-size="40" letter-spacing="8" fill="${C.white}">SUR MESURE</text>`,
-    `<rect x="440" y="840" width="120" height="5" fill="${C.tealLight}"/>`,
-    `<text x="500" y="940" text-anchor="middle" font-family="Century Gothic" font-size="34" letter-spacing="10" fill="${C.tealLight}">ERRACHIDIA · MAROC</text>`,
+  /** Grey heather hoodie, centre-chest two-colour screen print. */
+  "mslab-hoodie-grey-chest": () => svg(1000, 700, "grey hoodie, centre-chest print", [
+    logo(310, 70, 380, "color"),
+    `<text x="500" y="420" text-anchor="middle" font-family="Century Gothic" font-weight="bold" font-size="40" letter-spacing="6" fill="${C.ink}">IMPRESSION &amp; PRODUCTION</text>`,
+    `<text x="500" y="474" text-anchor="middle" font-family="Century Gothic" font-weight="bold" font-size="40" letter-spacing="6" fill="${C.ink}">SUR MESURE</text>`,
+    `<rect x="440" y="510" width="120" height="6" fill="${C.teal}"/>`,
   ].join("\n  ")),
 
   // ── Corporate kit (bases/corporate-kit-blank.webp) ─────────────────────────

@@ -13,6 +13,10 @@
  *
  * Surfaces were measured on the 1200 × 900 blanks: corners are the artwork's top-left,
  * top-right, bottom-right, bottom-left. See design/catalogue-mockups/README.md.
+ *
+ * `cutout`: the plain photo background is removed (transparent WebP, the product keeps its
+ * shadow) so the product sits on the card tile / gallery colour (owner request 2026-11-23).
+ * Scenes (corporate kit, tote on a wall) keep their photo.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -20,6 +24,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { ARTWORK } from "./catalogue-mockups/artwork.mjs";
 import { composite } from "./catalogue-mockups/compositor.mjs";
+import { applyMask, backgroundMask } from "./catalogue-mockups/cutout.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ART_DIR = resolve(ROOT, "design/catalogue-mockups/artwork");
@@ -37,6 +42,8 @@ for (const [name, make] of Object.entries(ARTWORK)) {
 
 /** Top sheet of the A4 stack (letterhead blank, and its copy for flyers). */
 const SHEET_TOP = [[242, 112], [790, 64], [1093, 586], [456, 713]];
+/** Inside of the A4 stack (letterhead, flyers): protected from the background fill. */
+const STACK_INSIDE = [[236, 140], [788, 68], [902, 122], [982, 600], [982, 724], [176, 726], [176, 662]];
 /** Leaning business card. */
 const CARD_FRONT = [[527, 277], [1068, 330], [1023, 657], [466, 583]];
 /** Studio's clip of the peeled sticker (placeholder-views.ts), in photo coordinates. */
@@ -45,6 +52,7 @@ const STICKER_CLIP = "M595.2 753.6A313.5 313.5 0 1 1 912 411.2L843.2 456L779.2 4
 export const MOCKUPS = [
   {
     id: "business-cards",
+    cutout: {},
     out: "printing/business-cards/business-cards-front-back.webp",
     base: BLANK("business-cards.webp"),
     layers: [
@@ -55,6 +63,7 @@ export const MOCKUPS = [
   },
   {
     id: "stickers",
+    cutout: {},
     out: "printing/stickers/stickers-round-diecut.webp",
     base: BLANK("stickers.webp"),
     // Circle of the sticker; the peeled fold stays blank (clip).
@@ -62,36 +71,36 @@ export const MOCKUPS = [
   },
   {
     // Screen print on white jersey: the print bends with the folds (displacement).
-    // Base: MSLAB's vector T-shirt template rendered sharp (bases/tshirt-white-front.webp, from a
-    // copy of the Studio template). The blank photo was soft and had white patches over the
-    // sides and hem.
+    // Base: photo supplied by the owner 2026-11-23 (bases/tshirt-white-front-photo.webp, framed to
+    // 1200 × 900 on its own grey); the grey is cut away.
     id: "custom-t-shirts",
+    cutout: { tol: 0.12 }, // the grey backdrop is lighter in the middle than at the border
     out: "apparel/t-shirts/t-shirts-front-print.webp",
-    base: BASE("tshirt-white-front.webp"),
-    layers: [{ svg: ART["mslab-tshirt-print"], quad: [[445, 215], [755, 215], [755, 587], [445, 587]], displace: 1.4, lumRange: [0.5, 1.01], opacity: 0.94, shadeMin: 0.55 }],
+    base: BASE("tshirt-white-front-photo.webp"),
+    layers: [{ svg: ART["mslab-tshirt-print"], quad: [[450, 210], [750, 210], [750, 570], [450, 570]], displace: 1.2, lumRange: [0.5, 1.01], opacity: 0.94, shadeMin: 0.55 }],
   },
   {
-    // Black hoodie, front: tone-on-tone embroidery on the wearer's left chest.
+    // Grey heather hoodie, front (photo supplied by the owner 2026-11-23, framed into
+    // bases/hoodie-grey-front-photo.webp): centre-chest print above the kangaroo pocket. The photo
+    // has a white outline around the hoodie: removed with the backdrop (lighter).
     id: "custom-hoodies",
-    out: "apparel/hoodies/hoodies-front-embroidery.webp",
-    base: BLANK("custom-hoodies.webp"),
-    layers: [{ svg: ART["mslab-hoodie-chest"], quad: [[628, 300], [728, 300], [728, 367], [628, 367]], mode: "embroidery", displace: 0.8, ref: 0.1, shadeMin: 0.7, shadeMax: 1.15, shadeStrength: 0.45, opacity: 0.97 }],
-  },
-  {
-    id: "custom-hoodies-back",
-    out: "apparel/hoodies/hoodies-back-print.webp",
-    base: BLANK("custom-hoodies-back.webp"),
-    layers: [{ svg: ART["mslab-hoodie-back"], quad: [[478, 380], [718, 380], [718, 678], [478, 678]], displace: 1.2, ref: 0.1, shadeMin: 0.65, shadeMax: 1.15, shadeStrength: 0.45, opacity: 0.9 }],
+    cutout: { lighter: 0.12, minRel: 0.88 },
+    out: "apparel/hoodies/hoodies-front-print.webp",
+    base: BASE("hoodie-grey-front-photo.webp"),
+    layers: [{ svg: ART["mslab-hoodie-grey-chest"], quad: [[500, 425], [700, 425], [700, 565], [500, 565]], displace: 1.0, lumRange: [0.3, 1.01], opacity: 0.93, shadeMin: 0.55 }],
   },
   {
     // Sublimation on a glazed mug: cylinder wrap, the glaze highlight stays on top.
     id: "custom-mugs",
+    // Hole inside the handle seeded; the glazed body (its highlight is as light as the backdrop) protected.
+    cutout: { seeds: [[885, 450]], exclude: [[[350, 165], [785, 165], [785, 720], [740, 738], [567, 745], [395, 738], [350, 720]]] },
     out: "merchandise/mugs/mugs-wrap-print.webp",
     base: BLANK("custom-mugs.webp"),
     layers: [{ svg: ART["mslab-mug-wrap"], polygon: [[350, 165], [786, 165], [786, 735], [350, 735]], mapping: "cylinder", cylinder: { cx: 567, radius: 222, top: 165, bottom: 735, arc: 1.08 }, place: [0, 0.05, 1, 0.95], lumRange: [0.45, 1.01], gloss: 0.975, opacity: 0.97 }],
   },
   {
     id: "letterhead",
+    cutout: { exclude: [STACK_INSIDE] },
     out: "stationery/letterhead/letterhead-a4.webp",
     base: BLANK("letterhead.webp"),
     layers: [{ svg: ART["mslab-letterhead"], quad: SHEET_TOP, lumRange: [0.6, 1.01], rasterWidth: 2100 }],
@@ -99,6 +108,7 @@ export const MOCKUPS = [
   {
     // Spiral coils are darker than the sheet: the luminance range keeps them on top of the print.
     id: "custom-notebooks",
+    cutout: {},
     out: "stationery/notebooks/notebooks-spiral-notepad.webp",
     base: BLANK("custom-notebooks.webp"),
     layers: [{ svg: ART["mslab-notepad"], quad: [[553, 93], [1036, 184], [734, 788], [188, 641]], lumRange: [0.82, 1.01] }],
@@ -106,6 +116,7 @@ export const MOCKUPS = [
   {
     // The Flyers product had no photo: same sheet-stack blank (copied into design/…/bases).
     id: "flyers",
+    cutout: { exclude: [STACK_INSIDE] },
     out: "printed-materials/flyers/flyers-a4-stack.webp",
     base: BASE("flyers-sheet-stack.webp"),
     layers: [{ svg: ART["mslab-flyer"], quad: SHEET_TOP, lumRange: [0.6, 1.01], rasterWidth: 2100, opacity: 0.98 }],
@@ -113,6 +124,7 @@ export const MOCKUPS = [
   {
     // Outside of a letter-fold leaflet laid open: inside flap · back panel · front cover.
     id: "leaflets",
+    cutout: {},
     out: "printed-materials/leaflets/leaflets-trifold.webp",
     base: BLANK("leaflets.webp"),
     layers: [
@@ -123,6 +135,7 @@ export const MOCKUPS = [
   },
   {
     id: "brochures-catalogs",
+    cutout: {},
     out: "printed-materials/brochures-catalogs/brochures-catalogs-cover.webp",
     base: BLANK("brochures-catalogs.webp"),
     layers: [{ svg: ART["mslab-brochure-cover"], quad: [[192, 182], [748, 100], [1088, 640], [466, 727]], lumRange: [0.6, 0.985], rasterWidth: 2100 }],
@@ -130,6 +143,8 @@ export const MOCKUPS = [
   {
     // One-colour print on kraft (multiply); the black tape band and the hand stay on top.
     id: "custom-mailer-boxes",
+    // The box and the hands fade to white at the left and right of the photo: fade zones.
+    cutout: { lightTint: 0.9, tol: 0.09, fadeZones: [[[0, 0], [340, 0], [340, 900], [0, 900]], [[860, 0], [1200, 0], [1200, 900], [860, 900]]], fadeK: 95 },
     out: "packaging/mailer-boxes/mailer-boxes-kraft-print.webp",
     base: BLANK("custom-mailer-boxes.webp"),
     // Artwork top = the hinge edge (T→R); its bottom = the front tuck flap (L→B).
@@ -165,6 +180,7 @@ export const MOCKUPS = [
   },
   {
     id: "custom-paper-bags",
+    cutout: { minRel: 0.85 }, // the bag's grey side panel stays part of the bag
     out: "packaging/paper-bags/paper-bags-front.webp",
     base: BLANK("custom-paper-bags.webp"),
     layers: [{ svg: ART["mslab-paper-bag"], quad: [[402, 241], [747, 275], [728, 772], [381, 713]], lumRange: [0.5, 0.995] }],
@@ -176,16 +192,25 @@ for (const m of MOCKUPS) {
   if (filter.length && !filter.some((f) => m.id.includes(f))) continue;
   const t0 = Date.now();
   const { data, width, height } = await composite(m.base, m.layers);
-  const file = OUT(m.out);
+  // Cut-outs get their own file name (new URL: no stale optimized image in any cache).
+  const file = OUT(m.cutout ? m.out.replace(/.webp$/, "-cutout.webp") : m.out);
   mkdirSync(dirname(file), { recursive: true });
-  await sharp(data, { raw: { width, height, channels: 3 } }).webp({ quality: 86, effort: 6 }).toFile(file);
-  // Square thumbnail cropped to the product (white margins trimmed): small square slots such
-  // as the homepage production lines (src/config/photos.ts).
-  const trimmed = await sharp(data, { raw: { width, height, channels: 3 } }).trim({ background: "#ffffff", threshold: 12 }).png().toBuffer();
+  // Cut-outs: the silhouette is found on the PRINTED image — on a blank, white paper is too close
+  // to the white background and the fill leaks into it; the print adds the edges that stop it.
+  const rgbPng = await sharp(data, { raw: { width, height, channels: 3 } }).png().toBuffer();
+  const image = m.cutout
+    ? sharp(applyMask(data, await backgroundMask(rgbPng, m.cutout)), { raw: { width, height, channels: 4 } })
+    : sharp(rgbPng);
+  const png = await image.png().toBuffer();
+  await sharp(png).webp({ quality: 86, alphaQuality: 90, effort: 6 }).toFile(file);
+  // Square thumbnail cropped to the product: small square slots such as the homepage production
+  // lines (src/config/photos.ts). Cut-outs trim on transparency, photos on their white.
+  const clear = { r: 255, g: 255, b: 255, alpha: m.cutout ? 0 : 1 };
+  const trimmed = await sharp(png).trim(m.cutout ? { threshold: 1 } : { background: "#ffffff", threshold: 12 }).png().toBuffer();
   await sharp(trimmed)
-    .resize(560, 560, { fit: "contain", background: "#ffffff" })
-    .extend({ top: 20, bottom: 20, left: 20, right: 20, background: "#ffffff" })
-    .webp({ quality: 86, effort: 6 })
+    .resize(560, 560, { fit: "contain", background: clear })
+    .extend({ top: 20, bottom: 20, left: 20, right: 20, background: clear })
+    .webp({ quality: 86, alphaQuality: 90, effort: 6 })
     .toFile(file.replace(/\.webp$/, "-square.webp"));
-  console.log(`${m.id.padEnd(22)} → public/catalog/mockups/${m.out}  (+ square, ${Date.now() - t0} ms)`);
+  console.log(`${m.id.padEnd(22)} → ${file.slice(ROOT.length + 1).split("\\").join("/")}  (+ square, ${Date.now() - t0} ms)`);
 }
