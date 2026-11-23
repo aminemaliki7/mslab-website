@@ -11,12 +11,13 @@ import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
  * Do not add a line here without the owner's confirmation that MSLAB provides it today.
  */
 export const PRODUCTION_LINES = [
-  { key: "print", art: "business-card", photo: "posters" },
-  { key: "textile", art: "tshirt", photo: "hoodies" },
-  { key: "merch", art: "mug", photo: "corporateKit" },
-  { key: "stationery", art: "letterhead", serviceArt: "fournitures-de-bureau" },
-  { key: "publishing", art: "catalog", photo: "book" },
-  { key: "packaging", art: "box", photo: "box" },
+  // Photos: catalogue products printed with MSLAB's identity (owner request 2026-11-23).
+  { key: "print", art: "business-card", photo: "designedBusinessCards" },
+  { key: "textile", art: "tshirt", photo: "designedTshirt" },
+  { key: "merch", art: "mug", photo: "designedMug" },
+  { key: "stationery", art: "letterhead", photo: "designedLetterhead" },
+  { key: "publishing", art: "catalog", photo: "designedBrochure" },
+  { key: "packaging", art: "box", photo: "designedMailerBox" },
 ] as const satisfies ReadonlyArray<{ key: string; art: MockupKey } & ({ photo: PhotoKey } | { serviceArt: string })>;
 
 export type ProductionLineKey = (typeof PRODUCTION_LINES)[number]["key"];

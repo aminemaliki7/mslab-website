@@ -13,7 +13,7 @@ export function ProductionIndex({ dict, href, className }: { dict: Dictionary; h
       className={className}
       rows={PRODUCTION_LINES.map((line) => ({
         // A line without a fitting photo shows its service drawing (looked up by French slug).
-        slugFr: "serviceArt" in line ? line.serviceArt : `production-${line.key}`,
+        slugFr: "serviceArt" in line ? String(line.serviceArt) : `production-${line.key}`,
         name: dict.productionLines[line.key].name,
         summary: dict.productionLines[line.key].summary,
         href,

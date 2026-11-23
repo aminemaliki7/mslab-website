@@ -192,6 +192,7 @@ values
    'أرسلوا ملفاتكم مع المقاس والكمية: يُؤكَّد الورق واللمسات النهائية في عرض السعر.',
    'Send your files with the format and quantity: paper and finishes are confirmed in your quote.',
    null, '[]', 'published', true, 510, now()),
+  ('d0000000-0000-4000-8000-000000000013', '/catalog/mockups/printed-materials/flyers/flyers-a4-stack.webp', 'Pile de flyers A4 MSLAB : promesse, lignes de production et contact', 'رزمة من المنشورات الإعلانية A4 لـMSLAB: الوعد وخطوط الإنتاج ومعلومات الاتصال', 'Stack of MSLAB A4 flyers: promise, production lines and contact', 1200, 900, 0, true),
   ('d0000000-0000-4000-8000-000000000014', 'a0000000-0000-4000-8000-000000000005',
    'Dépliants', 'مطويات', 'Leaflets', 'depliants', 'depliants', 'leaflets',
    'Dépliants pour présenter vos offres, services et programmes.',
@@ -248,29 +249,29 @@ on conflict (id) do update set
   is_featured = excluded.is_featured, sort_order = excluded.sort_order,
   published_at = coalesce(public.products.published_at, excluded.published_at);
 
--- Photos, served from public/catalog/products/: MSLAB's own, plus two free Unsplash photos
--- (document printing, office supplies; credits in public/catalog/CREDITS.md). Product 0013
--- (flyers) has none yet: it shows its drawing until a photo is added.
+-- Photos, served from public/catalog/: MSLAB's own photos and two free Unsplash photos (document
+-- printing, office supplies) in products/, and the products printed with MSLAB's identity in
+-- mockups/ (scripts/build-catalogue-mockups.mjs, migration 20261123120000). Credits: public/catalog/CREDITS.md.
 insert into public.product_images (product_id, storage_path, alt_fr, alt_ar, alt_en, width, height, sort_order, is_primary)
 values
-  ('d0000000-0000-4000-8000-000000000001', '/catalog/products/business-cards.webp', 'Pile de cartes de visite', 'رزمة من بطاقات الزيارة', 'Stack of business cards', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000001', '/catalog/mockups/printing/business-cards/business-cards-front-back.webp', 'Cartes de visite MSLAB : recto bleu canard au logo blanc, verso avec les coordonnées', 'بطاقات زيارة MSLAB: الوجه الأمامي أزرق بالشعار الأبيض، والخلفي بمعلومات الاتصال', 'MSLAB business cards: teal front with the white logo, back with contact details', 1200, 900, 0, true),
   ('d0000000-0000-4000-8000-000000000002', '/catalog/products/posters.webp', 'Trois affiches MSLAB encadrées sur un mur', 'ثلاثة ملصقات حائطية لـMSLAB في إطارات على جدار', 'Three framed MSLAB posters on a wall', 1200, 1200, 0, true),
-  ('d0000000-0000-4000-8000-000000000003', '/catalog/products/stickers.webp', 'Sticker rond à décoller', 'ملصق دائري قابل للنزع', 'Round peel-off sticker', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000003', '/catalog/mockups/printing/stickers/stickers-round-diecut.webp', 'Sticker rond découpé à la forme, aux couleurs de MSLAB', 'ملصق دائري مقصوص على الشكل بألوان MSLAB', 'Round die-cut sticker in MSLAB colours', 1200, 900, 0, true),
   ('d0000000-0000-4000-8000-000000000004', '/catalog/products/document-printing.webp', 'Pile de classeurs de documents imprimés', 'رزمة من ملفات الوثائق المطبوعة', 'Stack of binders of printed documents', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000005', '/catalog/products/custom-t-shirts.webp', 'T-shirt blanc', 'قميص أبيض', 'White T-shirt', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000006', '/catalog/products/custom-hoodies.webp', 'Sweat à capuche noir, vue de face', 'سترة سوداء بقلنسوة، من الأمام', 'Black hoodie, front view', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000006', '/catalog/products/custom-hoodies-back.webp', 'Sweat à capuche noir, vue de dos', 'سترة سوداء بقلنسوة، من الخلف', 'Black hoodie, back view', 1200, 900, 1, false),
-  ('d0000000-0000-4000-8000-000000000007', '/catalog/products/custom-mugs.webp', 'Mug blanc', 'كوب أبيض', 'White mug', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000005', '/catalog/mockups/apparel/t-shirts/t-shirts-front-print.webp', 'T-shirt blanc imprimé en sérigraphie : logo MSLAB et « Votre idée. Votre design. Notre production. »', 'قميص أبيض مطبوع بالشاشة الحريرية: شعار MSLAB وعبارة «فكرتكم. تصميمكم. إنتاجنا.»', 'White T-shirt screen printed with the MSLAB logo and “Your idea. Your design. Our production.”', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000006', '/catalog/mockups/apparel/hoodies/hoodies-front-embroidery.webp', 'Sweat à capuche noir, logo MSLAB brodé côté cœur', 'سترة سوداء بقلنسوة، شعار MSLAB مطرز على الصدر', 'Black hoodie with the MSLAB logo embroidered on the left chest', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000006', '/catalog/mockups/apparel/hoodies/hoodies-back-print.webp', 'Sweat à capuche noir, vue de dos : grand marquage MSLAB', 'سترة سوداء بقلنسوة من الخلف: طباعة كبيرة لـMSLAB', 'Black hoodie, back view: large MSLAB print', 1200, 900, 1, false),
+  ('d0000000-0000-4000-8000-000000000007', '/catalog/mockups/merchandise/mugs/mugs-wrap-print.webp', 'Mug blanc imprimé : logo MSLAB et « Votre idée. Votre design. Notre production. »', 'كوب أبيض مطبوع: شعار MSLAB وعبارة «فكرتكم. تصميمكم. إنتاجنا.»', 'White mug printed with the MSLAB logo and “Your idea. Your design. Our production.”', 1200, 900, 0, true),
   ('d0000000-0000-4000-8000-000000000008', '/catalog/products/custom-tote-bags.webp', 'Tote bags et documents au logo MSLAB préparés pour un événement', 'حقائب قماشية ووثائق بشعار MSLAB مُعدّة لمناسبة', 'Tote bags and documents with the MSLAB logo prepared for an event', 735, 1226, 0, true),
   ('d0000000-0000-4000-8000-000000000009', '/catalog/products/corporate-kits.webp', 'Kit d''entreprise personnalisé : gourdes, tote bags, tours de cou, badges, carnets et stylos', 'طقم شركة مخصص: قنينات وحقائب قماشية وأشرطة عنق وشارات ودفاتر وأقلام', 'Custom corporate kit: bottles, tote bags, lanyards, badges, notebooks and pens', 736, 736, 0, true),
-  ('d0000000-0000-4000-8000-000000000010', '/catalog/products/letterhead.webp', 'Pile de feuilles A4', 'رزمة من أوراق A4', 'Stack of A4 sheets', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000011', '/catalog/products/custom-notebooks.webp', 'Carnet à spirale', 'دفتر حلزوني', 'Spiral notebook', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000010', '/catalog/mockups/stationery/letterhead/letterhead-a4.webp', 'Papier à en-tête A4 MSLAB avec un exemple de lettre', 'ورق رسائل A4 بترويسة MSLAB مع نموذج رسالة', 'MSLAB A4 letterhead with a sample letter', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000011', '/catalog/mockups/stationery/notebooks/notebooks-spiral-notepad.webp', 'Bloc-notes à spirale aux couleurs de MSLAB', 'دفتر ملاحظات حلزوني بألوان MSLAB', 'Spiral notepad in MSLAB colours', 1200, 900, 0, true),
   ('d0000000-0000-4000-8000-000000000012', '/catalog/products/office-supplies.webp', 'Carnet, stylo et trombones sur un bureau blanc', 'دفتر وقلم ومشابك ورق على مكتب أبيض', 'Notebook, pen and paper clips on a white desk', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000014', '/catalog/products/leaflets.webp', 'Dépliant à trois volets', 'مطوية من ثلاث طيات', 'Tri-fold leaflet', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000015', '/catalog/products/brochures-catalogs.webp', 'Pile de brochures agrafées', 'رزمة من الكتيبات المدبّسة', 'Stack of stapled brochures', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000014', '/catalog/mockups/printed-materials/leaflets/leaflets-trifold.webp', 'Dépliant trois volets MSLAB ouvert : lignes de production, étapes d’une commande et couverture', 'مطوية MSLAB بثلاث طيات مفتوحة: خطوط الإنتاج ومراحل الطلب والغلاف', 'Open MSLAB tri-fold leaflet: production lines, order steps and cover', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000015', '/catalog/mockups/printed-materials/brochures-catalogs/brochures-catalogs-cover.webp', 'Brochures agrafées : couverture du catalogue de production MSLAB', 'كتيبات مدبّسة: غلاف كتالوج إنتاج MSLAB', 'Stapled brochures: MSLAB production catalogue cover', 1200, 900, 0, true),
   ('d0000000-0000-4000-8000-000000000016', '/catalog/products/books.webp', 'Livre avec le logo MSLAB sur la couverture', 'كتاب بشعار MSLAB على الغلاف', 'Book with the MSLAB logo on the cover', 736, 946, 0, true),
-  ('d0000000-0000-4000-8000-000000000017', '/catalog/products/custom-mailer-boxes.webp', 'Boîte d''expédition kraft', 'علبة شحن من الكرتون', 'Kraft mailer box', 1200, 900, 0, true),
-  ('d0000000-0000-4000-8000-000000000018', '/catalog/products/custom-paper-bags.webp', 'Sac en papier blanc', 'كيس ورقي أبيض', 'White paper bag', 1200, 900, 0, true)
+  ('d0000000-0000-4000-8000-000000000017', '/catalog/mockups/packaging/mailer-boxes/mailer-boxes-kraft-print.webp', 'Boîte d’expédition kraft imprimée en une couleur avec le logo MSLAB', 'علبة شحن من الكرتون مطبوعة بلون واحد بشعار MSLAB', 'Kraft mailer box printed in one colour with the MSLAB logo', 1200, 900, 0, true),
+  ('d0000000-0000-4000-8000-000000000018', '/catalog/mockups/packaging/paper-bags/paper-bags-front.webp', 'Sac en papier blanc aux couleurs de MSLAB', 'كيس ورقي أبيض بألوان MSLAB', 'White paper bag in MSLAB colours', 1200, 900, 0, true)
 on conflict (storage_path) do update set
   product_id = excluded.product_id,
   alt_fr = excluded.alt_fr, alt_ar = excluded.alt_ar, alt_en = excluded.alt_en,

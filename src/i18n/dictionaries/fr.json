@@ -823,6 +823,12 @@
     "corporateKit": "Kit d'entreprise personnalisé : gourdes, tote bags, tours de cou, badges, carnets et stylos",
     "heatPressArt": "Illustration d'une presse à chaud imprimant un T-shirt",
     "staffTshirt": "Personne de dos portant un T-shirt rouge marqué STAFF",
-    "printedSweatshirts": "Sweat-shirts imprimés de motifs colorés, suspendus devant une boutique"
+    "printedSweatshirts": "Sweat-shirts imprimés de motifs colorés, suspendus devant une boutique",
+    "designedBusinessCards": "Cartes de visite MSLAB : recto bleu canard au logo blanc, verso avec les coordonnées",
+    "designedTshirt": "T-shirt blanc imprimé du logo MSLAB et de « Votre idée. Votre design. Notre production. »",
+    "designedMug": "Mug blanc imprimé du logo MSLAB et de sa promesse",
+    "designedLetterhead": "Papier à en-tête A4 MSLAB avec un exemple de lettre",
+    "designedBrochure": "Brochures agrafées : couverture du catalogue de production MSLAB",
+    "designedMailerBox": "Boîte d’expédition kraft imprimée en une couleur avec le logo MSLAB"
   }
 }

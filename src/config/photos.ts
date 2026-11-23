@@ -14,6 +14,14 @@ import printedSweatshirts from "@/assets/production/printed-sweatshirts.jpg";
 import paperShoppingBag from "@/assets/production/paper-shopping-bag.jpg";
 import tshirtTechnicalSketch from "@/assets/production/tshirt-technical-sketch.jpg";
 import whiteMug from "@/assets/production/white-mug.jpg";
+// Catalogue products printed with MSLAB’s identity (scripts/build-catalogue-mockups.mjs): the
+// square crops of the catalogue images, for small square slots (homepage production lines).
+import designedTshirt from "../../public/catalog/mockups/apparel/t-shirts/t-shirts-front-print-square.webp";
+import designedMug from "../../public/catalog/mockups/merchandise/mugs/mugs-wrap-print-square.webp";
+import designedMailerBox from "../../public/catalog/mockups/packaging/mailer-boxes/mailer-boxes-kraft-print-square.webp";
+import designedBrochure from "../../public/catalog/mockups/printed-materials/brochures-catalogs/brochures-catalogs-cover-square.webp";
+import designedBusinessCards from "../../public/catalog/mockups/printing/business-cards/business-cards-front-back-square.webp";
+import designedLetterhead from "../../public/catalog/mockups/stationery/letterhead/letterhead-a4-square.webp";
 
 /**
  * Product and production photos supplied by the owner (2026-11-19). Every image carries the
@@ -48,9 +56,19 @@ export const PHOTOS = {
   /** Supplied by the owner (2026-11-20) for the "For brands & creators" card: printed sweatshirts
    *  on a shop front. Illustrative, not MSLAB's work. */
   printedSweatshirts,
+  /** Catalogue mockups in MSLAB’s identity (design/catalogue-mockups/README.md), square on white. */
+  designedBusinessCards,
+  designedTshirt,
+  designedMug,
+  designedLetterhead,
+  designedBrochure,
+  designedMailerBox,
 } satisfies Record<string, StaticImageData>;
 
 export type PhotoKey = keyof typeof PHOTOS;
 
 /** Wide product views on a white background: shown whole (contain) on white, never cropped. */
-export const CONTAIN_PHOTOS: ReadonlySet<PhotoKey> = new Set<PhotoKey>(["hoodies", "sketch", "tshirt"]);
+export const CONTAIN_PHOTOS: ReadonlySet<PhotoKey> = new Set<PhotoKey>([
+  "hoodies", "sketch", "tshirt",
+  "designedBusinessCards", "designedTshirt", "designedMug", "designedLetterhead", "designedBrochure", "designedMailerBox",
+]);

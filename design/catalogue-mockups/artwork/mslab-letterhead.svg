@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="2970" viewBox="0 0 2100 2970">
+  <!-- MSLAB — A4 letterhead with a sample letter -->
+  <rect width="2100" height="2970" fill="#FFFFFF"/>
+  <rect x="0" y="0" width="525" height="18" fill="#0B6E8A"/><rect x="525" y="0" width="525" height="18" fill="#C2255C"/><rect x="1050" y="0" width="525" height="18" fill="#F2C14E"/><rect x="1575" y="0" width="525" height="18" fill="#0E1A2B"/>
+  <g transform="translate(180 170) scale(0.7894736842105263) translate(-40 -54)"><path fill="#0B6E8A" d="M 44 218 L 44 114 A 56 56 0 0 1 156 114 L 156 154 A 13 13 0 0 0 182 154 L 182 114 A 56 56 0 0 1 294 114 L 294 218 L 246 218 L 246 114 A 8 8 0 0 0 230 114 L 230 156 A 61 61 0 0 1 108 156 L 108 114 A 8 8 0 0 0 92 114 L 92 218 Z"/><path fill="#0B6E8A" fill-rule="evenodd" d="M 304 114 A 56 56 0 0 1 416 114 L 416 162 A 56 56 0 0 1 304 162 Z M 416 110 L 362 110 A 8 8 0 0 0 362 126 L 416 126 Z M 304 150 L 358 150 A 8 8 0 0 1 358 166 L 304 166 Z"/><path fill="#0E1A2B" d="M66.5 293.5L44 293.5L44 238L55.1 238L55.1 284.0L66.5 284.0L66.5 293.5ZM78.1 294L78.1 294Q74.1 294 72.1 292.2Q70.0 290.3 69.3 287.2Q68.5 284.0 68.5 279.9L68.5 279.9Q68.5 275.6 69.4 272.9Q70.2 270.1 72.3 268.3Q74.3 266.6 78.0 265.3L78.0 265.3L85.0 262.9L85.0 258.1Q85.0 254.3 82.5 254.3L82.5 254.3Q80.2 254.3 80.2 257.4L80.2 257.4L80.2 260.2L69.2 260.2Q69.2 259.9 69.2 259.6Q69.2 259.2 69.2 258.7L69.2 258.7Q69.2 251.6 72.5 248.6Q75.8 245.7 83.1 245.7L83.1 245.7Q86.9 245.7 89.8 247.0Q92.8 248.4 94.6 251.0Q96.3 253.6 96.3 257.5L96.3 257.5L96.3 293.5L85.1 293.5L85.1 287.9Q84.3 290.8 82.4 292.4Q80.5 294 78.1 294ZM82.5 285.2L82.5 285.2Q83.9 285.2 84.4 284.1Q84.9 282.9 84.9 281.5L84.9 281.5L84.9 268.4Q82.6 269.3 81.3 270.7Q80.0 272.2 80.0 275.0L80.0 275.0L80.0 281.0Q80.0 285.2 82.5 285.2ZM119.6 294L119.6 294Q116.8 294 115.1 292.6Q113.3 291.3 112.3 288.5L112.3 288.5L112.3 293.5L100.8 293.5L100.8 238L112.3 238L112.3 251.2Q113.3 248.6 115.2 247.2Q117.0 245.7 120.5 245.7L120.5 245.7Q125.1 245.7 127.0 249.1Q128.9 252.4 128.9 257.9L128.9 257.9L128.9 281.2Q128.9 284.8 127.9 287.7Q126.9 290.6 124.9 292.3Q122.8 294 119.6 294ZM114.9 285.2L114.9 285.2Q116.7 285.2 117.1 283.4Q117.5 281.7 117.5 279.1L117.5 279.1L117.5 260.6Q117.5 258.0 117.1 256.2Q116.7 254.5 114.9 254.5L114.9 254.5Q113.1 254.5 112.7 256.3Q112.3 258.1 112.3 260.6L112.3 260.6L112.3 279.1Q112.3 281.6 112.7 283.4Q113.1 285.2 114.9 285.2Z"/><circle cx="386" cy="264" r="30" fill="#0B6E8A"/></g>
+  <g font-family="Century Gothic" font-size="28" fill="#5B6779" text-anchor="end"><text x="1920" y="230">Impression &amp; production sur mesure</text><text x="1920" y="272">Rue 04 N° 57, Cité Azemour, Errachidia</text><text x="1920" y="314">+212 6 70 36 70 05 · www.mslab.ma</text></g>
+  <rect x="180" y="440" width="1740" height="2" fill="#D3D0C6"/>
+  <g font-family="Georgia" fill="#0E1A2B">
+  <text x="1920" y="580" text-anchor="end" font-size="38">Errachidia, le 14 janvier 2027</text>
+  <text x="180" y="740" font-size="40" font-weight="bold">Objet : votre demande de devis de production</text>
+  <g font-size="38" fill="#2A3A44">
+  <text x="180" y="870">Madame, Monsieur,</text>
+  <text x="180" y="970">Nous vous remercions pour votre demande. Afin d’établir un devis précis,</text>
+  <text x="180" y="1026">nous vous invitons à nous préciser les éléments suivants :</text>
+  <text x="180" y="1110">— le produit et son format, ainsi que le support souhaité ;</text>
+  <text x="180" y="1166">— la quantité à produire et, le cas échéant, les déclinaisons ;</text>
+  <text x="180" y="1222">— vos fichiers ou votre idée de design, et la date de livraison visée.</text>
+  <text x="180" y="1322">Chaque commande est étudiée et chiffrée sur devis : nous revenons vers</text>
+  <text x="180" y="1378">vous avec une proposition adaptée à votre projet et à vos quantités.</text>
+  <text x="180" y="1478">Nous restons à votre disposition pour en discuter par téléphone ou à</text>
+  <text x="180" y="1534">notre atelier d’Errachidia.</text>
+  <text x="180" y="1634">Veuillez agréer, Madame, Monsieur, nos salutations distinguées.</text>
+  </g>
+  <text x="180" y="1830" font-size="40" font-style="italic">L’équipe MSLAB</text>
+  </g>
+  <rect x="180" y="2690" width="90" height="5" fill="#0B6E8A"/>
+  <text x="180" y="2760" font-family="Century Gothic" font-size="27" fill="#5B6779">MSLAB · Impression &amp; production sur mesure · Rue 04 N° 57, Cité Azemour, Errachidia · www.mslab.ma</text>
+</svg>

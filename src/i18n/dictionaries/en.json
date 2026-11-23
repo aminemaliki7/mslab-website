@@ -823,6 +823,12 @@
     "corporateKit": "Branded corporate kit: bottles, tote bags, lanyards, badges, notebooks and pens",
     "heatPressArt": "Illustration of a heat press printing a T-shirt",
     "staffTshirt": "Person seen from behind wearing a red T-shirt printed STAFF",
-    "printedSweatshirts": "Sweatshirts printed with colourful designs, hanging outside a shop"
+    "printedSweatshirts": "Sweatshirts printed with colourful designs, hanging outside a shop",
+    "designedBusinessCards": "MSLAB business cards: teal front with the white logo, back with contact details",
+    "designedTshirt": "White T-shirt printed with the MSLAB logo and “Your idea. Your design. Our production.”",
+    "designedMug": "White mug printed with the MSLAB logo and its promise",
+    "designedLetterhead": "MSLAB A4 letterhead with a sample letter",
+    "designedBrochure": "Stapled brochures: MSLAB production catalogue cover",
+    "designedMailerBox": "Kraft mailer box printed in one colour with the MSLAB logo"
   }
 }

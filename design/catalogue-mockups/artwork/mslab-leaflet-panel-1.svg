@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="2040" viewBox="0 0 900 2040">
+  <!-- MSLAB — tri-fold leaflet, inside flap: production lines -->
+  <rect width="900" height="2040" fill="#F7F6F2"/>
+  <rect x="90" y="150" width="70" height="8" fill="#0B6E8A"/>
+  <text x="90" y="270" font-family="Century Gothic" font-weight="bold" font-size="76" fill="#0E1A2B">Nos lignes</text>
+  <text x="90" y="355" font-family="Century Gothic" font-weight="bold" font-size="76" fill="#0B6E8A">de production</text>
+  <text x="90" y="520" font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" font-size="64" fill="#0B6E8A">01</text><text x="190" y="514" font-family="Century Gothic" font-size="40" fill="#0E1A2B">Impression &amp; reprographie</text><rect x="190" y="560" width="620" height="2" fill="#D3D0C6"/>
+  <text x="90" y="720" font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" font-size="64" fill="#0B6E8A">02</text><text x="190" y="714" font-family="Century Gothic" font-size="40" fill="#0E1A2B">Vêtements &amp; produits personnalisés</text><rect x="190" y="760" width="620" height="2" fill="#D3D0C6"/>
+  <text x="90" y="920" font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" font-size="64" fill="#0B6E8A">03</text><text x="190" y="914" font-family="Century Gothic" font-size="40" fill="#0E1A2B">Objets d’entreprise &amp; promotionnels</text><rect x="190" y="960" width="620" height="2" fill="#D3D0C6"/>
+  <text x="90" y="1120" font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" font-size="64" fill="#0B6E8A">04</text><text x="190" y="1114" font-family="Century Gothic" font-size="40" fill="#0E1A2B">Papeterie &amp; fournitures de bureau</text><rect x="190" y="1160" width="620" height="2" fill="#D3D0C6"/>
+  <text x="90" y="1320" font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" font-size="64" fill="#0B6E8A">05</text><text x="190" y="1314" font-family="Century Gothic" font-size="40" fill="#0E1A2B">Livres, brochures &amp; imprimés</text><rect x="190" y="1360" width="620" height="2" fill="#D3D0C6"/>
+  <text x="90" y="1520" font-family="Bahnschrift" font-weight="bold" font-stretch="condensed" font-size="64" fill="#0B6E8A">06</text><text x="190" y="1514" font-family="Century Gothic" font-size="40" fill="#0E1A2B">Packaging &amp; production en série</text><rect x="190" y="1560" width="620" height="2" fill="#D3D0C6"/>
+  <text x="90" y="1840" font-family="Century Gothic" font-size="32" fill="#5B6779">Pour les entreprises, les institutions</text>
+  <text x="90" y="1884" font-family="Century Gothic" font-size="32" fill="#5B6779">et les particuliers.</text>
+</svg>
