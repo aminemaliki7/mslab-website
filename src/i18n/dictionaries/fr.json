@@ -40,7 +40,7 @@
     "tracking": "Suivi de commande",
     "legalInfo": "Informations légales",
     "cookieSettings": "Gérer les cookies",
-    "production": "Nos services"
+    "production": "Production sur mesure"
   },
   "whatsapp": {
     "label": "Contacter MSLAB sur WhatsApp",
@@ -204,7 +204,8 @@
       "invalid_date": "Date invalide (aujourd'hui ou plus tard).",
       "invalid_option": "Une option choisie n'est plus disponible. Rechargez la page et réessayez.",
       "below_moq": "Quantité inférieure au minimum de commande de ce produit.",
-      "invalid_url": "Adresse de site invalide (ex. : https://exemple.ma)."
+      "invalid_url": "Adresse de site invalide (ex. : https://exemple.ma).",
+      "brief_missing": "Ajoutez votre fichier (cahier des charges) pour envoyer la demande."
     },
     "quickPick": "Choix rapide",
     "choose": "Choisir…",
@@ -284,7 +285,7 @@
     },
     "services": {
       "title": "Services",
-      "description": "Impression et reprographie, vêtements et produits personnalisés, objets d'entreprise, papeterie et fournitures de bureau, livres et imprimés, packaging, et une division digitale : les services de MSLAB, sur devis."
+      "description": "Production sur mesure, catalogue de fournitures et solutions digitales : les trois activités de MSLAB, pour les entreprises, les institutions, les marques et les créateurs, sur devis."
     },
     "catalog": {
       "title": "Catalogue",
@@ -410,6 +411,7 @@
     "fileType": "{name} : format non accepté.",
     "fileTooMany": "{max} fichiers maximum.",
     "fileFailed": "{name} n'a pas pu être envoyé. Réessayez.",
+    "filesRateLimited": "Trop d'envois de fichiers depuis votre connexion. Réessayez plus tard, ou écrivez-nous.",
     "filesNoJs": "L'ajout de fichiers nécessite JavaScript. Vous pourrez aussi nous les envoyer après réception de votre référence.",
     "filesPending": "Patientez jusqu'à la fin de l'envoi des fichiers.",
     "contactSection": "Vos coordonnées",
@@ -712,7 +714,7 @@
         "body": "Des outils web développés autour de vos processus."
       },
       {
-        "title": "Plateformes de gestion",
+        "title": "ERP & plateformes de gestion",
         "body": "Devis, commandes, clients ou stocks : vos données réunies en un seul outil."
       },
       {
@@ -829,6 +831,648 @@
     "designedMug": "Mug blanc imprimé du logo MSLAB et de sa promesse",
     "designedLetterhead": "Papier à en-tête A4 MSLAB avec un exemple de lettre",
     "designedBrochure": "Brochures agrafées : couverture du catalogue de production MSLAB",
-    "designedMailerBox": "Boîte d’expédition kraft imprimée en une couleur avec le logo MSLAB"
+    "designedMailerBox": "Boîte d’expédition kraft imprimée en une couleur avec le logo MSLAB",
+    "officeSupplies": "Fournitures de bureau : carnet, stylo et trombones"
+  },
+  "cx": {
+    "menu": {
+      "production": "Production",
+      "productionOverview": "Production sur mesure",
+      "productionOverviewHint": "Vos produits fabriqués à votre identité, en quantité.",
+      "lines": {
+        "print": "Impression & reprographie",
+        "textile": "Textile & vêtements",
+        "merch": "Objets promotionnels",
+        "stationery": "Papeterie personnalisée",
+        "publishing": "Livres & imprimés",
+        "packaging": "Packaging"
+      },
+      "studio": "Studio d'aperçu",
+      "studioHint": "Essayez votre logo sur nos produits.",
+      "catalog": "Catalogue",
+      "catalogAll": "Tous les produits",
+      "catalogAllHint": "Produits disponibles et personnalisables.",
+      "officeSupplies": "Fournitures de bureau",
+      "schoolSupplies": "Papeterie & fournitures scolaires",
+      "books": "Livres",
+      "customizable": "Produits personnalisables",
+      "digital": "Solutions digitales",
+      "digitalOverview": "Toutes nos solutions digitales",
+      "digitalOverviewHint": "Sites, e-commerce, applications et maintenance.",
+      "home": "Accueil"
+    },
+    "hero": {
+      "tagline": "Production sur mesure, fournitures et solutions digitales",
+      "lead": "Production à votre identité, catalogue de fournitures et solutions web : MSLAB accompagne les entreprises, les marques, les organisations et les créateurs, de la demande de devis à la livraison.",
+      "quote": "Demander un devis",
+      "proofNote": "Aperçu indicatif. Dans le studio, ajoutez votre logo et préparez votre devis."
+    },
+    "divisions": {
+      "title": "Trois activités, un seul interlocuteur",
+      "lead": "Choisissez votre point de départ : un produit à fabriquer à votre identité, des fournitures à commander ou un outil numérique à développer.",
+      "examplesLabel": "Exemples",
+      "production": {
+        "title": "Production sur mesure",
+        "body": "Vos produits fabriqués à votre identité, en série. Vous apportez votre design, ou nous le préparons avec vous.",
+        "examples": [
+          "T-shirts, sweats et tenues de travail",
+          "Cartes de visite, flyers et brochures",
+          "Mugs, tote bags et kits d'entreprise",
+          "Boîtes, sacs et packaging",
+          "Livres et imprimés"
+        ],
+        "cta": "Découvrir la production",
+        "secondary": "Essayer le studio"
+      },
+      "catalog": {
+        "title": "Catalogue & fournitures",
+        "body": "Des articles prêts à commander et des produits personnalisables, pour équiper vos équipes, vos établissements et vos événements.",
+        "examples": [
+          "Fournitures de bureau",
+          "Papeterie et fournitures scolaires",
+          "Livres et ouvrages",
+          "Produits personnalisables à votre logo"
+        ],
+        "cta": "Parcourir le catalogue"
+      },
+      "digital": {
+        "title": "Solutions digitales",
+        "body": "Sites web, e-commerce, applications et plateformes de gestion : nous concevons, développons et maintenons vos outils numériques.",
+        "examples": [
+          "Sites web d'entreprise",
+          "Sites e-commerce",
+          "Applications web, ERP et CRM",
+          "Design UI/UX et maintenance"
+        ],
+        "cta": "Découvrir les solutions digitales"
+      }
+    },
+    "flow": {
+      "title": "Comment travailler avec MSLAB",
+      "cta": "Démarrer une demande",
+      "steps": [
+        {
+          "title": "Vous partagez votre besoin",
+          "body": "Un formulaire, un message ou un appel."
+        },
+        {
+          "title": "Vous choisissez votre produit ou service",
+          "body": "Dans le catalogue ou avec notre équipe."
+        },
+        {
+          "title": "Nous étudions votre demande",
+          "body": "Et revenons vers vous si une précision manque."
+        },
+        {
+          "title": "Vous recevez votre devis",
+          "body": "Une proposition adaptée à votre projet."
+        },
+        {
+          "title": "Vous validez le projet",
+          "body": "Rien ne démarre sans votre accord."
+        },
+        {
+          "title": "Nous réalisons et livrons",
+          "body": "Production ou développement, puis livraison."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": [
+        {
+          "q": "Puis-je commander une seule pièce ?",
+          "a": "Pas en production sur mesure : MSLAB produit en quantité. La quantité minimum dépend du produit et de la technique ; elle est indiquée sur la fiche produit lorsqu'elle est définie, sinon confirmée dans votre devis."
+        },
+        {
+          "q": "Je n'ai pas encore de design. Pouvez-vous m'aider ?",
+          "a": "Oui. Indiquez « J'ai besoin d'aide pour le créer » dans votre demande de production : le visuel est préparé avec vous avant toute fabrication."
+        },
+        {
+          "q": "Quelle différence entre le catalogue et la production sur mesure ?",
+          "a": "Le catalogue présente des produits disponibles, commandés tels quels, et des produits personnalisables à votre logo. Pour un autre produit, format ou finition, la production sur mesure part de votre besoin."
+        },
+        {
+          "q": "Comment obtenir un prix ?",
+          "a": "Chaque demande est chiffrée sur devis, selon le produit ou le service, la quantité et les options. Vous recevez une proposition et rien ne démarre sans votre accord."
+        },
+        {
+          "q": "Comment suivre ma demande ?",
+          "a": "Après l'envoi, vous recevez une référence. Saisissez-la sur la page de suivi pour voir l'avancement de votre demande."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Un projet en tête ?",
+      "body": "Décrivez votre besoin : nous revenons vers vous avec une proposition. Pour une question générale, écrivez-nous.",
+      "quote": "Demander un devis",
+      "contact": "Nous contacter"
+    },
+    "offer": {
+      "standard": "Produit disponible",
+      "standardHint": "Article standard, commandé tel quel.",
+      "customizable": "Personnalisable",
+      "customizableHint": "Fabriqué à votre logo ou à votre design.",
+      "custom": "Sur mesure",
+      "customHint": "Un autre produit, format ou finition, produit à partir de votre besoin.",
+      "legendLabel": "Comment lire le catalogue",
+      "filterLabel": "Type de produit",
+      "filterAll": "Tous les produits",
+      "sortLabel": "Trier",
+      "sortDefault": "Sélection MSLAB",
+      "sortName": "Nom (A à Z)",
+      "customCardTitle": "Vous ne trouvez pas votre produit ?",
+      "customCardBody": "Décrivez le produit, la quantité et vos fichiers : nous étudions votre projet de production sur mesure.",
+      "customCardCta": "Demander une production sur mesure",
+      "cardCta": "Voir le produit",
+      "standardNote": "Article standard : précisez les références et les quantités dans votre demande.",
+      "customizableNote": "Produit personnalisable : envoyez votre logo ou votre design, ou préparez un aperçu dans le studio."
+    },
+    "product": {
+      "studioCta": "Personnaliser dans le studio",
+      "studioHint": "Placez votre logo sur le produit pour préparer votre demande.",
+      "specsTitle": "Ce que vous précisez dans votre demande",
+      "specsNote": "Les options disponibles (supports, finitions, techniques) et les délais sont confirmés dans votre devis.",
+      "customLink": "Besoin d'un autre format ou d'une autre finition ? Demandez une production sur mesure."
+    },
+    "specs": {
+      "textile": [
+        {
+          "label": "Tailles",
+          "hint": "La répartition par taille (par exemple du S au XXL)."
+        },
+        {
+          "label": "Couleur du textile",
+          "hint": "Une ou plusieurs couleurs de vêtement."
+        },
+        {
+          "label": "Matière",
+          "hint": "Coton, polyester ou mélange, selon l'usage."
+        },
+        {
+          "label": "Zones de marquage",
+          "hint": "Devant, dos, manche ou poitrine."
+        },
+        {
+          "label": "Visuel",
+          "hint": "Votre logo ou design, et ses couleurs."
+        },
+        {
+          "label": "Quantité totale",
+          "hint": "Le nombre de pièces, toutes tailles confondues."
+        }
+      ],
+      "businessCards": [
+        {
+          "label": "Format",
+          "hint": "Par exemple 85 × 55 mm, le format courant."
+        },
+        {
+          "label": "Papier",
+          "hint": "Type et épaisseur souhaités."
+        },
+        {
+          "label": "Impression",
+          "hint": "Recto ou recto-verso, en couleur ou non."
+        },
+        {
+          "label": "Finition",
+          "hint": "Mate, brillante ou autre, selon les options proposées."
+        },
+        {
+          "label": "Noms et quantités",
+          "hint": "Le nombre de personnes et de cartes par personne."
+        }
+      ],
+      "flatPrint": [
+        {
+          "label": "Format",
+          "hint": "A6, A5, A4, A3 ou dimensions précises."
+        },
+        {
+          "label": "Papier",
+          "hint": "Type et épaisseur souhaités."
+        },
+        {
+          "label": "Impression",
+          "hint": "Couleur ou noir et blanc, recto ou recto-verso."
+        },
+        {
+          "label": "Pliage",
+          "hint": "Pour les dépliants : nombre de volets."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre d'exemplaires."
+        }
+      ],
+      "bound": [
+        {
+          "label": "Format",
+          "hint": "A5, A4 ou dimensions précises."
+        },
+        {
+          "label": "Nombre de pages",
+          "hint": "Couverture comprise ou non, à préciser."
+        },
+        {
+          "label": "Papier",
+          "hint": "Pages intérieures et couverture."
+        },
+        {
+          "label": "Reliure",
+          "hint": "Agrafée, collée ou spirale, selon les options proposées."
+        },
+        {
+          "label": "Impression",
+          "hint": "Couleur ou noir et blanc."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre d'exemplaires."
+        }
+      ],
+      "stickers": [
+        {
+          "label": "Forme et dimensions",
+          "hint": "Rond, carré, rectangle ou forme découpée."
+        },
+        {
+          "label": "Support",
+          "hint": "Papier ou vinyle, pour l'intérieur ou l'extérieur."
+        },
+        {
+          "label": "Finition",
+          "hint": "Mate ou brillante."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre d'autocollants par modèle."
+        }
+      ],
+      "letterhead": [
+        {
+          "label": "Format",
+          "hint": "A4 ou autre format."
+        },
+        {
+          "label": "Papier",
+          "hint": "Type et épaisseur souhaités."
+        },
+        {
+          "label": "Impression",
+          "hint": "Couleurs de votre identité, recto ou recto-verso."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre de feuilles."
+        }
+      ],
+      "notebooks": [
+        {
+          "label": "Format",
+          "hint": "A5, A6 ou autre format."
+        },
+        {
+          "label": "Pages",
+          "hint": "Nombre de pages et réglure (ligné, quadrillé, blanc)."
+        },
+        {
+          "label": "Couverture",
+          "hint": "Matière, couleur et marquage de votre logo."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre de carnets."
+        }
+      ],
+      "merch": [
+        {
+          "label": "Modèle et couleur",
+          "hint": "Le produit choisi et sa couleur."
+        },
+        {
+          "label": "Marquage",
+          "hint": "Emplacement et taille du logo."
+        },
+        {
+          "label": "Couleurs du logo",
+          "hint": "Nombre de couleurs de votre visuel."
+        },
+        {
+          "label": "Contenu",
+          "hint": "Pour un kit : la liste des objets."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre de pièces ou de kits."
+        }
+      ],
+      "packaging": [
+        {
+          "label": "Dimensions",
+          "hint": "Longueur × largeur × hauteur, ou le produit à emballer."
+        },
+        {
+          "label": "Matière",
+          "hint": "Carton, kraft ou papier, selon l'usage."
+        },
+        {
+          "label": "Impression",
+          "hint": "Faces imprimées et couleurs."
+        },
+        {
+          "label": "Finition",
+          "hint": "Fermeture, poignées ou autre option."
+        },
+        {
+          "label": "Quantité",
+          "hint": "Le nombre d'emballages."
+        }
+      ],
+      "supplies": [
+        {
+          "label": "Articles",
+          "hint": "La liste des fournitures dont vous avez besoin."
+        },
+        {
+          "label": "Références",
+          "hint": "Marques ou modèles souhaités, si vous en avez."
+        },
+        {
+          "label": "Quantités",
+          "hint": "La quantité par article."
+        },
+        {
+          "label": "Livraison",
+          "hint": "Le lieu et l'échéance souhaités."
+        }
+      ]
+    },
+    "studio": {
+      "title": "Créez votre aperçu avant production",
+      "lead": "Le studio vous aide à préparer votre demande : vous voyez votre visuel sur le produit avant de demander un devis.",
+      "steps": [
+        "Choisissez un produit ou un support.",
+        "Ajoutez votre logo, votre design ou un texte.",
+        "Ajustez la position, la taille et les options proposées.",
+        "Envoyez l'aperçu avec votre demande de devis."
+      ],
+      "note": "L'aperçu numérique est indicatif et peut différer du produit fabriqué. Couleurs, formats et rendu final sont confirmés avec votre devis, avant toute production."
+    },
+    "nextSteps": {
+      "title": "Après l'envoi de votre demande",
+      "steps": [
+        "Votre demande est reçue.",
+        "Notre équipe étudie votre besoin.",
+        "Nous vous contactons si des précisions sont nécessaires.",
+        "Vous recevez une proposition adaptée.",
+        "La réalisation commence après validation."
+      ]
+    },
+    "confirm": {
+      "summaryTitle": "Récapitulatif",
+      "nextTitle": "Prochaine étape",
+      "nextBody": "Notre équipe étudie votre demande et vous contacte si des précisions sont nécessaires. Conservez votre référence pour suivre l'avancement.",
+      "questions": "Une question en attendant ?",
+      "contact": "Nous contacter",
+      "track": "Suivre ma demande",
+      "items": "Produits",
+      "productType": "Produit",
+      "quantity": "Quantité",
+      "projectTypes": "Type de projet",
+      "deadline": "Échéance",
+      "files": "Fichiers joints",
+      "design": "Design du studio",
+      "contactName": "Contact"
+    },
+    "quote": {
+      "tabCatalog": "Produits du catalogue",
+      "tabProduction": "Production sur mesure",
+      "tabDigital": "Projet digital",
+      "catalogLead": "Sélectionnez des produits du catalogue ou décrivez votre besoin, avec les quantités. MSLAB étudie votre demande et vous recontacte avec un devis.",
+      "productionLead": "Décrivez le produit à fabriquer, la quantité et vos fichiers. MSLAB étudie votre projet et vous recontacte avec un devis.",
+      "productionStudio": "Vous voulez d'abord voir votre logo sur le produit ? Préparez un aperçu dans le studio.",
+      "studioLink": "Ouvrir le studio"
+    },
+    "digital": {
+      "problem": "Le besoin",
+      "audience": "Pour qui",
+      "deliverables": "Ce que vous recevez",
+      "quoteCta": "Demander un devis",
+      "details": [
+        {
+          "id": "sites-web",
+          "problem": "Vos clients vous cherchent en ligne et ne trouvent pas d'information claire et à jour.",
+          "audience": "Entreprises, institutions, associations et indépendants.",
+          "deliverables": "Un site adapté au mobile avec vos pages, vos contenus et un formulaire de contact, et la prise en main de l'outil."
+        },
+        {
+          "id": "e-commerce",
+          "problem": "Vous vendez par téléphone ou sur les réseaux sociaux et voulez un canal de vente structuré.",
+          "audience": "Marques, commerces et créateurs.",
+          "deliverables": "Une boutique avec catalogue, commandes et gestion des produits, adaptée à vos modes de paiement et de livraison."
+        },
+        {
+          "id": "applications",
+          "problem": "Vos processus reposent sur des fichiers, du papier ou des messages dispersés.",
+          "audience": "Entreprises et organisations aux processus spécifiques.",
+          "deliverables": "Une application web développée autour de vos processus, avec les accès dont chaque équipe a besoin."
+        },
+        {
+          "id": "erp-crm",
+          "problem": "Clients, devis, commandes et stocks sont suivis dans des outils séparés.",
+          "audience": "PME, ateliers, distributeurs et établissements.",
+          "deliverables": "Une plateforme de gestion qui réunit vos données (clients, devis, commandes, stocks) selon le périmètre défini ensemble."
+        },
+        {
+          "id": "ui-ux",
+          "problem": "Votre outil est difficile à utiliser, ou vous voulez valider un projet avant de le développer.",
+          "audience": "Porteurs de projet, entreprises et équipes produit.",
+          "deliverables": "Des parcours et des maquettes validés avec vous avant le développement."
+        },
+        {
+          "id": "maintenance",
+          "problem": "Votre site ou application doit rester à jour et évoluer avec votre activité.",
+          "audience": "Toute organisation qui dispose d'un site ou d'une application.",
+          "deliverables": "Mises à jour, corrections et évolutions, selon un périmètre défini ensemble."
+        }
+      ],
+      "scopeTitle": "Développement, mise en ligne, hébergement, maintenance",
+      "scopeLead": "Quatre éléments distincts, précisés dans chaque devis.",
+      "scope": [
+        {
+          "title": "Développement",
+          "body": "La conception et la réalisation de votre site ou application, selon le périmètre du devis."
+        },
+        {
+          "title": "Mise en ligne",
+          "body": "La publication de votre projet, la configuration du nom de domaine et la prise en main."
+        },
+        {
+          "title": "Hébergement",
+          "body": "Le serveur sur lequel votre projet fonctionne. Le mode retenu et son coût sont précisés dans le devis."
+        },
+        {
+          "title": "Maintenance",
+          "body": "Le suivi après la mise en ligne : mises à jour, corrections et évolutions, proposé selon vos besoins."
+        }
+      ],
+      "workTitle": "Réalisation",
+      "work": {
+        "name": "mslab.ma",
+        "type": "Plateforme web : site, catalogue et back-office",
+        "body": "Le site que vous consultez : catalogue multilingue (français, arabe, anglais), demandes de devis avec suivi en ligne et back-office de gestion.",
+        "alt": "Page d'accueil du site mslab.ma"
+      }
+    },
+    "about": {
+      "divisionsTitle": "Nos trois activités",
+      "audienceTitle": "Pour qui nous travaillons",
+      "audiences": [
+        "Entreprises et commerces",
+        "Institutions et administrations",
+        "Établissements scolaires et de formation",
+        "Associations et organisations",
+        "Marques et créateurs"
+      ],
+      "approachTitle": "Notre façon de travailler",
+      "approach": [
+        {
+          "title": "Un seul interlocuteur",
+          "body": "Production, fournitures et projets digitaux suivis par la même équipe."
+        },
+        {
+          "title": "Un devis pour chaque demande",
+          "body": "Chaque projet est étudié et chiffré selon votre besoin."
+        },
+        {
+          "title": "Votre validation d'abord",
+          "body": "Rien n'est produit ni développé sans votre accord."
+        },
+        {
+          "title": "Un suivi avec référence",
+          "body": "Chaque demande reçoit une référence pour suivre son avancement."
+        }
+      ],
+      "workTitle": "Travailler avec MSLAB",
+      "workBody": "Décrivez votre besoin dans une demande de devis, ou écrivez-nous pour toute autre question."
+    },
+    "contact": {
+      "chooseTitle": "Comment pouvons-nous vous aider ?",
+      "messageTitle": "Une question",
+      "messageBody": "Question générale, partenariat, suivi d'une commande ou support : utilisez le formulaire ci-dessous.",
+      "messageCta": "Écrire un message",
+      "quoteTitle": "Un projet précis",
+      "quoteBody": "Un produit du catalogue, une production sur mesure ou un projet digital : la demande de devis recueille les bonnes informations.",
+      "quoteCta": "Demander un devis"
+    },
+    "hub": {
+      "supplyLead": "Fournitures de bureau, papeterie, fournitures scolaires et livres pour les organisations, et des produits personnalisables à votre logo.",
+      "catalogCta": "Parcourir le catalogue"
+    },
+    "studioFlow": {
+      "metaTitle": "Studio de personnalisation",
+      "metaDescription": "Choisissez votre support, ajoutez votre logo ou votre design et visualisez votre projet avant de demander un devis à MSLAB.",
+      "eyebrow": "Studio MSLAB",
+      "title": "Donnez vie à votre idée avant la production.",
+      "lead": "Choisissez votre support, ajoutez votre logo ou votre design et visualisez votre projet avant de demander un devis.",
+      "notes": [
+        "Personnalisation visuelle sur les supports présentés ici.",
+        "Pour un autre produit, vos options se précisent dans la demande.",
+        "Chaque projet est vérifié par l'équipe MSLAB avant production.",
+        "L'aperçu est indicatif : il ne garantit pas le rendu exact du produit fabriqué."
+      ],
+      "open": "Ouvrir le studio",
+      "progressLabel": "Étapes du projet",
+      "stepOf": "Étape {n} sur {total}",
+      "steps": [
+        "Produit",
+        "Configuration",
+        "Personnalisation",
+        "Aperçu",
+        "Devis"
+      ],
+      "done": "terminée",
+      "current": "en cours",
+      "back": "Retour",
+      "next": "Continuer",
+      "toQuote": "Demander un devis",
+      "edit": "Modifier",
+      "restart": "Recommencer le projet",
+      "productTitle": "Choisissez votre produit",
+      "productLead": "Sélectionnez un support à personnaliser. Vous pourrez en changer à tout moment.",
+      "all": "Tous",
+      "categories": {
+        "textile": "Textile",
+        "merch": "Objets promotionnels",
+        "stationery": "Papeterie",
+        "print": "Impression",
+        "packaging": "Packaging"
+      },
+      "visual": "Personnalisation visuelle",
+      "twoSides": "Devant et dos",
+      "selected": "Sélectionné",
+      "otherTitle": "Un autre produit ?",
+      "otherBody": "Votre produit n'est pas dans le studio : décrivez-le directement dans votre demande de devis.",
+      "otherCta": "Décrire mon produit",
+      "configTitle": "Configurez votre produit",
+      "configLead": "Indiquez la quantité et ce que vous savez déjà. MSLAB confirme les options disponibles dans votre devis.",
+      "quantity": "Quantité souhaitée",
+      "quantityHint": "Nombre total de pièces, toutes tailles et couleurs confondues.",
+      "quantityError": "Indiquez une quantité (en chiffres) pour continuer.",
+      "notes2": "Vos précisions (facultatif)",
+      "notesPlaceholder": "Tailles, couleurs, papier, finitions, échéance…",
+      "specsTitle": "À préciser pour ce produit",
+      "colorNote": "La couleur du produit et les faces se choisissent à l'étape suivante, sur l'aperçu.",
+      "customizeTitle": "Personnalisez votre design",
+      "customizeLead": "Ajoutez votre logo, une image ou un texte, puis placez-les sur le produit. Cette étape est facultative.",
+      "previewTitle": "Vérifiez votre projet",
+      "previewLead": "Voici votre projet tel qu'il sera transmis à MSLAB avec votre demande.",
+      "noDesign": "Aucun visuel ajouté : vous pourrez joindre vos fichiers dans la demande.",
+      "preparing": "Préparation de votre projet…",
+      "quoteTitle": "Demandez votre devis",
+      "quoteLead": "Votre produit, la quantité et vos précisions sont déjà repris. Le visuel et vos fichiers sont joints : complétez vos coordonnées et envoyez.",
+      "summaryTitle": "Votre projet",
+      "summaryProduct": "Produit",
+      "summaryCategory": "Catégorie",
+      "summaryQuantity": "Quantité",
+      "summaryColor": "Couleur",
+      "summarySides": "Faces personnalisées",
+      "summaryElements": "Éléments",
+      "summaryNotes": "Précisions",
+      "summaryNone": "Aucune",
+      "summaryEmpty": "À choisir",
+      "remainingTitle": "Reste à faire",
+      "todo": {
+        "product": "Choisir un produit",
+        "quantity": "Indiquer la quantité",
+        "design": "Ajouter un visuel (facultatif)",
+        "send": "Envoyer la demande"
+      },
+      "restored": "Projet retrouvé. Les images ne sont pas conservées après un rechargement : ajoutez-les à nouveau ({count}).",
+      "restoredNoImages": "Projet retrouvé : vous reprenez là où vous en étiez.",
+      "autoDescription": "Projet préparé dans le studio : {product}. Faces personnalisées : {sides}.",
+      "autoDescriptionNoDesign": "Projet préparé dans le studio : {product}."
+    },
+    "brief": {
+      "title": "Comment voulez-vous nous transmettre votre besoin ?",
+      "optionFile": "J'envoie mon fichier",
+      "optionFileHint": "Cahier des charges, liste de produits ou brief : votre fichier suffit, avec vos coordonnées.",
+      "optionForm": "Je remplis le formulaire",
+      "optionFormHint": "Pas de fichier ? Quelques questions guidées pour décrire votre besoin.",
+      "uploadTitle": "Votre fichier",
+      "uploadHint": "Jusqu'à 3 fichiers de 15 Mo maximum : PDF, Word, Excel, JPG ou PNG.",
+      "uploadButton": "Ajouter mon fichier",
+      "message": "Message (facultatif)",
+      "messagePlaceholder": "Échéance, quantités, contexte ou toute précision utile…",
+      "contactTitle": "Vos coordonnées",
+      "submit": "Envoyer ma demande",
+      "successTitle": "Demande envoyée",
+      "successBody": "Merci ! Votre fichier a bien été reçu. MSLAB l'étudie et revient vers vous avec une proposition.",
+      "successReference": "Référence de votre demande : {reference}",
+      "newRequest": "Faire une nouvelle demande",
+      "noJs": "L'envoi de fichier nécessite JavaScript. Remplissez le formulaire ou écrivez-nous."
+    }
   }
 }

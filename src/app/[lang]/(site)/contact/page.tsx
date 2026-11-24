@@ -5,13 +5,16 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { PageHeader } from "@/components/layout/page-header";
 import { whatsappHref } from "@/components/layout/whatsapp-button";
 import { ArrowLink } from "@/components/ui/arrow-link";
-import { buttonClasses } from "@/components/ui/button";
+import { ButtonLink, buttonClasses } from "@/components/ui/button";
 import { MailIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Container, Heading, Section } from "@/components/ui/layout";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, quoteFormHref } from "@/i18n/routes";
+import { formatPhone, telHref } from "@/lib/phone";
 import { buildPageMetadata } from "@/lib/seo";
+
+const FORM_ID = "message";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -24,10 +27,15 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-/** Contact form + verified company details (each hidden when empty; map only with a verified address). */
+/**
+ * Contact (general questions, partnerships, support) vs quote (a specific product, production or
+ * digital project), stated first; then the contact form and verified company details (each
+ * hidden when empty; map only with a verified address).
+ */
 export default async function ContactPage() {
   const locale = await getLocale();
   const [dict, settings] = await Promise.all([getDictionary(locale), getSiteSettings()]);
+  const c = dict.cx.contact;
   const address = forLocale(settings.address, locale);
   const hours = forLocale(settings.openingHours, locale);
   const contactPath = localizedPath(locale, { route: "contact" });
@@ -36,9 +44,35 @@ export default async function ContactPage() {
     <>
       <OrganizationJsonLd locale={locale} />
       <PageHeader title={dict.pages.contact.title} lead={dict.pages.contact.description} illustration={<EnvelopeIllustration />} />
-      <Section>
+
+      {/* Contact or quote? Said first, so a project request goes to the form built for it. */}
+      <section aria-labelledby="choose-heading" className="pb-2">
+        <Container>
+          <h2 id="choose-heading" className="text-fg text-lg font-semibold">
+            {c.chooseTitle}
+          </h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="border-line flex flex-col rounded-[var(--radius-card)] border p-5">
+              <h3 className="text-fg font-semibold">{c.messageTitle}</h3>
+              <p className="text-fg-muted mt-1.5 text-sm leading-relaxed">{c.messageBody}</p>
+              <a href={`#${FORM_ID}`} className="text-accent mt-auto inline-flex min-h-11 items-center pt-3 text-sm font-semibold underline-offset-4 hover:underline">
+                {c.messageCta}
+              </a>
+            </div>
+            <div className="bg-accent-soft flex flex-col rounded-[var(--radius-card)] p-5">
+              <h3 className="text-fg font-semibold">{c.quoteTitle}</h3>
+              <p className="text-fg-muted mt-1.5 text-sm leading-relaxed">{c.quoteBody}</p>
+              <ButtonLink href={quoteFormHref(locale)} className="mt-4 self-start">
+                {c.quoteCta}
+              </ButtonLink>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <Section className="pt-10 sm:pt-12 lg:pt-14">
         <Container className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
+          <div id={FORM_ID} className="scroll-mt-24 lg:col-span-7">
             <Heading as="h2" size="md">
               {dict.contactPage.formTitle}
             </Heading>
@@ -61,8 +95,8 @@ export default async function ContactPage() {
                     {settings.phone ? (
                       <li className="flex gap-3">
                         <PhoneIcon className="text-fg-muted mt-0.5 shrink-0" />
-                        <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center">
-                          <bdi dir="ltr">{settings.phone}</bdi>
+                        <a href={telHref(settings.phone)} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center">
+                          <bdi dir="ltr">{formatPhone(settings.phone)}</bdi>
                         </a>
                       </li>
                     ) : null}

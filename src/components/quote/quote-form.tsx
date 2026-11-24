@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useActionState, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "@/components/forms/form-parts";
+import { ConsentField, ErrorSummary, Honeypot } from "@/components/forms/form-parts";
+import { NextSteps, RequestConfirmation, type RequestFlow, type SummaryRow } from "@/components/forms/request-confirmation";
 import { ReferenceNotice } from "@/components/forms/reference-notice";
 import { useEnhancedForm, useFocusFirstError } from "@/components/forms/use-enhanced-form";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ type Props = {
   privacyHref: string;
   catalogHref: string;
   prefill: Prefill | null;
+  flow: RequestFlow;
   t: { forms: Dictionary["forms"]; page: Dictionary["quotePage"]; sku: string };
 };
 
@@ -41,14 +43,33 @@ export function QuoteForm(props: Props) {
   return <QuoteFormInner key={instance} {...props} onReset={() => setInstance((n) => n + 1)} />;
 }
 
-function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill, t, onReset }: Props & { onReset: () => void }) {
+function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill, flow, t, onReset }: Props & { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(submitQuote, initial);
-  const { onSubmit } = useEnhancedForm(formAction);
-  const ref = useRef<HTMLFormElement>(null);
-  useFocusFirstError(state.status === "error" ? state : null, ref);
-
   const hydrated = useSyncExternalStore(subscribeNothing, () => true, () => false);
   const storeRows = useQuoteRows();
+  // What was sent, for the confirmation summary (the list itself is cleared after success).
+  const [sent, setSent] = useState<SummaryRow[]>([]);
+  function summarize(data: FormData): SummaryRow[] {
+    const text = (key: string) => String(data.get(key) ?? "").trim();
+    const lines: string[] = [];
+    for (let i = 0; i < 50; i++) {
+      const productId = text(`items.${i}.productId`);
+      const label = text(`items.${i}.label`);
+      const quantity = text(`items.${i}.quantity`);
+      if (!productId && !label && !quantity) break;
+      const name = label || storeRows.find((r) => r.productId === productId)?.name || (prefill?.productId === productId ? prefill.name : "");
+      if (name) lines.push(quantity ? `${name} × ${quantity}` : name);
+    }
+    const contact = [text("fullName"), text("email")].filter(Boolean).join(" · ");
+    return [
+      ...(lines.length ? [{ label: flow.confirm.items, value: lines.join("\n") }] : []),
+      ...(contact ? [{ label: flow.confirm.contactName, value: contact }] : []),
+    ];
+  }
+
+  const { onSubmit } = useEnhancedForm(formAction, (data) => setSent(summarize(data)));
+  const ref = useRef<HTMLFormElement>(null);
+  useFocusFirstError(state.status === "error" ? state : null, ref);
 
   // ?product=<id> from a product page: make sure it is in the list.
   useEffect(() => {
@@ -67,13 +88,15 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
 
   if (state.status === "success") {
     return (
-      <SuccessPanel title={t.page.successTitle}>
-        <p>{t.page.successBody}</p>
-        {state.reference ? <ReferenceNotice reference={state.reference} label={t.page.successReference} t={t.forms} /> : null}
-        <Button variant="secondary" size="sm" onClick={onReset}>
-          {t.page.newRequest}
-        </Button>
-      </SuccessPanel>
+      <RequestConfirmation
+        title={t.page.successTitle}
+        body={t.page.successBody}
+        reference={state.reference ? <ReferenceNotice reference={state.reference} label={t.page.successReference} t={t.forms} /> : null}
+        summary={sent}
+        flow={flow}
+        resetLabel={t.page.newRequest}
+        onReset={onReset}
+      />
     );
   }
 
@@ -271,6 +294,8 @@ function QuoteFormInner({ locale, sourcePath, privacyHref, catalogHref, prefill,
           <ConsentField label={t.forms.consent} privacyHref={privacyHref} privacyLabel={t.forms.privacyLink} error={message("consent")} />
         </div>
       </fieldset>
+
+      <NextSteps flow={flow} />
 
       {/* Tinted footer: the one action of the page. */}
       <div className="bg-accent-soft -mx-5 -mb-5 rounded-b-[var(--radius-card)] px-5 py-5 sm:-mx-8 sm:-mb-8 sm:px-8 sm:py-6">

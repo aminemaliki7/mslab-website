@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useActionState, useRef, useState, useSyncExternalStore } from "react";
-import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "@/components/forms/form-parts";
+import { useActionState, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { ConsentField, ErrorSummary, Honeypot } from "@/components/forms/form-parts";
+import { NextSteps, RequestConfirmation, type RequestFlow, type SummaryRow } from "@/components/forms/request-confirmation";
 import { ReferenceNotice } from "@/components/forms/reference-notice";
 import { useEnhancedForm, useFocusFirstError } from "@/components/forms/use-enhanced-form";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,9 @@ type Props = {
   publishableKey: string;
   materials: ProductionOption[];
   finishings: ProductionOption[];
+  flow: RequestFlow;
+  /** Called once the request has been accepted (the Studio clears its saved project). */
+  onSubmitted?: () => void;
   t: { forms: Dictionary["forms"]; pod: Dictionary["printOnDemand"] };
 };
 
@@ -57,43 +60,56 @@ function CustomRequestFormInner({
   locale,
   sourcePath,
   privacyHref,
-  trackingHref,
   storageEndpoint,
   publishableKey,
   materials,
   finishings,
+  flow,
+  onSubmitted,
   t,
   onReset,
 }: Props & { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(submitCustomRequest, initial);
-  const { onSubmit } = useEnhancedForm(formAction);
+  // What was sent, for the confirmation summary.
+  const [sent, setSent] = useState<SummaryRow[]>([]);
+  const { onSubmit } = useEnhancedForm(formAction, (data) => {
+    const text = (key: string) => String(data.get(key) ?? "").trim();
+    const c = flow.confirm;
+    const files = data.getAll("uploadedFiles").length;
+    const contact = [text("fullName"), text("email")].filter(Boolean).join(" · ");
+    setSent(
+      [
+        { label: c.productType, value: text("projectType") },
+        { label: c.quantity, value: text("quantity") },
+        { label: c.deadline, value: text("deadline") },
+        { label: c.files, value: files > 0 ? String(files) : "" },
+        { label: c.design, value: text("studioDesign") ? "✓" : "" },
+        { label: c.contactName, value: contact },
+      ].filter((row) => row.value),
+    );
+  });
   const ref = useRef<HTMLFormElement>(null);
   useFocusFirstError(state.status === "error" ? state : null, ref);
   const hydrated = useSyncExternalStore(subscribeNothing, () => true, () => false);
   const [uploading, setUploading] = useState(false);
 
   const values = state.status === "error" ? state.values : {};
+  useEffect(() => {
+    if (state.status === "success") onSubmitted?.();
+  }, [state.status, onSubmitted]);
   const [material, setMaterial] = useState(values.materialOptionId || (values.materialOther ? OTHER : ""));
 
   if (state.status === "success") {
     return (
-      <SuccessPanel title={t.pod.successTitle}>
-        <p>{t.pod.successBody}</p>
-        {state.reference ? (
-          <>
-            <ReferenceNotice reference={state.reference} label={t.pod.successReference} t={t.forms} />
-            <p className="text-sm">
-              {t.pod.successTrack}{" "}
-              <Link href={trackingHref} className="text-accent underline underline-offset-2">
-                {t.pod.trackCta}
-              </Link>
-            </p>
-          </>
-        ) : null}
-        <Button variant="secondary" size="sm" onClick={onReset}>
-          {t.pod.newRequest}
-        </Button>
-      </SuccessPanel>
+      <RequestConfirmation
+        title={t.pod.successTitle}
+        body={t.pod.successBody}
+        reference={state.reference ? <ReferenceNotice reference={state.reference} label={t.pod.successReference} t={t.forms} /> : null}
+        summary={sent}
+        flow={flow}
+        resetLabel={t.pod.newRequest}
+        onReset={onReset}
+      />
     );
   }
 
@@ -305,6 +321,8 @@ function CustomRequestFormInner({
         </Field>
         <ConsentField label={t.forms.consent} privacyHref={privacyHref} privacyLabel={t.forms.privacyLink} error={message("consent")} />
       </fieldset>
+
+      <NextSteps flow={flow} />
 
       <div className="flex flex-wrap items-center gap-4">
         <Button type="submit" size="lg" disabled={pending || uploading} aria-disabled={pending || uploading} className="w-full sm:w-auto">

@@ -4,11 +4,11 @@ import { Checkbox } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
 /** Off-screen trap field: humans never see or focus it, naive bots fill it. */
-export function Honeypot({ label }: { label: string }) {
+export function Honeypot({ label, id = "website" }: { label: string; id?: string }) {
   return (
     <div aria-hidden="true" className="absolute -start-[10000px] top-auto size-px overflow-hidden">
-      <label htmlFor="website">{label}</label>
-      <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+      <label htmlFor={id}>{label}</label>
+      <input id={id} name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
     </div>
   );
 }
@@ -18,7 +18,10 @@ export function ConsentField({
   privacyHref,
   privacyLabel,
   error,
+  id = "consent",
 }: {
+  /** Unique per page: two forms on one page need different ids. */
+  id?: string;
   label: string;
   privacyHref: string;
   privacyLabel: string;
@@ -28,13 +31,13 @@ export function ConsentField({
     <div>
       <div className="flex items-start gap-3">
         <Checkbox
-          id="consent"
+          id={id}
           name="consent"
           required
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? "consent-error" : undefined}
+          aria-describedby={error ? `${id}-error` : undefined}
         />
-        <label htmlFor="consent" className="text-fg py-1 text-sm leading-relaxed">
+        <label htmlFor={id} className="text-fg py-1 text-sm leading-relaxed">
           {label}{" "}
           <Link href={privacyHref} className="text-accent underline underline-offset-2">
             {privacyLabel}
@@ -42,7 +45,7 @@ export function ConsentField({
         </label>
       </div>
       {error ? (
-        <p id="consent-error" className="text-danger mt-1.5 ms-7 text-sm">
+        <p id={`${id}-error`} className="text-danger mt-1.5 ms-7 text-sm">
           {error}
         </p>
       ) : null}

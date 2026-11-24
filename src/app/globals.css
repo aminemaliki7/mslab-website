@@ -265,6 +265,7 @@
     }
     .anim-bar { animation: mslab-bar-in 0.28s var(--ease-out-soft) both; }
     .anim-pop:not([hidden]) { animation: mslab-pop 0.16s var(--ease-out-soft) both; }
+    .anim-menu { animation: mslab-pop 0.16s var(--ease-out-soft) both; }
   }
 
   /* Native selects drawn like the comboboxes: same chevron, same inner spacing, both directions. */

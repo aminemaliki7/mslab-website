@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { DivisionsSection } from "@/components/home/divisions";
 import { LibraryIllustration } from "@/components/illustrations/scenes";
+import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { RichText } from "@/components/content/rich-text";
 import { PageHeader } from "@/components/layout/page-header";
 import { ArrowLink } from "@/components/ui/arrow-link";
+import { ButtonLink } from "@/components/ui/button";
+import { CheckIcon } from "@/components/ui/icons";
 import { Container, Heading, Section } from "@/components/ui/layout";
-import { PRODUCTION_LINES } from "@/config/production-lines";
+import { listMockupProducts } from "@/features/print-on-demand/queries";
 import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, quoteFormHref, studioHref } from "@/i18n/routes";
+import { formatPhone, telHref } from "@/lib/phone";
 import { buildPageMetadata } from "@/lib/seo";
+import { STUDIO_ENABLED } from "@/config/features";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -24,12 +29,20 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * About MSLAB. Presentation, mission, values and company details come from site settings
- * (verified, entered by MSLAB). Without them the page shows only facts from the brief.
+ * About MSLAB: who MSLAB is (settings text), its three divisions, who it works with and how,
+ * mission and values (settings, hidden while empty), verified company details, then how to start.
+ * Company facts come from site settings only; nothing is shown that MSLAB has not entered.
  */
 export default async function AboutPage() {
   const locale = await getLocale();
-  const [dict, settings, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
+  const [dict, settings, services, mockups] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale), listMockupProducts()]);
+  const a = dict.cx.about;
+  const serviceHref = (slugFr: string) => {
+    const service = services.find((s) => s.slugs.fr === slugFr);
+    return service ? localizedPath(locale, { route: "service", slug: service.slug }) : null;
+  };
+  const productionHref = serviceHref(PRINT_ON_DEMAND_SLUG);
+  const servicesHref = localizedPath(locale, { route: "services" });
 
   const about = forLocale(settings.about, locale);
   const mission = forLocale(settings.mission, locale);
@@ -45,8 +58,8 @@ export default async function AboutPage() {
     settings.phone && {
       label: dict.about.phone,
       value: (
-        <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center">
-          <bdi dir="ltr">{settings.phone}</bdi>
+        <a href={telHref(settings.phone)} className="hover:text-accent -my-2.5 inline-flex min-h-11 items-center">
+          <bdi dir="ltr">{formatPhone(settings.phone)}</bdi>
         </a>
       ),
     },
@@ -75,6 +88,51 @@ export default async function AboutPage() {
         </Container>
       </Section>
 
+      <DivisionsSection
+        dict={dict}
+        id="activites"
+        title={a.divisionsTitle}
+        lead={null}
+        tone="surface"
+        links={{
+          production: productionHref ?? servicesHref,
+          studio: STUDIO_ENABLED && mockups.length > 0 ? studioHref(locale) : null,
+          catalog: localizedPath(locale, { route: "catalog" }),
+          digital: serviceHref(DIGITAL_SOLUTIONS_SLUG) ?? servicesHref,
+        }}
+      />
+
+      <Section aria-labelledby="approach-heading">
+        <Container className="grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Heading as="h2" size="lg" id="audience-heading">
+              {a.audienceTitle}
+            </Heading>
+            <ul className="mt-6 space-y-3" aria-labelledby="audience-heading">
+              {a.audiences.map((audience) => (
+                <li key={audience} className="text-fg flex items-start gap-2.5 font-medium">
+                  <CheckIcon width={18} height={18} strokeWidth={2.25} aria-hidden="true" className="text-accent mt-0.5 shrink-0" />
+                  {audience}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="lg:col-span-7 lg:col-start-6">
+            <Heading as="h2" size="lg" id="approach-heading">
+              {a.approachTitle}
+            </Heading>
+            <ul className="border-fg mt-6 grid border-t-2 sm:grid-cols-2">
+              {a.approach.map((item) => (
+                <li key={item.title} className="border-line border-b py-5 sm:pe-6">
+                  <h3 className="text-fg font-semibold">{item.title}</h3>
+                  <p className="text-fg-muted mt-1.5 text-sm leading-relaxed">{item.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </Section>
+
       {mission || values ? (
         <Section aria-label={[dict.about.missionTitle, dict.about.valuesTitle].join(" / ")}>
           <Container className="grid gap-10 md:grid-cols-2">
@@ -97,41 +155,6 @@ export default async function AboutPage() {
           </Container>
         </Section>
       ) : null}
-
-      <Section aria-labelledby="expertise-heading">
-        <Container className="grid gap-8 lg:grid-cols-12">
-          <Heading as="h2" size="lg" id="expertise-heading" className="lg:col-span-4">
-            {dict.about.expertiseTitle}
-          </Heading>
-          <div className="lg:col-span-8">
-            <ul className="border-line grid border-t sm:grid-cols-2">
-              {/* MSLAB's core services — docs/POSITIONING.md. */}
-              {[...PRODUCTION_LINES.map((line) => dict.productionLines[line.key].name), dict.digital.title].map((area) => (
-                <li key={area} className="border-line text-fg border-b py-4 font-medium sm:pe-6">
-                  {area}
-                </li>
-              ))}
-            </ul>
-            {services.length > 0 ? (
-              <div className="mt-10">
-                <h3 className="text-fg-muted text-sm font-semibold">{dict.about.servicesListTitle}</h3>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {services.map((service) => (
-                    <li key={service.id}>
-                      <Link
-                        href={localizedPath(locale, { route: "service", slug: service.slug })}
-                        className="border-line hover:border-accent hover:text-accent inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm transition-colors active:bg-surface"
-                      >
-                        {service.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-          </div>
-        </Container>
-      </Section>
 
       {facts.length > 0 ? (
         <Section aria-labelledby="info-heading">
@@ -158,6 +181,24 @@ export default async function AboutPage() {
         </Section>
       ) : null}
 
+      <section aria-labelledby="work-heading" className="bg-ink-900 text-white">
+        <Container className="flex flex-col gap-6 py-14 lg:flex-row lg:items-end lg:justify-between lg:py-16">
+          <div>
+            <h2 id="work-heading" className="type-display text-2xl sm:text-3xl">
+              {a.workTitle}
+            </h2>
+            <p className="mt-3 max-w-xl text-white/75">{a.workBody}</p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <ButtonLink href={quoteFormHref(locale)} variant="accent" size="lg">
+              {dict.common.requestQuote}
+            </ButtonLink>
+            <ButtonLink href={localizedPath(locale, { route: "contact" })} variant="inverse" size="lg">
+              {dict.common.contactUs}
+            </ButtonLink>
+          </div>
+        </Container>
+      </section>
     </>
   );
 }

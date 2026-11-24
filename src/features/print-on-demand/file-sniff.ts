@@ -53,6 +53,9 @@ function svgSize(text: string): [number, number] | null {
   return box ? [Math.round(Number(box[1])), Math.round(Number(box[2]))] : null;
 }
 
+export const DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+export const XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
 export function sniffFile(bytes: Uint8Array): SniffedFile {
   const none = { width: null, height: null };
   const b = bytes;
@@ -73,6 +76,15 @@ export function sniffFile(bytes: Uint8Array): SniffedFile {
     return { mime: /Adobe Illustrator|Illustrator/i.test(head) ? "application/illustrator" : "application/pdf", ...none };
   }
   if (ascii(b, 0, 4) === "%!PS" || (b[0] === 0xc5 && b[1] === 0xd0 && b[2] === 0xd3 && b[3] === 0xc6)) return { mime: "application/postscript", ...none };
+  // Office Open XML (requirements files): a ZIP whose first entries name the document part.
+  if (b[0] === 0x50 && b[1] === 0x4b && b[2] === 0x03 && b[3] === 0x04) {
+    const names = new TextDecoder("latin1").decode(b);
+    if (names.includes("[Content_Types].xml") || names.includes("_rels/")) {
+      if (names.includes("word/")) return { mime: DOCX, ...none };
+      if (names.includes("xl/")) return { mime: XLSX, ...none };
+    }
+    return { mime: null, ...none };
+  }
 
   // SVG is text: allow a BOM, an XML declaration, comments and a doctype before <svg.
   const text = new TextDecoder("utf-8", { fatal: false }).decode(b.subarray(0, Math.min(b.length, 8192))).replace(/^﻿/, "");

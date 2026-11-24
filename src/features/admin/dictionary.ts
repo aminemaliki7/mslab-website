@@ -327,6 +327,8 @@ const fr = {
     download: "Télécharger",
     linkUnavailable: "Lien indisponible",
     noFiles: "Aucun fichier joint.",
+    briefFile: "Cahier des charges",
+    briefOnly: "Demande envoyée avec un fichier : le besoin est décrit dans le cahier des charges joint.",
     filesNote: "Liens valables 10 minutes : rechargez la page pour en obtenir de nouveaux.",
     studio: {
       title: "Design du Studio",
@@ -878,6 +880,8 @@ const en: AdminDict = {
     download: "Download",
     linkUnavailable: "Link unavailable",
     noFiles: "No files attached.",
+    briefFile: "Requirements file",
+    briefOnly: "Request sent as a file: the need is described in the attached requirements file.",
     filesNote: "Links are valid for 10 minutes: reload the page to get new ones.",
     studio: {
       title: "Studio design",
@@ -1427,6 +1431,8 @@ const ar: AdminDict = {
     download: "تنزيل",
     linkUnavailable: "الرابط غير متاح",
     noFiles: "لا توجد ملفات مرفقة.",
+    briefFile: "دفتر التحملات",
+    briefOnly: "طلب مُرسَل كملف: الحاجة موصوفة في دفتر التحملات المرفق.",
     filesNote: "الروابط صالحة لمدة 10 دقائق: أعد تحميل الصفحة للحصول على روابط جديدة.",
     studio: {
       title: "تصميم الاستوديو",

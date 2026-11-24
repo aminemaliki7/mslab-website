@@ -22,6 +22,7 @@ export const ERROR_CODES = [
   "invalid_option",
   "below_moq",
   "invalid_url",
+  "brief_missing",
 ] as const;
 export type ErrorCode = (typeof ERROR_CODES)[number];
 

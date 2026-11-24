@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState, useRef, useState, useSyncExternalStore } from "react";
-import { ConsentField, ErrorSummary, Honeypot, SuccessPanel } from "@/components/forms/form-parts";
+import { ConsentField, ErrorSummary, Honeypot } from "@/components/forms/form-parts";
+import { NextSteps, RequestConfirmation, type RequestFlow, type SummaryRow } from "@/components/forms/request-confirmation";
 import { fillField, inDays } from "@/components/forms/quick-picks";
 import { ReferenceNotice } from "@/components/forms/reference-notice";
 import { useEnhancedForm, useFocusFirstError } from "@/components/forms/use-enhanced-form";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { MultiDropdown } from "@/components/ui/multi-dropdown";
 import { Field, Input, Textarea } from "@/components/ui/form";
@@ -19,6 +20,7 @@ type Props = {
   sourcePath: string;
   privacyHref: string;
   trackingHref: string;
+  flow: RequestFlow;
   t: { forms: Dictionary["forms"]; form: Dictionary["digitalForm"]; trackCta: string };
 };
 
@@ -141,32 +143,42 @@ export function DigitalRequestForm(props: Props) {
 
 const initial: DigitalRequestState = { status: "idle" };
 
-function DigitalRequestFormInner({ locale, sourcePath, privacyHref, trackingHref, t, onReset }: Props & { onReset: () => void }) {
+function DigitalRequestFormInner({ locale, sourcePath, privacyHref, flow, t, onReset }: Props & { onReset: () => void }) {
   const [state, formAction, pending] = useActionState(submitDigitalRequest, initial);
-  const { onSubmit } = useEnhancedForm(formAction);
+  const f = t.form;
+  // What was sent, for the confirmation summary.
+  const [sent, setSent] = useState<SummaryRow[]>([]);
+  const { onSubmit } = useEnhancedForm(formAction, (data) => {
+    const text = (key: string) => String(data.get(key) ?? "").trim();
+    const c = flow.confirm;
+    const types = data
+      .getAll("projectTypes")
+      .map((key) => f.projectTypes[String(key) as keyof typeof f.projectTypes] ?? "")
+      .filter(Boolean)
+      .join(", ");
+    const contact = [text("fullName"), text("email")].filter(Boolean).join(" · ");
+    setSent(
+      [
+        { label: c.projectTypes, value: types },
+        { label: c.deadline, value: text("deadline") },
+        { label: c.contactName, value: contact },
+      ].filter((row) => row.value),
+    );
+  });
   const ref = useRef<HTMLFormElement>(null);
   useFocusFirstError(state.status === "error" ? state : null, ref);
-  const f = t.form;
 
   if (state.status === "success") {
     return (
-      <SuccessPanel title={f.successTitle}>
-        <p>{f.successBody}</p>
-        {state.reference ? (
-          <>
-            <ReferenceNotice reference={state.reference} label={f.successReference} t={t.forms} />
-            <p className="text-sm">{f.successTrack}</p>
-          </>
-        ) : null}
-        <div className="flex flex-wrap gap-3">
-          <ButtonLink href={trackingHref} variant="secondary" size="sm">
-            {t.trackCta}
-          </ButtonLink>
-          <Button variant="secondary" size="sm" onClick={onReset}>
-            {f.newRequest}
-          </Button>
-        </div>
-      </SuccessPanel>
+      <RequestConfirmation
+        title={f.successTitle}
+        body={f.successBody}
+        reference={state.reference ? <ReferenceNotice reference={state.reference} label={f.successReference} t={t.forms} /> : null}
+        summary={sent}
+        flow={flow}
+        resetLabel={f.newRequest}
+        onReset={onReset}
+      />
     );
   }
 
@@ -297,6 +309,8 @@ function DigitalRequestFormInner({ locale, sourcePath, privacyHref, trackingHref
       </section>
 
       <ConsentField label={t.forms.consent} privacyHref={privacyHref} privacyLabel={t.forms.privacyLink} error={message("consent")} />
+
+      <NextSteps flow={flow} />
 
       <Button type="submit" size="lg" disabled={pending} aria-disabled={pending} className="w-full sm:w-auto">
         {pending ? t.forms.sending : f.submit}

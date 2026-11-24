@@ -196,3 +196,39 @@ export async function notifyDigitalRequest(
     () => acknowledge(input.locale, input.email, input.fullName, reference, "quote"),
   );
 }
+
+/** Request sent as a requirements file ("cahier des charges") instead of the detailed form. */
+export async function notifyBriefRequest(
+  input: Pick<QuoteInput, "fullName" | "companyName" | "email" | "phone" | "preferredContact" | "locale"> & {
+    kind: "catalog" | "custom" | "digital";
+    message: string | null;
+    fileCount: number;
+  },
+  reference: string,
+) {
+  const kinds = { catalog: "Produits du catalogue", custom: "Production sur mesure", digital: "Projet digital" } as const;
+  const text = [
+    `Nouvelle demande avec cahier des charges — ${reference}`,
+    "",
+    `Type de demande : ${kinds[input.kind]}`,
+    `Nom : ${input.fullName}`,
+    `Entreprise : ${input.companyName ?? "—"}`,
+    `E-mail : ${input.email}`,
+    `Téléphone : ${input.phone}`,
+    `Contact préféré : ${input.preferredContact}`,
+    `Langue : ${input.locale}`,
+    "",
+    `Fichier(s) joint(s) : ${input.fileCount}`,
+    input.message ? `\n${input.message}` : "",
+    "",
+    "Les fichiers sont dans l'administration.",
+    `Administration : ${siteUrl}/admin/quotations?ref=${encodeURIComponent(reference)}`,
+  ].join("\n");
+
+  await deliver(
+    "quote",
+    reference,
+    { subject: `[MSLAB] Demande avec cahier des charges ${reference}`, text, replyTo: input.email },
+    () => acknowledge(input.locale, input.email, input.fullName, reference, "quote"),
+  );
+}

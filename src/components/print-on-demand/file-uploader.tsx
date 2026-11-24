@@ -7,10 +7,11 @@ import { ACCEPT_ATTRIBUTE, ACCEPTED_FILE_TYPES, MAX_FILE_BYTES, MAX_FILES } from
 import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
 import { SNIFF_BYTES, sniffFile } from "@/features/print-on-demand/file-sniff";
+import { BRIEF_ACCEPT, BRIEF_FILE_PREFIX, BRIEF_FILE_TYPES, MAX_BRIEF_FILES } from "@/features/inquiries/brief";
 import { mockupHandoff, type StudioHandoff } from "./mockup-handoff";
 
 type T = Dictionary["printOnDemand"];
-type Role = "artwork" | "mockup";
+type Role = "artwork" | "mockup" | "brief";
 type Upload = { key: string; name: string; size: number; path: string | null; state: "uploading" | "done" | "error"; role: Role; fingerprint: string };
 
 /** Studio mockups ride along with the artwork without using the visitor's file slots. */
@@ -59,12 +60,28 @@ function formatSize(bytes: number): string {
  * Next.js server), under "<ticket>/<n>-<name>". The form submits the ticket and the paths
  * still listed; the database attaches only those.
  */
-export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange }: {
+export function FileUploader({
+  storageEndpoint,
+  publishableKey,
+  t,
+  onBusyChange,
+  variant = "artwork",
+  labels,
+  onCountChange,
+}: {
   storageEndpoint: string;
   publishableKey: string;
   t: T;
   onBusyChange: (busy: boolean) => void;
+  /** "brief": the requirements file of a quote request (own formats and limit, no Studio hand-off). */
+  variant?: "artwork" | "brief";
+  /** Hint and button text (defaults: the production form's file texts). */
+  labels?: { hint: string; button: string };
+  /** Number of files uploaded and still attached. */
+  onCountChange?: (count: number) => void;
 }) {
+  const brief = variant === "brief";
+  const maxFiles = brief ? MAX_BRIEF_FILES : MAX_FILES;
   const inputId = useId();
   const hintId = useId();
   const [ticket, setTicket] = useState<string | null>(null);
@@ -73,29 +90,40 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
   const counter = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const rateLimited = useRef(false);
   async function ensureTicket(): Promise<string | null> {
     if (ticket) return ticket;
     const result = await requestUploadTicket();
+    rateLimited.current = !result.ok && result.reason === "rate_limited";
     if (!result.ok) return null;
     setTicket(result.ticket);
     return result.ticket;
   }
 
-  async function onFiles(list: FileList | File[] | null, role: Role = "artwork") {
+  async function onFiles(list: FileList | File[] | null, role: Role = brief ? "brief" : "artwork") {
     if (!list?.length) return;
     const files = [...list];
     if (inputRef.current) inputRef.current.value = "";
     const problems: string[] = [];
     const active = uploads.filter((u) => u.state !== "error" && u.role === role).length;
-    const room = (role === "artwork" ? MAX_FILES : MAX_MOCKUPS) - active;
-    if (files.length > room && role === "artwork") problems.push(format(t.fileTooMany, { max: MAX_FILES }));
+    const room = (role === "mockup" ? MAX_MOCKUPS : maxFiles) - active;
+    if (files.length > room && role !== "mockup") problems.push(format(t.fileTooMany, { max: maxFiles }));
 
     const accepted: { file: File; type: string }[] = [];
     for (const file of files.slice(0, Math.max(room, 0))) {
       // The real format is read from the file's first bytes. The declared type / extension is
       // only used when the content does not identify itself (e.g. some EPS variants).
       const sniffed = sniffFile(new Uint8Array(await file.slice(0, SNIFF_BYTES).arrayBuffer())).mime;
-      const type = sniffed ? ((ACCEPTED_FILE_TYPES as readonly string[]).includes(sniffed) ? sniffed : null) : mimeOf(file);
+      // Requirements files must identify themselves by content (no extension fallback).
+      const type = brief
+        ? sniffed && (BRIEF_FILE_TYPES as readonly string[]).includes(sniffed)
+          ? sniffed
+          : null
+        : sniffed
+          ? (ACCEPTED_FILE_TYPES as readonly string[]).includes(sniffed)
+            ? sniffed
+            : null
+          : mimeOf(file);
       if (!type) problems.push(format(t.fileType, { name: file.name }));
       else if (file.size > MAX_FILE_BYTES) problems.push(format(t.fileTooLarge, { name: file.name }));
       else accepted.push({ file, type });
@@ -107,7 +135,7 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
     const currentTicket = await ensureTicket();
     const queued = accepted.map(({ file, type }) => {
       counter.current += 1;
-      return { key: `${counter.current}`, file, type, path: currentTicket ? `${currentTicket}/${counter.current}-${safeName(file.name)}` : null };
+      return { key: `${counter.current}`, file, type, path: currentTicket ? `${currentTicket}/${counter.current}-${role === "brief" ? BRIEF_FILE_PREFIX : ""}${safeName(file.name)}` : null };
     });
     setUploads((prev) => [
       ...prev,
@@ -129,7 +157,7 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
             ok = false;
           }
         }
-        if (!ok) setMessages((m) => [...m, format(t.fileFailed, { name: q.file.name })]);
+        if (!ok) setMessages((m) => [...m, !q.path && rateLimited.current ? t.filesRateLimited : format(t.fileFailed, { name: q.file.name })]);
         setUploads((prev) => prev.map((u) => (u.key === q.key ? { ...u, state: ok ? "done" : "error" } : u)));
       }),
     );
@@ -145,10 +173,11 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
       void onFiles(h.artwork.filter((f) => !attached.has(fingerprint(f))), "artwork").then(() => onFiles(h.mockups, "mockup"));
     };
   });
-  useEffect(() => mockupHandoff.subscribe((h) => onHandoffRef.current(h)), []);
+  useEffect(() => (brief ? undefined : mockupHandoff.subscribe((h) => onHandoffRef.current(h))), [brief]);
 
   const done = uploads.filter((u) => u.state === "done" && u.path);
   const uploading = uploads.some((u) => u.state === "uploading");
+  useEffect(() => onCountChange?.(done.length), [done.length, onCountChange]);
 
   return (
     <div>
@@ -158,7 +187,7 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
       ))}
 
       <p id={hintId} className="text-fg-muted text-sm">
-        {format(t.filesHint, { max: MAX_FILES })}
+        {labels?.hint ?? format(t.filesHint, { max: MAX_FILES })}
       </p>
 
       <label
@@ -168,13 +197,13 @@ export function FileUploader({ storageEndpoint, publishableKey, t, onBusyChange 
         <svg aria-hidden="true" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.75" className="text-accent">
           <path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <span className="text-accent text-sm font-semibold">{t.filesButton}</span>
+        <span className="text-accent text-sm font-semibold">{labels?.button ?? t.filesButton}</span>
         <input
           ref={inputRef}
           id={inputId}
           type="file"
           multiple
-          accept={ACCEPT_ATTRIBUTE}
+          accept={brief ? BRIEF_ACCEPT : ACCEPT_ATTRIBUTE}
           aria-describedby={hintId}
           className="sr-only"
           onChange={(e) => void onFiles(e.target.files)}

@@ -1,6 +1,6 @@
 # MSLAB Studio (ADR-026)
 
-The print-on-demand customisation tool on `/fr/services/impression-a-la-demande#studio`.
+The customisation tool on its own page, `/fr/studio` (`/ar/studio`, `/en/studio`), as a five-step project: product, configuration, customization, preview, quote request. Customer-experience decisions: docs/STUDIO_CX_PLAN.md.
 
 ## 1. Principles
 - **No invented production data.** Product photos, printable areas, colours, sizes, materials, printing techniques and the minimum resolution are entered by MSLAB in `/admin/print-on-demand/studio/<product>`. Until a product has a configured side, the Studio shows a **placeholder** visual (one of MSLAB's vector templates, or an SVG drawing for the sticker and letterhead). It then exposes no specification and computes no print size.

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { DEFAULT_COLORS, MOCKUPS, type Design, type MockupKey } from "./mockups";
@@ -23,8 +24,8 @@ export function MockupArt({ product, className }: { product: MockupKey; classNam
   return <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[product]} label="" className={className} />;
 }
 
-/** Hero: a row of product tiles; tapping one opens that product in the studio below. */
-export function HeroMockups({ products, names, studioId, className }: { products: MockupKey[]; names: Record<MockupKey, string>; studioId: string; className?: string }) {
+/** Hero: a row of product tiles; tapping one opens that product in the Studio page. */
+export function HeroMockups({ products, names, hrefs, className }: { products: MockupKey[]; names: Record<MockupKey, string>; hrefs: Partial<Record<MockupKey, string>>; className?: string }) {
   const shown = products.slice(0, 5);
   return (
     <ul className={cn("grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-5", className)}>
@@ -33,12 +34,8 @@ export function HeroMockups({ products, names, studioId, className }: { products
         return (
           // Only three tiles fit a phone row; the rest appear from lg up.
           <li key={key} className={cn(index >= 3 && "hidden lg:block")}>
-            <button
-              type="button"
-              onClick={() => {
-                studioSelect.send(key);
-                document.getElementById(studioId)?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
+            <Link
+              href={hrefs[key] ?? "#"}
               className="group focus-visible:ring-accent block w-full overflow-hidden rounded-[var(--radius-tile)] text-start focus-visible:ring-2 focus-visible:outline-none"
               style={{ backgroundColor: tint(index) }}
             >
@@ -47,7 +44,7 @@ export function HeroMockups({ products, names, studioId, className }: { products
                 <Mockup design={PLACEHOLDER} color={DEFAULT_COLORS[key]} label="" className="w-full" />
               </span>
               <span className="text-fg block px-3 pb-3 text-sm font-semibold">{names[key]}</span>
-            </button>
+            </Link>
           </li>
         );
       })}

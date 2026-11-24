@@ -5,6 +5,8 @@ import { pick, slugFor } from "@/i18n/localize";
 import type { Tables } from "@/lib/supabase/database.types";
 import { createPublicClient } from "@/lib/supabase/public";
 import { catalogImageUrl } from "@/lib/supabase/storage";
+import { offerTypeOf, STANDARD_PRODUCT_SLUGS, type OfferType } from "@/config/catalog-offers";
+import type { CatalogSort } from "./search-params";
 import type { ProductVisualKey } from "./visual";
 
 /** Cache tags — admin mutations call updateTag() with these (Milestone 6). */
@@ -46,6 +48,8 @@ export type ProductSummary = {
   shortDescription: string | null;
   categoryId: string | null;
   isFeatured: boolean;
+  /** Available article or customizable product (config/catalog-offers.ts). */
+  offerType: OfferType;
   image: ProductImage | null;
 };
 
@@ -112,6 +116,7 @@ function toProductSummary(row: ProductSummaryRow, locale: Locale): ProductSummar
     shortDescription: pick(row, "short_description", locale),
     categoryId: row.category_id,
     isFeatured: row.is_featured,
+    offerType: offerTypeOf(row.slug_fr),
     image: first ? toImage(first, locale, name) : null,
   };
 }
@@ -167,13 +172,16 @@ export type ProductListParams = {
   /** Restrict to these categories (a parent category passes itself + its children). */
   categoryIds?: string[];
   query?: string;
+  /** Only available articles, or only customizable products. */
+  offerType?: OfferType;
+  sort?: CatalogSort;
   page?: number;
 };
 
 export type ProductListResult = { items: ProductSummary[]; total: number; page: number; pageCount: number };
 
 /** Published products with optional category filter, text search and pagination. */
-export async function listProducts({ locale, categoryIds, query, page = 1 }: ProductListParams): Promise<ProductListResult> {
+export async function listProducts({ locale, categoryIds, query, offerType, sort, page = 1 }: ProductListParams): Promise<ProductListResult> {
   "use cache";
   cacheLife("hours");
   cacheTag(CATALOG_TAG);
@@ -193,10 +201,17 @@ export async function listProducts({ locale, categoryIds, query, page = 1 }: Pro
     request = request.ilike("search_text", `%${escaped}%`);
   }
 
-  const { data, error, count } = await request
-    .order("sort_order")
-    .order("published_at", { ascending: false })
-    .range(from, from + PAGE_SIZE - 1);
+  // Offer type lives in config (French slugs), so the filter is a slug list.
+  const standard = `(${STANDARD_PRODUCT_SLUGS.map((slug) => `"${slug}"`).join(",")})`;
+  if (offerType === "standard") request = request.in("slug_fr", [...STANDARD_PRODUCT_SLUGS]);
+  if (offerType === "customizable" && STANDARD_PRODUCT_SLUGS.length > 0) request = request.not("slug_fr", "in", standard);
+
+  const nameColumn = locale === "fr" ? "name_fr" : locale === "ar" ? "name_ar" : "name_en";
+  const ordered =
+    sort === "name"
+      ? request.order(nameColumn, { ascending: true, nullsFirst: false }).order("name_fr")
+      : request.order("sort_order").order("published_at", { ascending: false });
+  const { data, error, count } = await ordered.range(from, from + PAGE_SIZE - 1);
   // PGRST103 = page beyond the last result (e.g. stale ?page= link): show an empty page, not an error.
   if (error?.code === "PGRST103") return { items: [], total: 0, page: safePage, pageCount: 1 };
   if (error) throw new Error(`[catalog] listProducts: ${error.code}`);

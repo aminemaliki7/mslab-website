@@ -12,12 +12,13 @@ import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
  */
 export const PRODUCTION_LINES = [
   // Photos: catalogue products printed with MSLAB's identity (owner request 2026-11-23).
-  { key: "print", art: "business-card", photo: "designedBusinessCards" },
-  { key: "textile", art: "tshirt", photo: "designedTshirt" },
-  { key: "merch", art: "mug", photo: "designedMug" },
-  { key: "stationery", art: "letterhead", photo: "designedLetterhead" },
-  { key: "publishing", art: "catalog", photo: "designedBrochure" },
-  { key: "packaging", art: "box", photo: "designedMailerBox" },
-] as const satisfies ReadonlyArray<{ key: string; art: MockupKey } & ({ photo: PhotoKey } | { serviceArt: string })>;
+  // `category`: French slug of the catalogue category that lists the line's products (menu links).
+  { key: "print", art: "business-card", photo: "designedBusinessCards", category: "impression-reprographie" },
+  { key: "textile", art: "tshirt", photo: "designedTshirt", category: "vetements-produits-personnalises" },
+  { key: "merch", art: "mug", photo: "designedMug", category: "objets-promotionnels" },
+  { key: "stationery", art: "letterhead", photo: "designedLetterhead", category: "papeterie-fournitures-de-bureau" },
+  { key: "publishing", art: "catalog", photo: "designedBrochure", category: "livres-brochures-imprimes" },
+  { key: "packaging", art: "box", photo: "designedMailerBox", category: "packaging" },
+] as const satisfies ReadonlyArray<{ key: string; art: MockupKey; category: string } & ({ photo: PhotoKey } | { serviceArt: string })>;
 
 export type ProductionLineKey = (typeof PRODUCTION_LINES)[number]["key"];

@@ -5,6 +5,7 @@ import { getSiteSettings } from "@/features/settings/queries";
 import { defaultLocale, localeMeta, type Locale } from "@/i18n/config";
 import { localizedPath, type RouteKey } from "@/i18n/routes";
 import { siteUrl } from "@/lib/env";
+import { STUDIO_ENABLED } from "@/config/features";
 
 /**
  * sitemap.xml: every indexable public page in every ENABLED locale, with hreflang alternates.
@@ -37,6 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: "contact" },
     { route: "quote" },
     { route: "track" },
+    ...(STUDIO_ENABLED ? [{ route: "studio" } as const] : []),
   ];
   // Legal documents stay out of the sitemap while they are drafts (noindex until validated).
   for (const doc of orderedLegalDocuments) {

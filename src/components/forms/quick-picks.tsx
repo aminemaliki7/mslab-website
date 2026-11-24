@@ -26,6 +26,8 @@ export function fillField(id: string, value: string) {
   Object.getOwnPropertyDescriptor(proto, "value")?.set?.call(el, value);
   el.dispatchEvent(new Event("input", { bubbles: true }));
   el.dispatchEvent(new Event("change", { bubbles: true }));
+  // Filled from elsewhere (not typed in): close any suggestion list the change opened.
+  if (document.activeElement !== el) el.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
 }
 
 /**

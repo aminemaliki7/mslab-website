@@ -1075,6 +1075,10 @@ export type Database = {
         Args: { error_message: string | null; kind: string; reference: string; submission_key: string }
         Returns: undefined
       }
+      submit_brief_request: {
+        Args: { payload: Json; submission_key: string }
+        Returns: string
+      }
       submit_contact_inquiry: {
         Args: { payload: Json; submission_key: string }
         Returns: string

@@ -60,6 +60,10 @@ Nothing below may be invented. Each item is needed from MSLAB:
 | Admin users (who manages the catalog and inquiries) | Admin accounts | Medium |
 | Data retention period for inquiries | Security/privacy | Medium |
 | Studio: photos of MSLAB products per printable side, print areas (px + mm), colours, sizes, materials, printing techniques, minimum DPI (docs/STUDIO.md §4) | Studio editor (placeholder visuals until then) | High |
+| Opening hours confirmation: settings currently say « Ouvert 24 h/24 » (docs/CX_AUDIT_AND_PLAN.md §5) | Contact, About | High |
+| Confirmation that MSLAB designed and built mslab.ma (shown as the digital division's one project), and real client projects with permission | Digital Solutions page | High |
+| Stocked or sourced supply articles (office, school, books) to publish as « Produit disponible » | Catalogue & fournitures | Medium |
+| Hosting policy for client websites (MSLAB-hosted or client account) | Digital Solutions scope section | Medium |
 
 ## 7. Success criteria
 - Visitors can reach a contact or quote action from any page in ≤ 1 click.

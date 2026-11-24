@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
  *   printed sheet, packed box, delivery truck.
  * - "web" — How a web project works (5): idea bulb, quote lines, design artboard, code being
  *   typed, rocket launch.
+ * - "home" — How to work with MSLAB (6, every division): request sent, product picked from a
+ *   grid, request reviewed (magnifier), quote written, approval tick, delivery truck.
  *
  * - CSS only (no JavaScript, no dependency): every animation of a journey shares one 15 s cycle,
  *   so all parts stay in sync; keyframes are generated below from one timing table, scoped per
@@ -22,7 +24,7 @@ import { cn } from "@/lib/utils";
  */
 
 type Step = { title: string; body: string };
-type Variant = "production" | "web";
+type Variant = "production" | "web" | "home";
 
 const CYCLE_S = 15;
 const START = 2; // % of the cycle: dot appears at stage 1
@@ -102,6 +104,26 @@ const FX: Record<Variant, Fx[][]> = {
     [
       { cls: "jr-fx-w4", rest: ty(0), frames: [[0, ty(3)], [0.3, ty(-2.5)], [0.45, ty(0)], [0.6, ty(-1)], [0.75, ty(0)]] },
       { cls: "jr-fx-w4b", rest: "opacity:1", frames: [[0, "opacity:0"], [0.1, "opacity:1"], [0.2, "opacity:0.35"], [0.3, "opacity:1"], [0.4, "opacity:0.35"], [0.5, "opacity:1"]] },
+    ],
+  ],
+  home: [
+    // 1. You share your need: the request lifts twice, as if sent.
+    [{ cls: "jr-fx-h0", rest: ty(0), frames: [[0, ty(0)], [0.18, ty(-3)], [0.36, ty(0)], [0.54, ty(-3)], [0.72, ty(0)]] }],
+    // 2. You choose: one tile of the grid is picked (it pops, the pointer taps it).
+    [
+      { cls: "jr-fx-h1", rest: scale(1), frames: [[0, scale(1)], [0.3, scale(1)], [0.42, scale(1.18)], [0.55, scale(1)]] },
+      { cls: "jr-fx-h1b", rest: "transform:translate(0,0)", frames: [[0, "transform:translate(-5px,-4px)"], [0.3, "transform:translate(0,0)"], [0.38, "transform:translate(0.5px,0.5px)"], [0.46, "transform:translate(0,0)"]] },
+    ],
+    // 3. We review: the magnifier sweeps the request.
+    [{ cls: "jr-fx-h2", rest: tx(0), frames: [[0, tx(-3)], [0.25, tx(3)], [0.5, tx(-3)], [0.75, tx(0)]] }],
+    // 4. You receive your quote: its lines are written.
+    quoteLines("jr-fx-h3"),
+    // 5. You approve: the tick is drawn.
+    [{ cls: "jr-fx-h4", rest: "stroke-dashoffset:0", frames: [[0, "stroke-dashoffset:1"], [0.12, "stroke-dashoffset:1"], [0.45, "stroke-dashoffset:0"]] }],
+    // 6. We produce and deliver: the truck drives in and idles.
+    [
+      { cls: "jr-fx-h5", rest: tx(0), frames: [[0, tx(-6)], [0.3, tx(0)], [0.38, ty(-1)], [0.46, ty(0)], [0.54, ty(-1)], [0.62, ty(0)]] },
+      { cls: "jr-fx-h5b", rest: "opacity:0", frames: [[0, "opacity:1"], [0.3, "opacity:1"], [0.45, "opacity:0"]] },
     ],
   ],
 };
@@ -230,7 +252,7 @@ function buildCss(variant: Variant) {
   return css.join("");
 }
 
-const JOURNEY_CSS: Record<Variant, string> = { production: buildCss("production"), web: buildCss("web") };
+const JOURNEY_CSS: Record<Variant, string> = { production: buildCss("production"), web: buildCss("web"), home: buildCss("home") };
 
 const svgProps = {
   viewBox: "0 0 24 24",
@@ -334,10 +356,57 @@ const ICONS: Record<Variant, ReactNode[]> = {
       </g>
     </g>,
   ],
+  home: [
+    // You share your need: a request being sent.
+    <g key="send" className="jr-fx jr-fx-h0">
+      <path d="M7 3h7l4 4v14H7z" />
+      <path d="M14 3v4h4M10 12h5M10 15.5h5" />
+    </g>,
+    // You choose a product or service: a grid with one tile picked, and a pointer.
+    <g key="choose">
+      <rect x="3" y="3" width="7.5" height="7.5" rx="1.4" />
+      <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.4" />
+      <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.4" />
+      <rect className="jr-fx jr-fx-h1" x="13.5" y="13.5" width="7.5" height="7.5" rx="1.4" fill="currentColor" fillOpacity="0.25" />
+      <g className="jr-fx jr-fx-h1b">
+        <path d="M16.5 16.5l5 2-2.1.9-.9 2.1z" fill="currentColor" />
+      </g>
+    </g>,
+    // We review your request: a magnifier over the lines.
+    <g key="review">
+      <path d="M4 5h11M4 9h8M4 13h6" />
+      <g className="jr-fx jr-fx-h2">
+        <circle cx="15" cy="14" r="4.2" />
+        <path d="M18.1 17.1 21 20" />
+      </g>
+    </g>,
+    // You receive your quote: a quote being written.
+    <g key="quote">
+      <path d="M6 3h12v18l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3z" />
+      <path className="jr-fx jr-line jr-fx-h3a" d="M9 8h6" />
+      <path className="jr-fx jr-line jr-fx-h3b" d="M9 11.5h6" />
+      <path className="jr-fx jr-line jr-fx-h3c" d="M9 15h4" />
+    </g>,
+    // You approve the project: tick in a circle.
+    <g key="approve">
+      <circle cx="12" cy="12" r="8.5" />
+      <path className="jr-fx jr-dash jr-fx-h4" pathLength={1} d="M8.2 12.3l2.6 2.6 5-5.4" />
+    </g>,
+    // We produce and deliver: truck (mirrored in Arabic).
+    <g key="deliver">
+      <path className="jr-fx jr-fx-h5b" d="M.8 10h1.6M.4 13h1.6" />
+      <g className="jr-fx jr-fx-h5">
+        <path d="M3.5 7h10.5v9H3.5z" />
+        <path d="M14 10h3.5l3 3v3H14z" />
+        <circle cx="7.5" cy="17.5" r="1.8" />
+        <circle cx="17" cy="17.5" r="1.8" />
+      </g>
+    </g>,
+  ],
 };
 
 /** The last stage's drawing is mirrored in Arabic when it has a direction (the truck). */
-const MIRROR_LAST: Record<Variant, boolean> = { production: true, web: false };
+const MIRROR_LAST: Record<Variant, boolean> = { production: true, web: false, home: true };
 /** Dark navy band behind every project journey (home, production page, Digital Solutions). */
 export const JOURNEY_BG = "#0E1A2B";
 

@@ -22,6 +22,8 @@ import designedMailerBox from "../../public/catalog/mockups/packaging/mailer-box
 import designedBrochure from "../../public/catalog/mockups/printed-materials/brochures-catalogs/brochures-catalogs-cover-cutout-square.webp";
 import designedBusinessCards from "../../public/catalog/mockups/printing/business-cards/business-cards-front-back-cutout-square.webp";
 import designedLetterhead from "../../public/catalog/mockups/stationery/letterhead/letterhead-a4-cutout-square.webp";
+// Catalogue photo of the "Fournitures de bureau" product (Catalogue & fournitures division card).
+import officeSupplies from "../../public/catalog/products/office-supplies.webp";
 
 /**
  * Product and production photos supplied by the owner (2026-11-19). Every image carries the
@@ -63,6 +65,7 @@ export const PHOTOS = {
   designedLetterhead,
   designedBrochure,
   designedMailerBox,
+  officeSupplies,
 } satisfies Record<string, StaticImageData>;
 
 export type PhotoKey = keyof typeof PHOTOS;

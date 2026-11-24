@@ -3,18 +3,19 @@ import { CookieSettingsButton } from "@/components/consent/cookie-settings-butto
 import { Container } from "@/components/ui/layout";
 import { orderedLegalDocuments } from "@/content/legal";
 import { MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/icons";
-import { DIGITAL_SOLUTIONS_SLUG } from "@/components/illustrations/service-art";
-import { PRODUCTION_LINES } from "@/config/production-lines";
-import { listServices } from "@/features/services/queries";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, quoteFormHref } from "@/i18n/routes";
+import { formatPhone, telHref } from "@/lib/phone";
+import { buildNavigation } from "./navigation";
 import { Wordmark } from "./wordmark";
 
 export async function Footer() {
   const locale = await getLocale();
-  const [dict, settings, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
-  const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
+  const dict = await getDictionary(locale);
+  const [settings, { items }] = await Promise.all([getSiteSettings(), buildNavigation(locale, dict)]);
+  const production = items.find((item) => item.key === "production");
+  const digital = items.find((item) => item.key === "digital");
 
   const address = settings.address[locale] ?? settings.address.fr ?? null;
   const hasContact = Boolean(settings.email || settings.phone || address);
@@ -22,6 +23,7 @@ export async function Footer() {
   const navLinks = [
     { href: localizedPath(locale, { route: "services" }), label: dict.nav.services },
     { href: localizedPath(locale, { route: "catalog" }), label: dict.nav.catalog },
+    ...(digital ? [{ href: digital.href, label: dict.cx.menu.digital }] : []),
     { href: localizedPath(locale, { route: "about" }), label: dict.nav.about },
     { href: localizedPath(locale, { route: "contact" }), label: dict.nav.contact },
     { href: quoteFormHref(locale), label: dict.common.requestQuote },
@@ -50,19 +52,26 @@ export async function Footer() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">{dict.footer.about}</p>
         </div>
 
-        {/* MSLAB's core services — docs/POSITIONING.md. */}
+        {/* Production sur mesure: the six lines, each to its catalogue category (docs/POSITIONING.md). */}
         <div className="lg:col-span-2">
-          <h2 className={headingClass}>{dict.footer.production}</h2>
-          <ul className="mt-4 space-y-2.5 text-sm text-white/85">
-            {PRODUCTION_LINES.map((line) => (
-              <li key={line.key}>{dict.productionLines[line.key].name}</li>
+          <h2 className={headingClass}>
+            {production ? (
+              <Link href={production.href} className="underline-offset-4 hover:underline">
+                {dict.footer.production}
+              </Link>
+            ) : (
+              dict.footer.production
+            )}
+          </h2>
+          <ul className="mt-2 grid grid-cols-2 gap-x-4 text-sm sm:block">
+            {(production?.children ?? []).map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={linkClass}>
+                  {link.label}
+                </Link>
+              </li>
             ))}
           </ul>
-          {digital ? (
-            <Link href={localizedPath(locale, { route: "service", slug: digital.slug })} className={`${linkClass} mt-3 font-semibold text-white`}>
-              {dict.digital.title}
-            </Link>
-          ) : null}
         </div>
 
         <div className="lg:col-span-2">
@@ -103,8 +112,8 @@ export async function Footer() {
               {settings.phone ? (
                 <li className="flex items-start gap-2.5">
                   <PhoneIcon width={18} height={18} className="mt-0.5 shrink-0 text-white/60" />
-                  <a href={`tel:${settings.phone.replace(/\s+/g, "")}`} className={linkClass}>
-                    <bdi dir="ltr">{settings.phone}</bdi>
+                  <a href={telHref(settings.phone)} className={linkClass}>
+                    <bdi dir="ltr" className="whitespace-nowrap">{formatPhone(settings.phone)}</bdi>
                   </a>
                 </li>
               ) : null}

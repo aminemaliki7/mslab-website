@@ -22,6 +22,9 @@ type Props = {
   children?: React.ReactNode;
 };
 
+const rowClass =
+  "active:bg-surface -mx-2 flex min-h-14 w-[calc(100%+1rem)] items-center justify-between gap-4 rounded-[var(--radius-control)] px-2 text-start text-lg font-medium transition-colors";
+
 const toggleClass =
   "text-fg hover:bg-surface active:bg-surface-strong inline-flex size-11 items-center justify-center rounded-[var(--radius-control)] transition-colors";
 
@@ -69,7 +72,7 @@ export function MobileNav({ items, cta, labels, secondary = [], contact, childre
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";
     root.dataset.menuOpen = "";
-    panelRef.current?.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
+    panelRef.current?.querySelector<HTMLElement>("a, button")?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener("keydown", onKey);
       desktop.removeEventListener("change", onDesktop);
@@ -110,18 +113,19 @@ export function MobileNav({ items, cta, labels, secondary = [], contact, childre
         >
           <ul className="flex flex-col">
             {items.map((item, index) => (
-              <li key={item.section} className="anim-sheet-item border-line border-b" style={{ "--i": index } as React.CSSProperties}>
-                <Link
-                  href={item.href}
-                  aria-current={active === item.section ? "page" : undefined}
-                  className={cn(
-                    "active:bg-surface -mx-2 flex min-h-14 items-center justify-between gap-4 rounded-[var(--radius-control)] px-2 text-lg font-medium transition-colors",
-                    active === item.section ? "text-accent" : "text-fg",
-                  )}
-                >
-                  {item.label}
-                  <ChevronIcon width={18} height={18} aria-hidden="true" className="text-fg-subtle shrink-0 rtl:-scale-x-100" />
-                </Link>
+              <li key={item.key} className="anim-sheet-item border-line border-b" style={{ "--i": index } as React.CSSProperties}>
+                {item.children?.length ? (
+                  <MobileGroup item={item} isActive={active === item.key} />
+                ) : (
+                  <Link
+                    href={item.href}
+                    aria-current={active === item.key ? "page" : undefined}
+                    className={cn(rowClass, active === item.key ? "text-accent" : "text-fg")}
+                  >
+                    {item.label}
+                    <ChevronIcon width={18} height={18} aria-hidden="true" className="text-fg-subtle shrink-0 rtl:-scale-x-100" />
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -163,5 +167,44 @@ export function MobileNav({ items, cta, labels, secondary = [], contact, childre
         </nav>
       </div>
     </div>
+  );
+}
+
+/**
+ * A division in the mobile menu: one tap opens its links (accordion), so the whole menu stays
+ * one short list. The division of the current page starts open.
+ */
+function MobileGroup({ item, isActive }: { item: NavItem; isActive: boolean }) {
+  const [open, setOpen] = useState(isActive);
+  const listId = useId();
+  const links = [...(item.overview ? [item.overview] : []), ...(item.children ?? []), ...(item.extra ? [item.extra] : [])];
+  return (
+    <>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen((value) => !value)}
+        className={cn(rowClass, isActive ? "text-accent" : "text-fg")}
+      >
+        {item.label}
+        <ChevronIcon width={18} height={18} aria-hidden="true" className={cn("text-fg-subtle shrink-0 rotate-90 transition-transform duration-200", open && "-rotate-90")} />
+      </button>
+      <ul id={listId} hidden={!open} className="pb-3">
+        {links.map((link, index) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className={cn(
+                "active:bg-surface flex min-h-11 items-center rounded-[var(--radius-control)] ps-3 pe-2 text-base",
+                index === 0 && item.overview ? "text-fg font-semibold" : "text-fg-muted",
+              )}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

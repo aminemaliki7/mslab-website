@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { lang } from "next/root-params";
 import { ProductActionBar } from "@/components/catalog/product-action-bar";
-import { ProductCard } from "@/components/catalog/product-card";
+import { OfferBadge } from "@/components/catalog/offer-badge";
+import { ProductCard, productCardLabels } from "@/components/catalog/product-card";
 import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductArt } from "@/components/illustrations/product-art";
+import { PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
+import { STUDIO_SUPPORT_BY_PRODUCT } from "@/config/catalog-offers";
+import { specTemplateFor } from "@/config/product-spec-templates";
+import { listMockupProducts } from "@/features/print-on-demand/queries";
+import { listServices } from "@/features/services/queries";
 import { resolveVisualKey } from "@/features/catalog/visual";
 import { JsonLd } from "@/components/content/json-ld";
 import { RichText } from "@/components/content/rich-text";
@@ -17,9 +23,10 @@ import { getProductBySlug, listProducts, listRelatedProducts, type ProductDetail
 import { hasLocale, locales, type Locale } from "@/i18n/config";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
-import { localizedPath, type RouteKey, quoteFormHref } from "@/i18n/routes";
+import { localizedPath, type RouteKey, quoteFormHref, studioHref } from "@/i18n/routes";
 import { siteUrl } from "@/lib/env";
 import { buildPageMetadata } from "@/lib/seo";
+import { STUDIO_ENABLED } from "@/config/features";
 
 const NO_PRODUCT = "__none__";
 
@@ -64,10 +71,21 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/products/[
 
 export default async function ProductPage({ params }: PageProps<"/[lang]/products/[product]">) {
   const { locale, product } = await load(params);
-  const [dict, related] = await Promise.all([
+  const [dict, related, mockups, services] = await Promise.all([
     getDictionary(locale),
     listRelatedProducts(locale, product.id, product.categoryId),
+    listMockupProducts(),
+    listServices(locale),
   ]);
+  const o = dict.cx.offer;
+  const production = services.find((s) => s.slugs.fr === PRINT_ON_DEMAND_SLUG);
+  const productionHref = production ? localizedPath(locale, { route: "service", slug: production.slug }) : null;
+  // Studio link only when this product's support is active in the studio (admin → Studio).
+  const support = STUDIO_SUPPORT_BY_PRODUCT[product.slugFr];
+  const studioLink = STUDIO_ENABLED && support && mockups.includes(support) ? studioHref(locale, support) : null;
+  // "What you specify" list for this kind of product (config/product-spec-templates.ts).
+  const template = specTemplateFor(product.slugFr, product.category?.slugs.fr);
+  const specItems = template ? dict.cx.specs[template] : [];
 
   const quoteHref = quoteFormHref(locale, product.id);
   const productUrl = `${siteUrl}${localizedPath(locale, { route: "product", slug: product.slug })}`;
@@ -111,7 +129,10 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
             />
 
             <div>
-              {product.category ? <p className="text-accent text-sm font-medium">{product.category.name}</p> : null}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <OfferBadge type={product.offerType} labels={o} />
+                {product.category ? <p className="text-accent text-sm font-medium">{product.category.name}</p> : null}
+              </div>
               <Heading as="h1" size="xl" className="mt-2">
                 {product.name}
               </Heading>
@@ -147,8 +168,34 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
                   quoteHref={quoteFormHref(locale)}
                   labels={{ add: dict.quotePage.addToQuote, added: dict.quotePage.addedToQuote, view: dict.quotePage.viewQuote }}
                 />
-                <p className="text-fg-muted text-sm">{dict.product.quoteHint}</p>
+                <p className="text-fg-muted text-sm">{product.offerType === "standard" ? o.standardNote : dict.product.quoteHint}</p>
+                {studioLink ? (
+                  <div className="bg-accent-soft flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[var(--radius-card)] px-4 py-3">
+                    <p className="text-fg text-sm">{dict.cx.product.studioHint}</p>
+                    <ArrowLink href={studioLink}>{dict.cx.product.studioCta}</ArrowLink>
+                  </div>
+                ) : null}
               </div>
+
+              {specItems.length > 0 ? (
+                <div className="mt-10">
+                  <h2 className="type-display text-fg text-xl">{dict.cx.product.specsTitle}</h2>
+                  <dl className="border-fg mt-4 border-t-2">
+                    {specItems.map((spec) => (
+                      <div key={spec.label} className="border-line grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 border-b py-3 text-sm">
+                        <dt className="text-fg font-medium">{spec.label}</dt>
+                        <dd className="text-fg-muted">{spec.hint}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="text-fg-muted mt-3 text-sm">{dict.cx.product.specsNote}</p>
+                  {productionHref && product.offerType !== "standard" ? (
+                    <ArrowLink href={`${productionHref}#demande`} className="mt-4">
+                      {dict.cx.product.customLink}
+                    </ArrowLink>
+                  ) : null}
+                </div>
+              ) : null}
 
               {product.specifications.length > 0 ? (
                 <div className="mt-10">
@@ -192,7 +239,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/product
                   <ProductCard
                     product={item}
                     href={localizedPath(locale, { route: "product", slug: item.slug })}
-                    labels={{ sku: dict.product.sku, noImage: dict.product.noImage, moq: dict.product.moqShort }}
+                    labels={productCardLabels(dict)}
                   />
                 </li>
               ))}

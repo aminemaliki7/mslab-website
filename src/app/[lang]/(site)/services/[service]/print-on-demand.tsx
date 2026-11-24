@@ -1,22 +1,27 @@
 import { ProductionIndex } from "@/components/catalog/production-index";
 import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
+import { BriefOrForm } from "@/components/forms/brief-or-form";
+import { briefProps, requestFlow } from "@/components/forms/request-flow";
 import { CustomRequestForm } from "@/components/print-on-demand/custom-request-form";
-import { StudioEditor } from "@/components/print-on-demand/studio/studio-editor";
 import { HeroMockups } from "@/components/print-on-demand/pod-showcase";
 import { PortfolioGallery } from "@/components/print-on-demand/portfolio-gallery";
 import { ButtonLink, buttonClasses } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ChevronIcon } from "@/components/ui/icons";
 import { Container, Eyebrow, Heading, Lead, Section } from "@/components/ui/layout";
-import { getStudioConfig, listMockupProducts, listPortfolio, listProductionOptions } from "@/features/print-on-demand/queries";
+import { listMockupProducts, listPortfolio, listProductionOptions } from "@/features/print-on-demand/queries";
 import type { ServiceDetail } from "@/features/services/queries";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { localizedPath } from "@/i18n/routes";
+import { localizedPath, studioHref } from "@/i18n/routes";
 import { publicEnv } from "@/lib/env";
+import { STUDIO_ENABLED } from "@/config/features";
 
 const FORM_ID = "demande";
 const STUDIO_ID = "studio";
+/** Dictionary entries about the Studio (printOnDemand.heroPoints / faq), hidden while it is off. */
+const STUDIO_HERO_POINT = 1;
+const STUDIO_FAQ = [3, 5];
 // In-page jumps use plain <a href="#…"> (native, works before hydration); page links use ButtonLink.
 
 /**
@@ -29,11 +34,14 @@ const STUDIO_ID = "studio";
  * statistics, reviews or delivery promises (CLAUDE.md §1).
  */
 export async function PrintOnDemandPage({ locale, dict, service }: { locale: Locale; dict: Dictionary; service: ServiceDetail }) {
-  const [options, portfolio, mockups, studioConfig] = await Promise.all([listProductionOptions(locale), listPortfolio(locale), listMockupProducts(), getStudioConfig(locale)]);
+  const [options, portfolio, mockups, flow] = await Promise.all([listProductionOptions(locale), listPortfolio(locale), listMockupProducts(), requestFlow(locale, dict)]);
   const t = dict.printOnDemand;
   const trackingHref = localizedPath(locale, { route: "track" });
   const pagePath = localizedPath(locale, { route: "service", slug: service.slug });
-  const hasStudio = mockups.length > 0;
+  const hasStudio = STUDIO_ENABLED && mockups.length > 0;
+  // Studio off: its hero point ("preview of your design") and its two FAQ answers are hidden too.
+  const heroPoints = hasStudio ? t.heroPoints : t.heroPoints.filter((_, i) => i !== STUDIO_HERO_POINT);
+  const faq = hasStudio ? t.faq : t.faq.filter((_, i) => !STUDIO_FAQ.includes(i));
 
   return (
     <>
@@ -55,7 +63,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
             </Heading>
             <Lead className="mt-5 max-w-2xl">{service.description ?? t.heroLead}</Lead>
             <ul className="text-fg mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
-              {t.heroPoints.map((point) => (
+              {heroPoints.map((point) => (
                 <li key={point} className="inline-flex items-center gap-2">
                   <CheckIcon />
                   {point}
@@ -67,7 +75,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
                 {t.startCta}
               </a>
               {hasStudio ? (
-                <a href={`#${STUDIO_ID}`} className={buttonClasses("secondary", "lg")}>
+                <a href={studioHref(locale)} className={buttonClasses("secondary", "lg")}>
                   {t.designCta}
                 </a>
               ) : (
@@ -81,7 +89,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
               {dict.sections.bulkNote}
             </p>
           </div>
-          {hasStudio ? <HeroMockups products={mockups} names={t.studio.products} studioId={STUDIO_ID} className="mt-12 lg:mt-16" /> : null}
+          {hasStudio ? <HeroMockups products={mockups} names={t.studio.products} hrefs={Object.fromEntries(mockups.map((key) => [key, studioHref(locale, key)]))} className="mt-12 lg:mt-16" /> : null}
         </Container>
       </div>
 
@@ -107,10 +115,26 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
       {hasStudio ? (
         <Section id={STUDIO_ID} aria-labelledby="pod-studio-heading" className="scroll-mt-20">
           <Container>
-            <SectionIntro id="pod-studio-heading" title={t.studio.title} lead={t.studio.lead} />
-            <div className="bg-surface border-line mt-10 rounded-2xl border p-4 sm:p-6 lg:p-8">
-              <StudioEditor products={mockups} config={studioConfig} t={t.studio} formId={FORM_ID} />
-            </div>
+            <SectionIntro id="pod-studio-heading" title={dict.cx.studio.title} lead={dict.cx.studio.lead} />
+            {/* What the studio does, in four steps, and what the preview is (and is not). */}
+            <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {dict.cx.studio.steps.map((step, index) => (
+                <li key={step} className="border-line flex items-start gap-3 rounded-[var(--radius-card)] border p-4">
+                  <span aria-hidden="true" className="bg-primary text-on-primary grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold">
+                    {index + 1}
+                  </span>
+                  <span className="text-fg text-sm leading-snug font-medium">{step}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="text-fg-muted mt-4 flex max-w-3xl items-start gap-2 text-sm">
+              <span aria-hidden="true" className="bg-accent mt-1.5 size-2 shrink-0 rounded-full" />
+              {dict.cx.studio.note}
+            </p>
+            {/* The editor itself lives on its own page (/studio), as a five-step project. */}
+            <ButtonLink href={studioHref(locale)} size="lg" className="mt-8">
+              {dict.cx.studioFlow.open}
+            </ButtonLink>
           </Container>
         </Section>
       ) : null}
@@ -132,7 +156,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
         <Container className="max-w-3xl">
           <SectionIntro id="pod-faq-heading" title={t.faqTitle} />
           <div className="border-line bg-bg mt-10 divide-y divide-[var(--color-line)] rounded-[var(--radius-card)] border">
-            {t.faq.map((item) => (
+            {faq.map((item) => (
               <details key={item.q} className="group px-5 sm:px-6">
                 <summary className="text-fg flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-semibold [&::-webkit-details-marker]:hidden">
                   {item.q}
@@ -150,6 +174,7 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
         <Container className="max-w-3xl">
           <SectionIntro id="pod-form-heading" title={t.formTitle} lead={t.formLead} />
           <div className="border-line mt-10 rounded-2xl border p-5 sm:p-8">
+            <BriefOrForm {...briefProps(locale, dict, "custom", pagePath, flow)}>
             <CustomRequestForm
               locale={locale}
               sourcePath={pagePath}
@@ -159,8 +184,10 @@ export async function PrintOnDemandPage({ locale, dict, service }: { locale: Loc
               publishableKey={publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
               materials={options.filter((o) => o.kind === "material")}
               finishings={options.filter((o) => o.kind === "finishing")}
+              flow={flow}
               t={{ forms: dict.forms, pod: t }}
             />
+            </BriefOrForm>
           </div>
         </Container>
       </Section>

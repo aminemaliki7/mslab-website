@@ -40,7 +40,7 @@
     "tracking": "Order tracking",
     "legalInfo": "Legal & information",
     "cookieSettings": "Manage cookies",
-    "production": "Our services"
+    "production": "Custom production"
   },
   "whatsapp": {
     "label": "Contact MSLAB on WhatsApp",
@@ -204,7 +204,8 @@
       "invalid_date": "Invalid date (today or later).",
       "invalid_option": "A selected option is no longer available. Reload the page and try again.",
       "below_moq": "Quantity below this product's minimum order.",
-      "invalid_url": "Invalid website address (e.g. https://example.com)."
+      "invalid_url": "Invalid website address (e.g. https://example.com).",
+      "brief_missing": "Add your requirements file to send the request."
     },
     "quickPick": "Quick pick",
     "choose": "Choose…",
@@ -284,7 +285,7 @@
     },
     "services": {
       "title": "Services",
-      "description": "Printing and reprographics, custom apparel and personalized products, corporate merchandise, stationery and office supplies, books and printed materials, packaging, and a digital division: MSLAB's services, quoted per project."
+      "description": "Custom production, a supplies catalogue and digital solutions: MSLAB's three activities for businesses, institutions, brands and creators, quoted per project."
     },
     "catalog": {
       "title": "Catalog",
@@ -410,6 +411,7 @@
     "fileType": "{name}: format not accepted.",
     "fileTooMany": "{max} files maximum.",
     "fileFailed": "{name} could not be uploaded. Try again.",
+    "filesRateLimited": "Too many file uploads from your connection. Try again later, or write to us.",
     "filesNoJs": "Adding files requires JavaScript. You can also send them to us once you have your reference.",
     "filesPending": "Please wait until your files have finished uploading.",
     "contactSection": "Your contact details",
@@ -712,7 +714,7 @@
         "body": "Web tools built around your processes."
       },
       {
-        "title": "Business management platforms",
+        "title": "ERP & management platforms",
         "body": "Quotes, orders, customers or stock: your data brought together in one tool."
       },
       {
@@ -829,6 +831,648 @@
     "designedMug": "White mug printed with the MSLAB logo and its promise",
     "designedLetterhead": "MSLAB A4 letterhead with a sample letter",
     "designedBrochure": "Stapled brochures: MSLAB production catalogue cover",
-    "designedMailerBox": "Kraft mailer box printed in one colour with the MSLAB logo"
+    "designedMailerBox": "Kraft mailer box printed in one colour with the MSLAB logo",
+    "officeSupplies": "Office supplies: notebook, pen and paper clips"
+  },
+  "cx": {
+    "menu": {
+      "production": "Production",
+      "productionOverview": "Custom production",
+      "productionOverviewHint": "Your products made in your brand identity, in quantity.",
+      "lines": {
+        "print": "Printing & reprographics",
+        "textile": "Textile & apparel",
+        "merch": "Promotional products",
+        "stationery": "Custom stationery",
+        "publishing": "Books & printed matter",
+        "packaging": "Packaging"
+      },
+      "studio": "Preview studio",
+      "studioHint": "Try your logo on our products.",
+      "catalog": "Catalogue",
+      "catalogAll": "All products",
+      "catalogAllHint": "Available and customizable products.",
+      "officeSupplies": "Office supplies",
+      "schoolSupplies": "Stationery & school supplies",
+      "books": "Books",
+      "customizable": "Customizable products",
+      "digital": "Digital solutions",
+      "digitalOverview": "All digital solutions",
+      "digitalOverviewHint": "Websites, e-commerce, applications and maintenance.",
+      "home": "Home"
+    },
+    "hero": {
+      "tagline": "Custom production, supplies and digital solutions",
+      "lead": "Production in your brand identity, a supplies catalogue and web solutions: MSLAB works with businesses, brands, organizations and creators, from quote request to delivery.",
+      "quote": "Request a quote",
+      "proofNote": "Indicative preview. In the studio, add your logo and prepare your quote."
+    },
+    "divisions": {
+      "title": "Three activities, one point of contact",
+      "lead": "Choose your starting point: a product made in your brand identity, supplies to order, or a digital tool to build.",
+      "examplesLabel": "Examples",
+      "production": {
+        "title": "Custom production",
+        "body": "Your products made in your brand identity, in series. Bring your own design, or we prepare it with you.",
+        "examples": [
+          "T-shirts, sweatshirts and workwear",
+          "Business cards, flyers and brochures",
+          "Mugs, tote bags and corporate kits",
+          "Boxes, bags and packaging",
+          "Books and printed matter"
+        ],
+        "cta": "Discover production",
+        "secondary": "Try the studio"
+      },
+      "catalog": {
+        "title": "Catalogue & supplies",
+        "body": "Ready-to-order articles and customizable products to equip your teams, your institutions and your events.",
+        "examples": [
+          "Office supplies",
+          "Stationery and school supplies",
+          "Books and publications",
+          "Products customizable with your logo"
+        ],
+        "cta": "Browse the catalogue"
+      },
+      "digital": {
+        "title": "Digital solutions",
+        "body": "Websites, e-commerce, applications and management platforms: we design, build and maintain your digital tools.",
+        "examples": [
+          "Corporate websites",
+          "E-commerce websites",
+          "Web applications, ERP and CRM",
+          "UI/UX design and maintenance"
+        ],
+        "cta": "Discover digital solutions"
+      }
+    },
+    "flow": {
+      "title": "How to work with MSLAB",
+      "cta": "Start a request",
+      "steps": [
+        {
+          "title": "You share your need",
+          "body": "A form, a message or a call."
+        },
+        {
+          "title": "You choose your product or service",
+          "body": "In the catalogue or with our team."
+        },
+        {
+          "title": "We review your request",
+          "body": "And get back to you if a detail is missing."
+        },
+        {
+          "title": "You receive your quote",
+          "body": "A proposal suited to your project."
+        },
+        {
+          "title": "You approve the project",
+          "body": "Nothing starts without your approval."
+        },
+        {
+          "title": "We produce and deliver",
+          "body": "Production or development, then delivery."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        {
+          "q": "Can I order a single item?",
+          "a": "Not for custom production: MSLAB produces in quantity. The minimum depends on the product and the technique; it is shown on the product page when set, otherwise confirmed in your quote."
+        },
+        {
+          "q": "I don't have a design yet. Can you help?",
+          "a": "Yes. Select \"I need help creating it\" in your production request: the artwork is prepared with you before anything is made."
+        },
+        {
+          "q": "What is the difference between the catalogue and custom production?",
+          "a": "The catalogue shows available products, ordered as they are, and products customizable with your logo. For any other product, format or finish, custom production starts from your need."
+        },
+        {
+          "q": "How do I get a price?",
+          "a": "Every request is quoted according to the product or service, the quantity and the options. You receive a proposal and nothing starts without your approval."
+        },
+        {
+          "q": "How do I track my request?",
+          "a": "After sending it, you receive a reference. Enter it on the tracking page to see how your request is progressing."
+        }
+      ]
+    },
+    "closing": {
+      "title": "Have a project in mind?",
+      "body": "Describe your need: we get back to you with a proposal. For a general question, write to us.",
+      "quote": "Request a quote",
+      "contact": "Contact us"
+    },
+    "offer": {
+      "standard": "Available product",
+      "standardHint": "Standard article, ordered as is.",
+      "customizable": "Customizable",
+      "customizableHint": "Made with your logo or design.",
+      "custom": "Custom-made",
+      "customHint": "Another product, format or finish, produced from your need.",
+      "legendLabel": "How to read the catalogue",
+      "filterLabel": "Product type",
+      "filterAll": "All products",
+      "sortLabel": "Sort",
+      "sortDefault": "MSLAB selection",
+      "sortName": "Name (A to Z)",
+      "customCardTitle": "Can't find your product?",
+      "customCardBody": "Describe the product, the quantity and your files: we review your custom production project.",
+      "customCardCta": "Request custom production",
+      "cardCta": "View product",
+      "standardNote": "Standard article: give the references and quantities in your request.",
+      "customizableNote": "Customizable product: send your logo or design, or prepare a preview in the studio."
+    },
+    "product": {
+      "studioCta": "Customize in the studio",
+      "studioHint": "Place your logo on the product to prepare your request.",
+      "specsTitle": "What you specify in your request",
+      "specsNote": "Available options (materials, finishes, techniques) and lead times are confirmed in your quote.",
+      "customLink": "Need another format or finish? Request custom production."
+    },
+    "specs": {
+      "textile": [
+        {
+          "label": "Sizes",
+          "hint": "The split by size (for example S to XXL)."
+        },
+        {
+          "label": "Garment colour",
+          "hint": "One or more garment colours."
+        },
+        {
+          "label": "Material",
+          "hint": "Cotton, polyester or a blend, depending on use."
+        },
+        {
+          "label": "Print areas",
+          "hint": "Front, back, sleeve or chest."
+        },
+        {
+          "label": "Artwork",
+          "hint": "Your logo or design, and its colours."
+        },
+        {
+          "label": "Total quantity",
+          "hint": "The number of pieces, all sizes combined."
+        }
+      ],
+      "businessCards": [
+        {
+          "label": "Format",
+          "hint": "For example 85 × 55 mm, the usual format."
+        },
+        {
+          "label": "Paper",
+          "hint": "Type and thickness you want."
+        },
+        {
+          "label": "Printing",
+          "hint": "Single or double-sided, in colour or not."
+        },
+        {
+          "label": "Finish",
+          "hint": "Matt, gloss or other, depending on the options offered."
+        },
+        {
+          "label": "Names and quantities",
+          "hint": "The number of people and cards per person."
+        }
+      ],
+      "flatPrint": [
+        {
+          "label": "Format",
+          "hint": "A6, A5, A4, A3 or exact dimensions."
+        },
+        {
+          "label": "Paper",
+          "hint": "Type and thickness you want."
+        },
+        {
+          "label": "Printing",
+          "hint": "Colour or black and white, single or double-sided."
+        },
+        {
+          "label": "Folding",
+          "hint": "For leaflets: number of panels."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of copies."
+        }
+      ],
+      "bound": [
+        {
+          "label": "Format",
+          "hint": "A5, A4 or exact dimensions."
+        },
+        {
+          "label": "Number of pages",
+          "hint": "With or without the cover, to be specified."
+        },
+        {
+          "label": "Paper",
+          "hint": "Inside pages and cover."
+        },
+        {
+          "label": "Binding",
+          "hint": "Stapled, glued or spiral, depending on the options offered."
+        },
+        {
+          "label": "Printing",
+          "hint": "Colour or black and white."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of copies."
+        }
+      ],
+      "stickers": [
+        {
+          "label": "Shape and size",
+          "hint": "Round, square, rectangle or die-cut shape."
+        },
+        {
+          "label": "Material",
+          "hint": "Paper or vinyl, for indoor or outdoor use."
+        },
+        {
+          "label": "Finish",
+          "hint": "Matt or gloss."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of stickers per design."
+        }
+      ],
+      "letterhead": [
+        {
+          "label": "Format",
+          "hint": "A4 or another format."
+        },
+        {
+          "label": "Paper",
+          "hint": "Type and thickness you want."
+        },
+        {
+          "label": "Printing",
+          "hint": "Your brand colours, single or double-sided."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of sheets."
+        }
+      ],
+      "notebooks": [
+        {
+          "label": "Format",
+          "hint": "A5, A6 or another format."
+        },
+        {
+          "label": "Pages",
+          "hint": "Number of pages and ruling (lined, squared, plain)."
+        },
+        {
+          "label": "Cover",
+          "hint": "Material, colour and logo marking."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of notebooks."
+        }
+      ],
+      "merch": [
+        {
+          "label": "Model and colour",
+          "hint": "The chosen product and its colour."
+        },
+        {
+          "label": "Marking",
+          "hint": "Position and size of the logo."
+        },
+        {
+          "label": "Logo colours",
+          "hint": "Number of colours in your artwork."
+        },
+        {
+          "label": "Contents",
+          "hint": "For a kit: the list of items."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of pieces or kits."
+        }
+      ],
+      "packaging": [
+        {
+          "label": "Dimensions",
+          "hint": "Length × width × height, or the product to pack."
+        },
+        {
+          "label": "Material",
+          "hint": "Cardboard, kraft or paper, depending on use."
+        },
+        {
+          "label": "Printing",
+          "hint": "Printed sides and colours."
+        },
+        {
+          "label": "Finish",
+          "hint": "Closure, handles or another option."
+        },
+        {
+          "label": "Quantity",
+          "hint": "The number of packages."
+        }
+      ],
+      "supplies": [
+        {
+          "label": "Items",
+          "hint": "The list of supplies you need."
+        },
+        {
+          "label": "References",
+          "hint": "Preferred brands or models, if any."
+        },
+        {
+          "label": "Quantities",
+          "hint": "The quantity per item."
+        },
+        {
+          "label": "Delivery",
+          "hint": "The place and the date you need them."
+        }
+      ]
+    },
+    "studio": {
+      "title": "Create your preview before production",
+      "lead": "The studio helps you prepare your request: you see your artwork on the product before asking for a quote.",
+      "steps": [
+        "Choose a product or medium.",
+        "Add your logo, your design or a text.",
+        "Adjust the position, size and the options offered.",
+        "Send the preview with your quote request."
+      ],
+      "note": "The digital preview is indicative and may differ from the manufactured product. Colours, formats and final result are confirmed with your quote, before any production."
+    },
+    "nextSteps": {
+      "title": "After you send your request",
+      "steps": [
+        "Your request is received.",
+        "Our team reviews your need.",
+        "We contact you if details are needed.",
+        "You receive a suitable proposal.",
+        "Work starts after your approval."
+      ]
+    },
+    "confirm": {
+      "summaryTitle": "Summary",
+      "nextTitle": "Next step",
+      "nextBody": "Our team reviews your request and contacts you if details are needed. Keep your reference to track its progress.",
+      "questions": "A question in the meantime?",
+      "contact": "Contact us",
+      "track": "Track my request",
+      "items": "Products",
+      "productType": "Product",
+      "quantity": "Quantity",
+      "projectTypes": "Project type",
+      "deadline": "Deadline",
+      "files": "Attached files",
+      "design": "Studio design",
+      "contactName": "Contact"
+    },
+    "quote": {
+      "tabCatalog": "Catalogue products",
+      "tabProduction": "Custom production",
+      "tabDigital": "Digital project",
+      "catalogLead": "Select catalogue products or describe your need, with quantities. MSLAB reviews your request and gets back to you with a quote.",
+      "productionLead": "Describe the product to make, the quantity and your files. MSLAB reviews your project and gets back to you with a quote.",
+      "productionStudio": "Want to see your logo on the product first? Prepare a preview in the studio.",
+      "studioLink": "Open the studio"
+    },
+    "digital": {
+      "problem": "The need",
+      "audience": "For whom",
+      "deliverables": "What you receive",
+      "quoteCta": "Request a quote",
+      "details": [
+        {
+          "id": "sites-web",
+          "problem": "Your customers look for you online and find no clear, up-to-date information.",
+          "audience": "Businesses, institutions, associations and freelancers.",
+          "deliverables": "A mobile-friendly website with your pages, your content and a contact form, plus a handover of the tool."
+        },
+        {
+          "id": "e-commerce",
+          "problem": "You sell by phone or on social media and want a structured sales channel.",
+          "audience": "Brands, shops and creators.",
+          "deliverables": "A shop with catalogue, orders and product management, suited to your payment and delivery methods."
+        },
+        {
+          "id": "applications",
+          "problem": "Your processes rely on files, paper or scattered messages.",
+          "audience": "Businesses and organizations with specific processes.",
+          "deliverables": "A web application built around your processes, with the access each team needs."
+        },
+        {
+          "id": "erp-crm",
+          "problem": "Customers, quotes, orders and stock are tracked in separate tools.",
+          "audience": "SMEs, workshops, distributors and institutions.",
+          "deliverables": "A management platform bringing your data together (customers, quotes, orders, stock) within the scope agreed together."
+        },
+        {
+          "id": "ui-ux",
+          "problem": "Your tool is hard to use, or you want to validate a project before building it.",
+          "audience": "Project owners, businesses and product teams.",
+          "deliverables": "User journeys and mockups validated with you before development."
+        },
+        {
+          "id": "maintenance",
+          "problem": "Your website or application must stay up to date and evolve with your business.",
+          "audience": "Any organization with a website or an application.",
+          "deliverables": "Updates, fixes and improvements, within a scope agreed together."
+        }
+      ],
+      "scopeTitle": "Development, deployment, hosting, maintenance",
+      "scopeLead": "Four separate items, specified in every quote.",
+      "scope": [
+        {
+          "title": "Development",
+          "body": "Designing and building your website or application, within the scope of the quote."
+        },
+        {
+          "title": "Deployment",
+          "body": "Publishing your project, setting up the domain name and the handover."
+        },
+        {
+          "title": "Hosting",
+          "body": "The server your project runs on. The chosen option and its cost are specified in the quote."
+        },
+        {
+          "title": "Maintenance",
+          "body": "Follow-up after launch: updates, fixes and improvements, offered according to your needs."
+        }
+      ],
+      "workTitle": "Our work",
+      "work": {
+        "name": "mslab.ma",
+        "type": "Web platform: website, catalogue and back office",
+        "body": "The website you are browsing: multilingual catalogue (French, Arabic, English), quote requests with online tracking and a management back office.",
+        "alt": "Home page of the mslab.ma website"
+      }
+    },
+    "about": {
+      "divisionsTitle": "Our three activities",
+      "audienceTitle": "Who we work with",
+      "audiences": [
+        "Businesses and shops",
+        "Institutions and administrations",
+        "Schools and training centres",
+        "Associations and organizations",
+        "Brands and creators"
+      ],
+      "approachTitle": "How we work",
+      "approach": [
+        {
+          "title": "One point of contact",
+          "body": "Production, supplies and digital projects followed by the same team."
+        },
+        {
+          "title": "A quote for every request",
+          "body": "Every project is reviewed and priced according to your need."
+        },
+        {
+          "title": "Your approval first",
+          "body": "Nothing is produced or developed without your approval."
+        },
+        {
+          "title": "Tracking with a reference",
+          "body": "Every request gets a reference to follow its progress."
+        }
+      ],
+      "workTitle": "Working with MSLAB",
+      "workBody": "Describe your need in a quote request, or write to us for any other question."
+    },
+    "contact": {
+      "chooseTitle": "How can we help?",
+      "messageTitle": "A question",
+      "messageBody": "General question, partnership, order follow-up or support: use the form below.",
+      "messageCta": "Write a message",
+      "quoteTitle": "A specific project",
+      "quoteBody": "A catalogue product, custom production or a digital project: the quote request collects the right information.",
+      "quoteCta": "Request a quote"
+    },
+    "hub": {
+      "supplyLead": "Office supplies, stationery, school supplies and books for organizations, and products customizable with your logo.",
+      "catalogCta": "Browse the catalogue"
+    },
+    "studioFlow": {
+      "metaTitle": "Customization studio",
+      "metaDescription": "Choose your product, add your logo or design and preview your project before requesting a quote from MSLAB.",
+      "eyebrow": "MSLAB Studio",
+      "title": "Bring your idea to life before production.",
+      "lead": "Choose your product, add your logo or design and preview your project before requesting a quote.",
+      "notes": [
+        "Visual customization on the products shown here.",
+        "For another product, you specify your options in the request.",
+        "Every project is checked by the MSLAB team before production.",
+        "The preview is indicative: it does not guarantee the exact result of the manufactured product."
+      ],
+      "open": "Open the studio",
+      "progressLabel": "Project steps",
+      "stepOf": "Step {n} of {total}",
+      "steps": [
+        "Product",
+        "Configuration",
+        "Customization",
+        "Preview",
+        "Quote"
+      ],
+      "done": "done",
+      "current": "current",
+      "back": "Back",
+      "next": "Continue",
+      "toQuote": "Request a quote",
+      "edit": "Edit",
+      "restart": "Start a new project",
+      "productTitle": "Choose your product",
+      "productLead": "Select a product to customize. You can change it at any time.",
+      "all": "All",
+      "categories": {
+        "textile": "Textile",
+        "merch": "Promotional products",
+        "stationery": "Stationery",
+        "print": "Printing",
+        "packaging": "Packaging"
+      },
+      "visual": "Visual customization",
+      "twoSides": "Front and back",
+      "selected": "Selected",
+      "otherTitle": "Another product?",
+      "otherBody": "Your product is not in the studio: describe it directly in your quote request.",
+      "otherCta": "Describe my product",
+      "configTitle": "Configure your product",
+      "configLead": "Give the quantity and what you already know. MSLAB confirms the available options in your quote.",
+      "quantity": "Quantity wanted",
+      "quantityHint": "Total number of pieces, all sizes and colours combined.",
+      "quantityError": "Enter a quantity (in figures) to continue.",
+      "notes2": "Your details (optional)",
+      "notesPlaceholder": "Sizes, colours, paper, finishes, deadline…",
+      "specsTitle": "To specify for this product",
+      "colorNote": "The product colour and the sides are chosen in the next step, on the preview.",
+      "customizeTitle": "Customize your design",
+      "customizeLead": "Add your logo, an image or a text, then place them on the product. This step is optional.",
+      "previewTitle": "Check your project",
+      "previewLead": "Here is your project as it will be sent to MSLAB with your request.",
+      "noDesign": "No artwork added: you can attach your files in the request.",
+      "preparing": "Preparing your project…",
+      "quoteTitle": "Request your quote",
+      "quoteLead": "Your product, quantity and details are already filled in. The preview and your files are attached: add your contact details and send.",
+      "summaryTitle": "Your project",
+      "summaryProduct": "Product",
+      "summaryCategory": "Category",
+      "summaryQuantity": "Quantity",
+      "summaryColor": "Colour",
+      "summarySides": "Customized sides",
+      "summaryElements": "Elements",
+      "summaryNotes": "Details",
+      "summaryNone": "None",
+      "summaryEmpty": "To choose",
+      "remainingTitle": "Still to do",
+      "todo": {
+        "product": "Choose a product",
+        "quantity": "Enter the quantity",
+        "design": "Add artwork (optional)",
+        "send": "Send the request"
+      },
+      "restored": "Project restored. Images are not kept after a reload: add them again ({count}).",
+      "restoredNoImages": "Project restored: you can pick up where you left off.",
+      "autoDescription": "Project prepared in the studio: {product}. Customized sides: {sides}.",
+      "autoDescriptionNoDesign": "Project prepared in the studio: {product}."
+    },
+    "brief": {
+      "title": "How would you like to send us your need?",
+      "optionFile": "I send my file",
+      "optionFileHint": "Specifications, product list or brief: your file is enough, with your contact details.",
+      "optionForm": "I fill in the form",
+      "optionFormHint": "No file? A few guided questions to describe your need.",
+      "uploadTitle": "Your file",
+      "uploadHint": "Up to 3 files of 15 MB maximum: PDF, Word, Excel, JPG or PNG.",
+      "uploadButton": "Add my file",
+      "message": "Message (optional)",
+      "messagePlaceholder": "Deadline, quantities, context or any useful detail…",
+      "contactTitle": "Your contact details",
+      "submit": "Send my request",
+      "successTitle": "Request sent",
+      "successBody": "Thank you! Your file has been received. MSLAB reviews it and gets back to you with a proposal.",
+      "successReference": "Your request reference: {reference}",
+      "newRequest": "Make a new request",
+      "noJs": "Sending a file needs JavaScript. Fill in the form or write to us."
+    }
   }
 }

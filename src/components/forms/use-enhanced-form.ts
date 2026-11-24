@@ -10,7 +10,7 @@ import { startTransition, useEffect, useRef, type FormEvent } from "react";
  *     startedAt     time the form became interactive (minimum fill-time anti-spam check)
  *     submissionId  one id per form instance → database idempotency on double submit
  */
-export function useEnhancedForm(formAction: (data: FormData) => void) {
+export function useEnhancedForm(formAction: (data: FormData) => void, onSubmitData?: (data: FormData) => void) {
   const startedAt = useRef(0);
   const submissionId = useRef("");
 
@@ -24,6 +24,8 @@ export function useEnhancedForm(formAction: (data: FormData) => void) {
     const data = new FormData(event.currentTarget);
     if (startedAt.current) data.set("startedAt", String(startedAt.current));
     if (submissionId.current) data.set("submissionId", submissionId.current);
+    // Lets the form keep what was sent (confirmation summary); the data itself is not changed.
+    onSubmitData?.(data);
     startTransition(() => formAction(data));
   }
 

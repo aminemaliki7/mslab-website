@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { LOCALE_COOKIE, hasLocale } from "@/i18n/config";
 import { negotiateLocale } from "@/i18n/negotiate";
-import { entityFromPath, localizedPath, resolveLocalizedPath, splitLocale } from "@/i18n/routes";
+import { STUDIO_ENABLED } from "@/config/features";
+import { entityFromPath, localizedPath, resolveLocalizedPath, sectionOfPath, splitLocale } from "@/i18n/routes";
 import { checkEntitySlug } from "@/lib/entity-slug-index";
 import { refreshAdminSession } from "@/lib/supabase/proxy-session";
 
@@ -49,6 +50,14 @@ export async function proxy(request: NextRequest) {
       if (verdict?.kind === "redirect") url.pathname = localizedPath(locale, { route: target.route, slug: verdict.slug });
     }
     return NextResponse.redirect(url, 308);
+  }
+
+  // Studio switched off (config/features.ts): a real 404, like an unknown page.
+  if (!STUDIO_ENABLED && sectionOfPath(pathname) === "studio") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${locale}/${NOT_FOUND_SEGMENT}`;
+    url.search = "";
+    return NextResponse.rewrite(url);
   }
 
   // Entity pages (category/product/service): real 404 / 308 before the streamed shell fixes a 200.

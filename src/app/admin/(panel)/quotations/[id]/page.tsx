@@ -47,7 +47,7 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
   const checks = await checkUploads((files ?? []).map((f) => ({ path: f.storage_path, url: viewUrl(f.storage_path) })));
   const fileLinks = (files ?? []).map((file) => ({
     ...file,
-    role: (file.role === "mockup" ? "mockup" : "artwork") as "mockup" | "artwork",
+    role: (file.role === "mockup" || file.role === "brief" ? file.role : "artwork") as "mockup" | "artwork" | "brief",
     url: signed.find((s) => s.path === file.storage_path)?.signedUrl ?? null,
     check: checks.get(file.storage_path) ?? null,
   }));
@@ -173,8 +173,10 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
 
           {design ? <StudioDesignPanel design={design} mockups={mockups} t={t} /> : null}
 
-          {details ? (
+          {/* Requests sent as a requirements file have files but no detail rows. */}
+          {details || fileLinks.length > 0 ? (
             <Panel title={format(q.files, { count: fileLinks.length })}>
+              {fileLinks.some((f) => f.role === "brief") && !details && !digital ? <p className="text-fg-muted mb-3 text-sm">{q.briefOnly}</p> : null}
               {fileLinks.length > 0 ? (
                 <ul className="divide-line divide-y text-sm">
                   {fileLinks.map((file) => (
@@ -182,7 +184,7 @@ export default async function QuotationDetailPage({ params }: PageProps<"/admin/
                       <span className="min-w-0">
                         <bdi className="block truncate font-medium">{file.original_name}</bdi>
                         <span className="text-fg-muted text-xs" dir="ltr">
-                          {file.role === "mockup" ? `${q.studio.mockup} · ` : ""}
+                          {file.role === "mockup" ? `${q.studio.mockup} · ` : file.role === "brief" ? `${q.briefFile} · ` : ""}
                           {file.mime_type ?? q.unknownType}
                           {file.size_bytes ? ` · ${format(q.megabytes, { size: (file.size_bytes / (1024 * 1024)).toFixed(1) })}` : ""}
                           {file.check?.width && file.check.height ? ` · ${format(q.studio.pixels, { w: file.check.width, h: file.check.height })}` : ""}

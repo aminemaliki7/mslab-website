@@ -2,37 +2,26 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/layout";
-import { DIGITAL_SOLUTIONS_SLUG } from "@/components/illustrations/service-art";
-import { listServices } from "@/features/services/queries";
 import { getSiteSettings } from "@/features/settings/queries";
 import { getDictionary, getLocale } from "@/i18n/dictionaries";
 import { localizedPath, quoteFormHref } from "@/i18n/routes";
 import { LanguageLinks, LanguageSwitcher } from "./language-switcher";
 import { MobileNav, MobileNavFallback } from "./mobile-nav";
-import { NavLinks, NavList, type NavItem } from "./nav-links";
+import { NavLinks, NavList } from "./nav-links";
+import { buildNavigation } from "./navigation";
 import { whatsappHref } from "./whatsapp-button";
 import { Wordmark } from "./wordmark";
 
 export async function Header() {
   const locale = await getLocale();
-  const [dict, settings, services] = await Promise.all([getDictionary(locale), getSiteSettings(), listServices(locale)]);
+  const dict = await getDictionary(locale);
+  const [settings, { items }] = await Promise.all([getSiteSettings(), buildNavigation(locale, dict)]);
   const { enabledLocales } = settings;
   // One-tap contact in the mobile menu — only numbers MSLAB has verified in site settings.
   const contact = {
     phone: settings.phone ? { href: `tel:${settings.phone.replace(/\s+/g, "")}`, label: dict.common.call } : undefined,
     whatsapp: settings.whatsappNumber ? { href: whatsappHref(settings.whatsappNumber, dict.whatsapp.prefill), label: "WhatsApp" } : undefined,
   };
-  // Digital Solutions: separate division, its own link (shown once the service is published).
-  const digital = services.find((s) => s.slugs.fr === DIGITAL_SOLUTIONS_SLUG);
-  const digitalHref = digital ? localizedPath(locale, { route: "service", slug: digital.slug }) : null;
-
-  const items: NavItem[] = [
-    { section: "services", href: localizedPath(locale, { route: "services" }), label: dict.nav.services },
-    ...(digitalHref ? [{ section: "digital", href: digitalHref, label: dict.digital.title, match: digitalHref }] : []),
-    { section: "catalog", href: localizedPath(locale, { route: "catalog" }), label: dict.nav.catalog },
-    { section: "about", href: localizedPath(locale, { route: "about" }), label: dict.nav.about },
-    { section: "contact", href: localizedPath(locale, { route: "contact" }), label: dict.nav.contact },
-  ];
   const cta = { href: quoteFormHref(locale), label: dict.common.requestQuote };
 
   return (

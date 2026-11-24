@@ -14,6 +14,8 @@ import { FONT_KEYS, OPTION_KINDS, STUDIO_FONTS, isStudioProduct, type FontKey, t
 import type { Dictionary } from "@/i18n/dictionaries";
 import { format } from "@/i18n/format";
 import { cn } from "@/lib/utils";
+import { fillField } from "@/components/forms/quick-picks";
+import type { ViewKey } from "@/features/print-on-demand/studio";
 import { MOCKUP_FILE_PREFIX, mockupHandoff } from "../mockup-handoff";
 import { DEFAULT_COLORS, MOCKUPS, canRecolor } from "../mockups";
 import { proofText } from "../proof-text";
@@ -111,22 +113,73 @@ function IconButton({ label, onClick, disabled, children }: { label: string; onC
   );
 }
 
+/** What the Studio flow shows in its project summary (studio-flow.tsx). */
+export type StudioSnapshot = {
+  product: MockupKey;
+  /** Sides the product has, in order. */
+  views: ViewKey[];
+  /** Customized sides and their elements (text or file name). */
+  layers: Array<{ view: ViewKey; kind: "text" | "image"; name: string }>;
+  colorName: string | null;
+  colorHex: string | null;
+  options: Array<{ kind: string; label: string; name: string }>;
+};
+
+/** Serializable part of a design kept across a reload (text layers only: never files). */
+export type StudioRestore = {
+  product: MockupKey;
+  colorHex: string | null;
+  options: Partial<Record<string, string>>;
+  textLayers: EditorLayer[];
+};
+
+/** Lets the Studio flow trigger the hand-off from its own "Request a quote" button. */
+export type StudioController = { submit: () => Promise<boolean>; restoreData: () => StudioRestore };
+
 /**
  * MSLAB Studio editor (ADR-026): layers (images and text) per printable side, direct
  * manipulation, undo/redo, verified product options, then "Use this design in my request"
  * hands the design spec, the ORIGINAL files and high-resolution mockups to the request form.
  * Everything stays in the browser until the visitor submits the request.
+ *
+ * Inside the Studio flow (studio-flow.tsx) the product is chosen outside (`selectedProduct`),
+ * `mode="preview"` shows every customized side read-only, and the flow's own buttons call the
+ * hand-off through `controllerRef`.
  */
-export function StudioEditor({ products, config, t, formId }: {
+export function StudioEditor({
+  products,
+  config,
+  t,
+  formId,
+  selectedProduct,
+  hideProductPicker = false,
+  mode = "edit",
+  onSnapshot,
+  controllerRef,
+  restore,
+}: {
   products: MockupKey[];
   config: Partial<Record<string, StudioProductConfig>>;
   t: T;
   formId: string;
+  selectedProduct?: MockupKey;
+  hideProductPicker?: boolean;
+  mode?: "edit" | "preview";
+  onSnapshot?: (snapshot: StudioSnapshot) => void;
+  controllerRef?: { current: StudioController | null };
+  restore?: StudioRestore | null;
 }) {
   const e = t.editor;
   const uid = useId();
-  const [product, setProduct] = useState<MockupKey>(products[0] ?? "tshirt");
-  const [state, dispatch] = useReducer(editorReducer, undefined, () => initialEditorState("front", DEFAULT_COLORS[products[0] ?? "tshirt"]));
+  const firstProduct = restore?.product ?? selectedProduct ?? products[0] ?? "tshirt";
+  const [product, setProduct] = useState<MockupKey>(firstProduct);
+  const [state, dispatch] = useReducer(editorReducer, undefined, () => {
+    const initial = initialEditorState(editorViews(firstProduct, config)[0]!.key, restore?.colorHex ?? DEFAULT_COLORS[firstProduct]);
+    if (!restore) return initial;
+    // Reload: text layers and options come back (files never left the previous page).
+    const available = new Set(editorViews(firstProduct, config).map((v) => v.key));
+    return { ...initial, doc: { ...initial.doc, options: restore.options, layers: restore.textLayers.filter((l) => l.kind === "text" && available.has(l.view)) } };
+  });
   const assets = useRef(new Map<string, Asset>());
   const [, setAssetVersion] = useState(0);
   const [problem, setProblem] = useState<string | null>(null);
@@ -157,10 +210,18 @@ export function StudioEditor({ products, config, t, formId }: {
     [products, config],
   );
 
-  // Text typed in the homepage live proof starts the design (once).
+  // Product chosen in the Studio flow's first step.
+  useEffect(() => {
+    if (selectedProduct && selectedProduct !== product && products.includes(selectedProduct)) changeProduct(selectedProduct);
+    // changeProduct only uses stable setters and the config prop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProduct]);
+
+  // Text typed in the homepage live proof starts the design (once; not over a restored project).
   useEffect(() => {
     if (seeded.current) return;
     seeded.current = true;
+    if (restore) return;
     const handed = proofText.read().trim().slice(0, 120);
     if (handed) addText(handed);
     // Runs once on mount.
@@ -257,10 +318,15 @@ export function StudioEditor({ products, config, t, formId }: {
   const dpi = selected?.kind === "image" && selected.file.width && mm && selected.file.type !== "image/svg+xml" ? effectiveDpi(selected.file.width, mm.width) : null;
   const minDpi = productConfig?.minDpi ?? null;
 
-  async function submitDesign() {
+  /** Hands the design to the request form; true once the form has everything (or there is no design). */
+  async function submitDesign(): Promise<boolean> {
     const available = new Set(views.map((v) => v.key));
     const layers = state.doc.layers.filter((l) => available.has(l.view));
-    if (layers.length === 0) return;
+    if (layers.length === 0) {
+      // No design: the request still names the product chosen in the Studio.
+      fillField("projectType", productName(product));
+      return true;
+    }
     setBusy(true);
     setStatus(e.preparing);
     const design: DesignInput = {
@@ -292,20 +358,91 @@ export function StudioEditor({ products, config, t, formId }: {
     const used = new Set(layers.map((l) => l.asset).filter(Boolean));
     const artwork = [...assets.current.entries()].filter(([id]) => used.has(id)).map(([, a]) => a.file);
 
-    const input = document.getElementById("projectType");
-    if (input instanceof HTMLInputElement) input.value = productName(product);
+    // Same as typing it: the form's own state (combobox) sees the product name.
+    fillField("projectType", productName(product));
     mockupHandoff.send({ design: JSON.stringify(design), productName: productName(product), layerCount: layers.length, artwork, mockups });
     setBusy(false);
     setStatus(exportFailed ? e.exportError : e.handedOver);
-    document.getElementById(formId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // In the Studio flow the flow moves to its request step itself.
+    if (!controllerRef) document.getElementById(formId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
   }
+
+  // The flow's buttons reach the hand-off and the restorable state through this controller.
+  useEffect(() => {
+    if (!controllerRef) return;
+    controllerRef.current = {
+      submit: submitDesign,
+      restoreData: () => ({
+        product,
+        colorHex: state.doc.colorHex ?? null,
+        options: state.doc.options,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        textLayers: state.doc.layers.filter((l) => l.kind === "text").map(({ asset: _asset, ...l }) => l),
+      }),
+    };
+  });
+
+  // Project summary for the flow: product, sides, elements, colour and options.
+  const colorName = configured ? (colorOption?.name ?? null) : null;
+  const snapshotKey = JSON.stringify([product, state.doc, views.map((v) => v.key), colorName]);
+  useEffect(() => {
+    if (!onSnapshot) return;
+    const sideKeys = views.map((v) => v.key);
+    onSnapshot({
+      product,
+      views: sideKeys,
+      layers: state.doc.layers
+        .filter((l) => sideKeys.includes(l.view))
+        .map((l) => ({ view: l.view, kind: l.kind, name: l.kind === "text" ? l.text : l.file.name })),
+      colorName,
+      colorHex: configured ? (colorOption?.hex ?? null) : canRecolor(product) ? drawingColor : null,
+      options: productConfig
+        ? (["size", "material", "technique"] as const).flatMap((kind) => {
+            const option = productConfig.options[kind].find((o) => o.id === state.doc.options[kind]);
+            return option ? [{ kind, label: e.options[kind], name: option.name }] : [];
+          })
+        : [],
+    });
+    // snapshotKey captures every value read above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snapshotKey]);
 
   const stageLabel = format(e.stageLabel, { product: productName(product), view: e.viewNames[view.key] });
   const layerName = (l: EditorLayer) => (l.kind === "text" ? l.text : l.file.name);
 
+  // Preview: every side that carries a design (or the first side), read only, side by side.
+  const previewViews = views.filter((v) => state.doc.layers.some((l) => l.view === v.key));
+  const preview =
+    mode === "preview" ? (
+      <ul className={cn("grid gap-4", (previewViews.length || 1) > 1 && "sm:grid-cols-2")}>
+        {(previewViews.length ? previewViews : views.slice(0, 1)).map((v) => (
+          <li key={v.key} className="bg-bg border-line rounded-[var(--radius-card)] border p-3 sm:p-4">
+            <p className="text-fg text-sm font-semibold">
+              {productName(product)}
+              {views.length > 1 ? <span className="text-fg-muted font-normal"> · {e.viewNames[v.key]}</span> : null}
+            </p>
+            <Stage
+              view={v}
+              layers={state.doc.layers.filter((l) => l.view === v.key)}
+              assets={assets.current}
+              tint={v.mask && colorOption?.hex ? colorOption.hex : null}
+              drawingColor={drawingColor}
+              selectedId={null}
+              interactive={false}
+              label={format(e.stageLabel, { product: productName(product), view: e.viewNames[v.key] })}
+              className="mx-auto mt-2 w-full max-w-lg"
+            />
+          </li>
+        ))}
+      </ul>
+    ) : null;
+
   return (
-    // minmax(0,1fr): the swipeable product row must scroll, not widen the column.
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-12">
+    <>
+    {preview}
+    {/* The editor stays mounted in preview mode (hidden): layers, files and the export stage live here. */}
+    <div className={cn("grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-12", mode === "preview" && "hidden")}>
       {/* ─── Controls ─── */}
       <div className="space-y-6 lg:col-span-4">
         <div className="flex flex-wrap items-center gap-2">
@@ -536,9 +673,11 @@ export function StudioEditor({ products, config, t, formId }: {
               {productName(product)}
               {views.length > 1 ? <span className="text-fg-muted font-normal"> · {e.viewNames[view.key]}</span> : null}
             </p>
-            <Button onClick={() => void submitDesign()} size="sm" disabled={busy || state.doc.layers.length === 0} className="max-sm:min-h-11 max-sm:w-full">
-              {busy ? e.preparing : e.use}
-            </Button>
+            {controllerRef ? null : (
+              <Button onClick={() => void submitDesign()} size="sm" disabled={busy || state.doc.layers.length === 0} className="max-sm:min-h-11 max-sm:w-full">
+                {busy ? e.preparing : e.use}
+              </Button>
+            )}
           </div>
           <Stage
             view={view}
@@ -566,7 +705,7 @@ export function StudioEditor({ products, config, t, formId }: {
           ) : null}
         </div>
 
-        <div className="mt-4">
+        <div className={cn("mt-4", hideProductPicker && "hidden")}>
           <p className="sr-only">{t.productsLabel}</p>
           {/* Phones: one swipeable row (the cut-off last tile shows there is more), not a tall grid. */}
           <ul className="flex snap-x snap-mandatory gap-2 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0 lg:grid-cols-6">
@@ -594,5 +733,6 @@ export function StudioEditor({ products, config, t, formId }: {
         </div>
       </div>
     </div>
+    </>
   );
 }

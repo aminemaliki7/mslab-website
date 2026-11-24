@@ -22,6 +22,7 @@ const sections = {
   returns: { fr: "retours-remboursements", ar: "retours-remboursements", en: "returns-refunds" },
   "custom-orders": { fr: "commandes-personnalisees", ar: "commandes-personnalisees", en: "custom-orders" },
   track: { fr: "suivi-commande", ar: "suivi-commande", en: "order-tracking" },
+  studio: { fr: "studio", ar: "studio", en: "studio" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type Section = keyof typeof sections;
@@ -56,6 +57,19 @@ export function quoteFormHref(locale: Locale, productId?: string): string {
 
 /** Query value that switches the quote page to the Digital Solutions (web project) form. */
 export const DIGITAL_QUOTE_TYPE = "digital";
+
+/** The Studio page, optionally opened on one support (?product=<mockup key>). */
+export function studioHref(locale: Locale, product?: string): string {
+  return `${localizedPath(locale, { route: "studio" })}${product ? `?product=${encodeURIComponent(product)}` : ""}`;
+}
+
+/** Query value that switches the quote page to the custom production form. */
+export const PRODUCTION_QUOTE_TYPE = "production";
+
+/** The quote page opened on the custom production form. */
+export function productionQuoteHref(locale: Locale): string {
+  return `${localizedPath(locale, { route: "quote" })}?type=${PRODUCTION_QUOTE_TYPE}#${QUOTE_FORM_ID}`;
+}
 
 /** The quote page opened on the web-project form (Digital Solutions). */
 export function digitalQuoteHref(locale: Locale): string {
