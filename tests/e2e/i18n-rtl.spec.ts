@@ -85,7 +85,12 @@ test("mobile menu opens, closes with Escape and on navigation", async ({ page })
   await page.keyboard.press("Escape");
   await expect(page.getByRole("button", { name: "Ouvrir le menu" })).toHaveAttribute("aria-expanded", "false");
   await page.getByRole("button", { name: "Ouvrir le menu" }).click();
-  await page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Catalogue" }).click();
+  // Divisions are accordions in the mobile menu: open « Catalogue », then follow its overview link.
+  const nav = page.getByRole("navigation", { name: "Navigation principale" });
+  const catalogue = nav.getByRole("button", { name: "Catalogue" });
+  await catalogue.click();
+  await expect(catalogue).toHaveAttribute("aria-expanded", "true");
+  await nav.getByRole("link", { name: "Tous les produits" }).click();
   await expect(page).toHaveURL(/\/fr\/catalogue$/);
   await expect(page.getByRole("button", { name: "Ouvrir le menu" })).toHaveAttribute("aria-expanded", "false");
 });
