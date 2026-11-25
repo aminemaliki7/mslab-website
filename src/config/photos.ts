@@ -24,6 +24,9 @@ import designedBusinessCards from "../../public/catalog/mockups/printing/busines
 import designedLetterhead from "../../public/catalog/mockups/stationery/letterhead/letterhead-a4-cutout-square.webp";
 // Catalogue photo of the "Fournitures de bureau" product (Catalogue & fournitures division card).
 import officeSupplies from "../../public/catalog/products/office-supplies.webp";
+// Division cards on the homepage (sources in src/assets/divisions/CREDITS.md).
+import divisionCatalogue from "@/assets/divisions/division-catalogue.jpg";
+import divisionDigital from "@/assets/divisions/division-digital.jpg";
 
 /**
  * Product and production photos supplied by the owner (2026-11-19). Every image carries the
@@ -66,6 +69,13 @@ export const PHOTOS = {
   designedBrochure,
   designedMailerBox,
   officeSupplies,
+  /**
+   * Division cards (2026-11-25; the production card uses `heatPressArt`). Catalogue: unbranded
+   * corporate kit supplied by the owner. Digital: Unsplash photo (Unsplash License). Generic
+   * scenes, never captioned as MSLAB's premises, clients or orders.
+   */
+  divisionCatalogue,
+  divisionDigital,
 } satisfies Record<string, StaticImageData>;
 
 export type PhotoKey = keyof typeof PHOTOS;

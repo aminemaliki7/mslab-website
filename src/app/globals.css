@@ -25,6 +25,7 @@
   --color-cyan-800: #085870;
   --color-cyan-50: #e7f2f5;
   --color-cyan-300: #5ba7bc; /* accent text on dark ink */
+  --color-charcoal: #131517; /* 3D printing film frame (matches the film's studio backdrop) */
   /* Process colors: printer's control strip only (docs/ART_DIRECTION.md) — never UI fills. */
   --color-process-c: #0b6e8a;
   --color-process-m: #c2255c;
@@ -431,6 +432,16 @@
     }
     .anim-ping {
       animation: mslab-ping 2.2s ease-out 2.5s 3 both;
+    }
+  }
+
+  /* Control strip (components/home/control-strip.tsx): the inks print in one after another,
+     left to right, once on load. Static without motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    .control-patch {
+      transform-origin: left center;
+      animation: mslab-grow-x 0.5s var(--ease-out-soft) both;
+      animation-delay: calc(0.75s + var(--i, 0) * 90ms);
     }
   }
 

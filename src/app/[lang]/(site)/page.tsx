@@ -4,7 +4,9 @@ import { ProductionIndex } from "@/components/catalog/production-index";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/content/organization-json-ld";
 import { RichText, toLines } from "@/components/content/rich-text";
 import { DivisionsSection } from "@/components/home/divisions";
-import { ProofCollage, ProofField } from "@/components/home/live-proof";
+import { Print3dSection } from "@/components/home/print-3d";
+import { CatalogueCollage, type HeroProduct } from "@/components/home/catalogue-collage";
+import { ControlStrip } from "@/components/home/control-strip";
 import { JOURNEY_BG, ProjectJourney } from "@/components/home/project-journey";
 import { HeroScene } from "@/components/illustrations/scenes";
 import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
@@ -14,7 +16,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { ChevronIcon, WhatsAppIcon } from "@/components/ui/icons";
 import { Container, Heading, Section } from "@/components/ui/layout";
 import { PHOTOS } from "@/config/photos";
-import type { MockupKey } from "@/features/print-on-demand/mockup-keys";
+import { listFeaturedProducts, listProducts } from "@/features/catalog/queries";
 import { listMockupProducts } from "@/features/print-on-demand/queries";
 import { listServices } from "@/features/services/queries";
 import { forLocale, getSiteSettings } from "@/features/settings/queries";
@@ -47,12 +49,28 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function HomePage() {
   const locale = await getLocale();
-  const [dict, settings, services, mockups] = await Promise.all([
+  const [dict, settings, services, mockups, featured, firstPage] = await Promise.all([
     getDictionary(locale),
     getSiteSettings(),
     listServices(locale),
     listMockupProducts(),
+    listFeaturedProducts(locale, 8),
+    listProducts({ locale }),
   ]);
+
+  // Hero collage: featured products first, then the catalogue order; only products with a photo.
+  const seen = new Set<string>();
+  const heroProducts: HeroProduct[] = [];
+  for (const product of [...featured, ...firstPage.items]) {
+    if (!product.image || seen.has(product.id) || heroProducts.length >= 8) continue;
+    seen.add(product.id);
+    heroProducts.push({
+      id: product.id,
+      name: product.name,
+      href: localizedPath(locale, { route: "product", slug: product.slug }),
+      image: { url: product.image.url, alt: product.image.alt },
+    });
+  }
 
   const about = forLocale(settings.about, locale);
   const highlights = toLines(forLocale(settings.highlights, locale));
@@ -69,11 +87,18 @@ export default async function HomePage() {
     <>
       <OrganizationJsonLd locale={locale} />
       <WebSiteJsonLd locale={locale} />
-      <Hero dict={dict} mockups={mockups} studioHref={studioPage} quoteHref={quoteHref} trackingHref={localizedPath(locale, { route: "track" })} />
+      <Hero
+        dict={dict}
+        products={heroProducts}
+        catalogHref={localizedPath(locale, { route: "catalog" })}
+        quoteHref={quoteHref}
+        trackingHref={localizedPath(locale, { route: "track" })}
+      />
 
       {/* ─── The three divisions: what MSLAB offers ────────────────────────── */}
       <DivisionsSection
         dict={dict}
+        tone="surface"
         links={{
           production: productionHref ?? servicesHref,
           studio: studioPage,
@@ -81,6 +106,9 @@ export default async function HomePage() {
           digital: digital ? localizedPath(locale, { route: "service", slug: digital.slug }) : servicesHref,
         }}
       />
+
+      {/* ─── 3D printing: the printer's own timelapse ─────────────────────── */}
+      <Print3dSection dict={dict} quoteHref={quoteHref} />
 
       {/* ─── How to work with MSLAB (every division) ───────────────────────── */}
       <section aria-labelledby="process-heading" className="text-white" style={{ backgroundColor: JOURNEY_BG }}>
@@ -98,7 +126,7 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Production capabilities ──────────────────────────────────────── */}
-      <Section aria-labelledby="services-heading">
+      <Section aria-labelledby="services-heading" tone="surface">
         <Container>
           <SectionHeader
             id="services-heading"
@@ -111,7 +139,7 @@ export default async function HomePage() {
       </Section>
 
       {/* ─── What MSLAB simplifies (not a sequence: no numbers) ───────────── */}
-      <Section aria-labelledby="pain-heading" className="pt-0 sm:pt-0 lg:pt-0">
+      <Section aria-labelledby="pain-heading">
         <Container>
           <Heading as="h2" size="xl" id="pain-heading" className="type-display reveal">
             {dict.sections.painTitle}
@@ -181,13 +209,14 @@ export default async function HomePage() {
       </Section>
 
       {/* ─── Closing call to action ───────────────────────────────────────── */}
-      <section aria-labelledby="closing-heading" className="bg-ink-900 text-white">
+      {/* Brand teal: the one coloured band, distinct from the navy footer below it. */}
+      <section aria-labelledby="closing-heading" className="bg-primary text-white">
         <Container className="grid gap-8 py-14 lg:grid-cols-12 lg:items-end lg:py-20">
           <div className="lg:col-span-7">
             <h2 id="closing-heading" className="type-display text-2xl text-balance sm:text-3xl">
               {dict.cx.closing.title}
             </h2>
-            <p className="mt-4 max-w-xl text-white/75">{dict.cx.closing.body}</p>
+            <p className="mt-4 max-w-xl text-white/90">{dict.cx.closing.body}</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:col-span-5 lg:justify-end">
             <ButtonLink href={quoteHref} variant="accent" size="lg">
@@ -201,7 +230,7 @@ export default async function HomePage() {
                 href={whatsappHref(settings.whatsappNumber, dict.whatsapp.prefill)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 px-2 text-sm font-medium text-white/85 underline-offset-4 hover:text-white hover:underline"
+                className="inline-flex min-h-12 items-center justify-center gap-2 px-2 text-sm font-medium text-white underline-offset-4 hover:underline"
               >
                 <WhatsAppIcon width={18} height={18} aria-hidden="true" />
                 WhatsApp
@@ -215,31 +244,31 @@ export default async function HomePage() {
 }
 
 /**
- * Hero (docs/DESIGN_SYSTEM.md §0): the promise in light capitals, a lead naming the three
- * activities and the audiences, two calls to action (quote / order tracking), then the
- * brand-name field beside an object collage that shows the typed brand on MSLAB products. On
- * phones the actions come right after the lead, then the collage and the field. Falls back to
- * the activities scene when no mockup product is active.
+ * Hero (docs/DESIGN_SYSTEM.md §0): the promise in Anton capitals, a lead naming the three
+ * activities and the audiences, two calls to action (quote / order tracking) and a link to the
+ * full catalogue — beside the object collage: one large pageable tile of real catalogue products
+ * (each opens its product page) above two fixed tiles, « Votre idée » (T-shirt tech pack) and
+ * « Notre production » (heat-press illustration). On phones the actions come right after the
+ * lead, then the collage, then the catalogue link. Falls back to the activities scene when no
+ * published product has a photo.
  */
 function Hero({
   dict,
-  mockups,
-  studioHref,
+  products,
+  catalogHref,
   quoteHref,
   trackingHref,
 }: {
   dict: Dictionary;
-  mockups: MockupKey[];
-  studioHref: string | null;
+  products: HeroProduct[];
+  catalogHref: string;
   quoteHref: string;
   trackingHref: string;
 }) {
   // "Votre idée. Votre design. Notre production." → one sentence per line.
   const lines = dict.printOnDemand.heroTitle.split(/(?<=\.)\s+/);
-  const t = dict.printOnDemand.studio;
-  // The three tiles stand for the three sentences: idea (tech pack), design (live), production.
+  // The small tiles stand for the first and last sentences: idea (tech pack), production.
   const stages = lines.map((line) => (line.endsWith(".") ? line.slice(0, -1) : line));
-  const proof = mockups.length > 0 && studioHref;
 
   return (
     <section className="overflow-hidden">
@@ -271,31 +300,17 @@ function Hero({
           </div>
         </div>
 
-        {proof ? (
-          <ProofField
-            studioHref={studioHref}
-            className="anim-rise order-4 max-w-xl [--d:6] lg:order-none lg:col-span-6 lg:row-start-3"
-            labels={{
-              field: dict.sections.proofLabel,
-              placeholder: dict.sections.proofPlaceholder,
-              cta: dict.sections.proofCta,
-              note: dict.cx.hero.proofNote,
-            }}
-          />
-        ) : null}
+        <div className="anim-rise order-4 [--d:6] lg:order-none lg:col-span-6 lg:row-start-3">
+          <ArrowLink href={catalogHref}>{dict.sections.allProducts}</ArrowLink>
+          {/* Printer's control strip (docs/ART_DIRECTION.md): the four process inks, once per site. */}
+          <ControlStrip variant="process" className="mt-7 lg:mt-9" barClassName="h-1.5 max-w-[10.5rem] gap-[3px] sm:h-2 [&>span]:rounded-[1px]" />
+        </div>
 
         <div className="anim-rise order-3 [--d:2] [--rise:36px] lg:order-none lg:col-span-6 lg:col-start-7 lg:row-span-3 lg:row-start-1 lg:ms-auto lg:w-full lg:max-w-[27rem] lg:self-center">
-          {proof ? (
-            <ProofCollage
-              products={mockups}
-              names={t.products}
-              labels={{
-                placeholder: dict.sections.proofPlaceholder,
-                preview: t.previewLabel,
-                previous: dict.sections.proofPrev,
-                next: dict.sections.proofNext,
-                stage: stages[1],
-              }}
+          {products.length > 0 ? (
+            <CatalogueCollage
+              products={products}
+              labels={{ stage: dict.nav.catalog, previous: dict.sections.proofPrev, next: dict.sections.proofNext }}
               photos={[
                 { src: PHOTOS.tshirt, alt: dict.photos.tshirt, caption: stages[0], contain: true },
                 { src: PHOTOS.heatPressArt, alt: dict.photos.heatPressArt, caption: stages[2], tint: "#9c0d29" },

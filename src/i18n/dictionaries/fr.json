@@ -66,10 +66,6 @@
     "ctaBody": "Envoyez le produit, les quantités et vos fichiers : nous revenons avec un devis.",
     "ctaWhatsApp": "Écrire sur WhatsApp",
     "heroLead": "Imprimés, vêtements, objets personnalisés, papeterie et packaging, produits en quantité pour les entreprises, les institutions et les particuliers.",
-    "proofLabel": "Écrivez le nom de votre marque",
-    "proofPlaceholder": "Votre marque",
-    "proofCta": "Continuer dans le studio",
-    "proofNote": "Aperçu indicatif.",
     "servicesTitle": "Ce que nous imprimons et produisons",
     "processCta": "Démarrer un projet de production",
     "catalogTitle": "Fournitures pour les organisations",
@@ -832,13 +828,16 @@
     "designedLetterhead": "Papier à en-tête A4 MSLAB avec un exemple de lettre",
     "designedBrochure": "Brochures agrafées : couverture du catalogue de production MSLAB",
     "designedMailerBox": "Boîte d’expédition kraft imprimée en une couleur avec le logo MSLAB",
-    "officeSupplies": "Fournitures de bureau : carnet, stylo et trombones"
+    "officeSupplies": "Fournitures de bureau : carnet, stylo et trombones",
+    "divisionCatalogue": "Kit d’entreprise : gobelet isotherme, carnet, stylo, tote bag, porte-badge et carte dans une boîte kraft",
+    "divisionDigital": "Ordinateur portable affichant du code sur un bureau lumineux"
   },
   "cx": {
     "menu": {
       "production": "Production",
       "productionOverview": "Production sur mesure",
       "productionOverviewHint": "Vos produits fabriqués à votre identité, en quantité.",
+      "print3d": "Impression 3D",
       "lines": {
         "print": "Impression & reprographie",
         "textile": "Textile & vêtements",
@@ -864,8 +863,23 @@
     "hero": {
       "tagline": "Production sur mesure, fournitures et solutions digitales",
       "lead": "Production à votre identité, catalogue de fournitures et solutions web : MSLAB accompagne les entreprises, les marques, les organisations et les créateurs, de la demande de devis à la livraison.",
-      "quote": "Demander un devis",
-      "proofNote": "Aperçu indicatif. Dans le studio, ajoutez votre logo et préparez votre devis."
+      "quote": "Demander un devis"
+    },
+    "print3d": {
+      "eyebrow": "Impression 3D",
+      "title": "Vos pièces imprimées en 3D, couche par couche",
+      "body": "Engrenages, supports, pièces techniques ou objets à votre identité : envoyez votre fichier 3D, nous préparons l’impression et vous remettons les pièces finies.",
+      "uses": [
+        "Pièces techniques et engrenages",
+        "Supports et accessoires",
+        "Prototypes et maquettes",
+        "Objets personnalisés à votre identité"
+      ],
+      "note": "Sur devis, comme toutes nos productions.",
+      "cta": "Demander un devis",
+      "videoLabel": "Vidéo : un support de téléphone imprimé en 3D, son impression en accéléré, puis le produit fini",
+      "pauseVideo": "Mettre la vidéo en pause",
+      "playVideo": "Lire la vidéo"
     },
     "divisions": {
       "title": "Trois activités, un seul interlocuteur",
@@ -879,7 +893,8 @@
           "Cartes de visite, flyers et brochures",
           "Mugs, tote bags et kits d'entreprise",
           "Boîtes, sacs et packaging",
-          "Livres et imprimés"
+          "Livres et imprimés",
+          "Impression 3D"
         ],
         "cta": "Découvrir la production",
         "secondary": "Essayer le studio"

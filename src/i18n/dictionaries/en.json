@@ -66,10 +66,6 @@
     "ctaBody": "Send the product, quantities and files: we reply with a quote.",
     "ctaWhatsApp": "Message us on WhatsApp",
     "heroLead": "Print, apparel, personalized products, stationery and packaging, produced in quantity for businesses, institutions and individuals.",
-    "proofLabel": "Type your brand name",
-    "proofPlaceholder": "Your brand",
-    "proofCta": "Continue in the studio",
-    "proofNote": "Indicative preview.",
     "servicesTitle": "What we print and produce",
     "processCta": "Start a production project",
     "catalogTitle": "Supplies for organizations",
@@ -832,13 +828,16 @@
     "designedLetterhead": "MSLAB A4 letterhead with a sample letter",
     "designedBrochure": "Stapled brochures: MSLAB production catalogue cover",
     "designedMailerBox": "Kraft mailer box printed in one colour with the MSLAB logo",
-    "officeSupplies": "Office supplies: notebook, pen and paper clips"
+    "officeSupplies": "Office supplies: notebook, pen and paper clips",
+    "divisionCatalogue": "Corporate kit: insulated tumbler, notebook, pen, tote bag, badge holder and card in a kraft box",
+    "divisionDigital": "Laptop showing code on a bright desk"
   },
   "cx": {
     "menu": {
       "production": "Production",
       "productionOverview": "Custom production",
       "productionOverviewHint": "Your products made in your brand identity, in quantity.",
+      "print3d": "3D printing",
       "lines": {
         "print": "Printing & reprographics",
         "textile": "Textile & apparel",
@@ -864,8 +863,23 @@
     "hero": {
       "tagline": "Custom production, supplies and digital solutions",
       "lead": "Production in your brand identity, a supplies catalogue and web solutions: MSLAB works with businesses, brands, organizations and creators, from quote request to delivery.",
-      "quote": "Request a quote",
-      "proofNote": "Indicative preview. In the studio, add your logo and prepare your quote."
+      "quote": "Request a quote"
+    },
+    "print3d": {
+      "eyebrow": "3D printing",
+      "title": "Your parts, 3D printed layer by layer",
+      "body": "Gears, stands, technical parts or objects in your brand identity: send your 3D file, we prepare the print and hand you the finished parts.",
+      "uses": [
+        "Technical parts and gears",
+        "Stands and accessories",
+        "Prototypes and models",
+        "Objects in your brand identity"
+      ],
+      "note": "Quoted, like all our production.",
+      "cta": "Request a quote",
+      "videoLabel": "Video: a 3D-printed phone stand, its print sped up, then the finished product",
+      "pauseVideo": "Pause the video",
+      "playVideo": "Play the video"
     },
     "divisions": {
       "title": "Three activities, one point of contact",
@@ -879,7 +893,8 @@
           "Business cards, flyers and brochures",
           "Mugs, tote bags and corporate kits",
           "Boxes, bags and packaging",
-          "Books and printed matter"
+          "Books and printed matter",
+          "3D printing"
         ],
         "cta": "Discover production",
         "secondary": "Try the studio"

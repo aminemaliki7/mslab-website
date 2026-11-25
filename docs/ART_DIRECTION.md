@@ -39,7 +39,7 @@ Every print job passes through a proof: a sheet with trim marks and a color cont
 5. **Qui sommes-nous / Pourquoi MSLAB** — owner-managed text; hidden while empty.
 6. **Contact band.**
 
-Files: `src/app/[lang]/(site)/page.tsx`, `src/components/home/live-proof.tsx`, `src/components/home/control-strip.tsx`, `src/components/print-on-demand/proof-text.ts`, `.type-display` and process colors in `globals.css`, `src/lib/fonts.ts`.
+Files: `src/app/[lang]/(site)/page.tsx`, `src/components/home/catalogue-collage.tsx`, `src/components/home/control-strip.tsx`, `src/components/print-on-demand/proof-text.ts`, `.type-display` and process colors in `globals.css`, `src/lib/fonts.ts`.
 
 ## 6. Stage 4 — applying the direction (after approval)
 | Area | Change |

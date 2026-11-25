@@ -1,4 +1,5 @@
 import "server-only";
+import { PRINT_3D_ID } from "@/components/home/print-3d";
 import { DIGITAL_SOLUTIONS_SLUG, PRINT_ON_DEMAND_SLUG } from "@/components/illustrations/service-art";
 import { PRODUCTION_LINES } from "@/config/production-lines";
 import { listCategories } from "@/features/catalog/queries";
@@ -47,7 +48,8 @@ export async function buildNavigation(locale: Locale, dict: Dictionary): Promise
     href: productionHref ?? localizedPath(locale, { route: "services" }),
     match: productionHref ? [productionHref] : [],
     overview: { href: productionHref ?? localizedPath(locale, { route: "services" }), label: m.productionOverview, hint: m.productionOverviewHint },
-    children: lines,
+    // 3D printing has no page of its own yet: it links to its homepage section.
+    children: [...lines, { href: `${localizedPath(locale, { route: "home" })}#${PRINT_3D_ID}`, label: m.print3d }],
     extra: STUDIO_ENABLED ? { href: studioHref(locale), label: m.studio, hint: m.studioHint } : undefined,
   };
 
