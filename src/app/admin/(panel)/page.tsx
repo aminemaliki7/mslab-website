@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { AdminPageHeader, Notice, Panel, StatusBadge, Tile } from "@/components/admin/ui";
 import { requireAdmin } from "@/features/admin/auth";
@@ -6,6 +7,7 @@ import { formatAdminDateTime, type AdminLang } from "@/features/admin/dictionary
 import { inquiryStatuses, quotationStatuses, type StatusLabel } from "@/features/admin/labels";
 import { adminTitle, getAdminT } from "@/features/admin/lang";
 import { format } from "@/i18n/format";
+import { getPermissions } from "@/features/business/permissions";
 import { createSessionClient } from "@/lib/supabase/server";
 
 export const generateMetadata = adminTitle((t) => t.dashboard.title);
@@ -16,6 +18,9 @@ export const generateMetadata = adminTitle((t) => t.dashboard.title);
  */
 export default async function DashboardPage() {
   const [admin, { lang, t }] = await Promise.all([requireAdmin(), getAdminT()]);
+  // Members whose work is the business module only (Gérant, Associé) land on its overview.
+  const permissions = await getPermissions();
+  if (permissions.has("business.read") && !permissions.has("site.content.manage")) redirect("/admin/business");
   const d = t.dashboard;
   const db = await createSessionClient();
   const count = (q: PromiseLike<{ count: number | null }>) => q.then((r) => r.count ?? 0);

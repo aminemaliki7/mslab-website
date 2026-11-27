@@ -1,6 +1,7 @@
 # MSLAB Internal ERP — Architecture (revised 2026-11-22)
 
-> **Status: Proposed (ADR-027).** Nothing in this document is implemented yet. It replaces the earlier
+> **Status: Phase 0 applied to `mslab-dev` (2026-11-27)** together with the lightweight Business Management module
+> (`docs/BUSINESS_MANAGEMENT.md`, ADR-028), which is the first operational slice of this plan. The rest is not implemented yet. It replaces the earlier
 > idea of a public "digital services pricing page": the ERP is an **internal business management
 > system** inside the existing `/admin` back office. No ERP data (prices, costs, margins, staff,
 > stock, customers) is ever exposed on the public site.

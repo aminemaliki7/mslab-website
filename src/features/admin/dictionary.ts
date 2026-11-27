@@ -3,6 +3,7 @@
  * a cookie — see features/admin/lang.ts). Pure module: used by server pages and client forms.
  * Content typed by the admin (product names, customer messages…) is never translated.
  */
+import { BUSINESS_MESSAGES } from "@/features/business/dictionary";
 
 export const ADMIN_LANGS = ["fr", "en", "ar"] as const;
 export type AdminLang = (typeof ADMIN_LANGS)[number];
@@ -1751,8 +1752,10 @@ const MESSAGES: Record<string, { en: string; ar: string }> = {
 /** Translate a French action/validation message for display. */
 export function translateMessage(message: string, lang: AdminLang): string {
   if (lang === "fr") return message;
-  const known = MESSAGES[message];
+  const known = MESSAGES[message] ?? BUSINESS_MESSAGES[message];
   if (known) return known[lang];
+  const line = /^Ligne (\d+) invalide\.$/.exec(message);
+  if (line) return BUSINESS_MESSAGES["Ligne {n} invalide."][lang].replace("{n}", line[1]);
   const max = /^(\d[\d\s ]*) caractères maximum\.$/.exec(message);
   if (max) return lang === "en" ? `${max[1]} characters maximum.` : `${max[1]} حرف كحد أقصى.`;
   return message;
